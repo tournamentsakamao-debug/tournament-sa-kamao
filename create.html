@@ -1,103 +1,123 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Create Tournament</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
-    body{
-      margin:0;
+    body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      background:#0f172a;
-      color:white;
-      padding:15px;
+      background: linear-gradient(180deg, #020617, #0f172a);
+      color: #ffffff;
     }
-    h2{
-      text-align:center;
-      margin-bottom:20px;
+
+    .header {
+      background: #020617;
+      padding: 16px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
     }
-    .box{
-      background:#111827;
-      border-radius:12px;
-      padding:15px;
-      margin-bottom:15px;
+
+    .back {
+      margin: 15px;
+      color: #38bdf8;
+      cursor: pointer;
+      font-size: 14px;
     }
-    label{
-      font-size:14px;
-      color:#cbd5f5;
+
+    .box {
+      background: #020617;
+      margin: 15px;
+      padding: 16px;
+      border-radius: 14px;
     }
-    input, textarea, select{
-      width:100%;
-      padding:12px;
-      margin-top:6px;
-      margin-bottom:12px;
-      border-radius:8px;
-      border:none;
-      outline:none;
-      font-size:15px;
+
+    .box h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 18px;
     }
-    textarea{
-      height:120px;
-      resize:none;
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      border: none;
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 14px;
     }
-    .btn{
-      width:100%;
-      padding:14px;
-      border:none;
-      border-radius:10px;
-      font-size:17px;
-      background:#ef4444;
-      color:white;
-      font-weight:bold;
+
+    textarea {
+      resize: none;
+      height: 90px;
     }
-    .note{
-      font-size:13px;
-      color:#9ca3af;
-      margin-top:10px;
-      text-align:center;
+
+    .note {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-bottom: 12px;
+    }
+
+    .create-btn {
+      width: 100%;
+      padding: 14px;
+      background: #ef4444;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .created {
+      background: #22c55e;
     }
   </style>
 </head>
 
 <body>
 
-<h2>Create Tournament</h2>
-
-<div class="box">
-  <label>Tournament Name</label>
-  <input placeholder="Enter tournament name">
-
-  <label>Game Name</label>
-  <input placeholder="Free Fire / BGMI / Ludo">
-
-  <label>Game Mode</label>
-  <select>
-    <option>Solo</option>
-    <option>Duo</option>
-    <option>Squad</option>
-  </select>
-
-  <label>Prize Amount (₹)</label>
-  <input placeholder="e.g. 1000">
-
-  <label>Joining Fee (₹)</label>
-  <input placeholder="e.g. 50">
-
-  <label>Max Players</label>
-  <input placeholder="e.g. 48">
-
-  <label>Date & Time</label>
-  <input placeholder="DD/MM/YYYY - HH:MM">
-
-  <label>Game Rules</label>
-  <textarea placeholder="Write tournament rules here..."></textarea>
-
-  <button class="btn">CREATE TOURNAMENT</button>
-
-  <div class="note">
-    Security + commission may apply.  
-    Amount will be refunded after match completion.
+  <div class="header">
+    Create Tournament
   </div>
-</div>
+
+  <div class="back" onclick="location.href='index.html'">
+    ← Back to Home
+  </div>
+
+  <div class="box">
+    <h3>Create New Tournament</h3>
+
+    <div class="note">
+      Security + Commission = ₹100 (Refund after tournament)
+    </div>
+
+    <input type="text" placeholder="Tournament Name" />
+    <input type="text" placeholder="Game Name (Free Fire / BGMI)" />
+
+    <select>
+      <option>Game Mode</option>
+      <option>Solo</option>
+      <option>Duo</option>
+      <option>Squad</option>
+    </select>
+
+    <input type="number" placeholder="Prize Money (₹)" />
+    <input type="number" placeholder="Max Players" />
+    <input type="date" />
+    <input type="time" />
+
+    <textarea placeholder="Game Rules / Description (max 1000 words)"></textarea>
+
+    <button class="create-btn" onclick="this.innerText='CREATED'; this.classList.add('created')">
+      CREATE TOURNAMENT
+    </button>
+  </div>
 
 </body>
-</html>
+  </html>
