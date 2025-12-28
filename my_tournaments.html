@@ -1,42 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>My Tournaments</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body{
-      margin:0;
-      font-family: Arial;
-      background:#0f172a;
-      color:white;
-      padding:15px;
-    }
-    .card{
-      background:#111827;
-      padding:15px;
-      border-radius:12px;
-      margin-bottom:10px;
-    }
-    .status{
-      color:#22c55e;
-      font-size:14px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Tournaments</title>
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(180deg,#020617,#0f172a);
+  color:#fff;
+}
+.header{
+  background:#020617;
+  padding:16px;
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+}
+.back{
+  margin:15px;
+  color:#38bdf8;
+  font-size:14px;
+  cursor:pointer;
+}
+.card{
+  background:#020617;
+  margin:15px;
+  padding:16px;
+  border-radius:14px;
+}
+.title{
+  font-size:18px;
+  font-weight:bold;
+}
+.info{
+  font-size:14px;
+  opacity:0.9;
+  margin-top:4px;
+}
+.status{
+  margin-top:8px;
+  font-size:13px;
+  font-weight:bold;
+  color:#22c55e;
+}
+.completed{
+  color:#94a3b8;
+}
+</style>
 </head>
+
 <body>
 
-<h2>My Tournaments</h2>
+<div class="header">My Tournaments</div>
+
+<div class="back" onclick="location.href='index.html'">← Back to Home</div>
 
 <div class="card">
-  <strong>BGMI Squad</strong><br>
-  Prize: ₹1500<br>
-  <span class="status">Joined</span>
+  <div class="title">BGMI Squad Battle</div>
+  <div class="info">Prize: ₹1500</div>
+  <div class="status">JOINED</div>
 </div>
 
 <div class="card">
-  <strong>Free Fire Solo</strong><br>
-  Prize: ₹800<br>
-  <span class="status">Completed</span>
+  <div class="title">Free Fire Solo</div>
+  <div class="info">Prize: ₹800</div>
+  <div class="status completed">COMPLETED</div>
 </div>
 
 </body>
