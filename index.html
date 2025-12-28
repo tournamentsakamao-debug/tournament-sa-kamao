@@ -4,73 +4,70 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tournament Sa Kamao</title>
+
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #0f172a;
+      background: linear-gradient(180deg, #020617, #0f172a);
       color: #ffffff;
+      text-align: center;
     }
 
     .header {
       background: #020617;
-      padding: 16px;
-      text-align: center;
-      font-size: 22px;
+      padding: 18px;
+      font-size: 24px;
       font-weight: bold;
     }
 
     .wallet {
+      margin: 15px;
+      padding: 14px;
       background: #020617;
-      padding: 12px;
-      text-align: center;
+      border-radius: 12px;
       font-size: 18px;
-      border-bottom: 1px solid #1e293b;
-    }
-
-    .container {
-      padding: 20px;
     }
 
     .btn {
-      width: 100%;
-      padding: 18px;
-      margin: 12px 0;
-      font-size: 20px;
+      width: 90%;
+      padding: 16px;
+      margin: 12px auto;
+      display: block;
+      font-size: 18px;
       font-weight: bold;
+      border-radius: 14px;
       border: none;
-      border-radius: 10px;
       cursor: pointer;
     }
 
-    .join {
+    .join-btn {
       background: #22c55e;
       color: #000;
     }
 
-    .create {
+    .create-btn {
       background: #ef4444;
       color: #fff;
     }
 
-    .info {
-      margin-top: 20px;
-      padding: 16px;
+    .card {
       background: #020617;
-      border-radius: 10px;
+      margin: 20px;
+      padding: 18px;
+      border-radius: 16px;
       font-size: 16px;
-      text-align: center;
-      color: #cbd5f5;
+      opacity: 0.95;
     }
 
     .footer {
-      margin-top: 40px;
-      text-align: center;
-      font-size: 14px;
-      color: #94a3b8;
+      margin: 25px 0;
+      font-size: 13px;
+      opacity: 0.7;
     }
   </style>
 </head>
+
 <body>
 
   <div class="header">
@@ -81,22 +78,21 @@
     Wallet Balance: ₹0
   </div>
 
-  <div class="container">
-    <button class="join-btn" onclick="location.href='join.html'">
-  JOIN TOURNAMENT
-</button>
+  <button class="btn join-btn" onclick="location.href='join.html'">
+    JOIN TOURNAMENT
+  </button>
 
-<button class="create-btn" onclick="location.href='create.html'">
-  CREATE TOURNAMENT
-</button>
-    <div class="info">
-      Play tournaments, win prizes, and earn money.<br/>
-      Simple • Fast • Trusted
-    </div>
+  <button class="btn create-btn" onclick="location.href='create.html'">
+    CREATE TOURNAMENT
+  </button>
 
-    <div class="footer">
-      © 2025 Tournament Sa Kamao
-    </div>
+  <div class="card">
+    Play tournaments, win prizes, and earn money.<br>
+    <b>Simple • Fast • Trusted</b>
+  </div>
+
+  <div class="footer">
+    © 2025 Tournament Sa Kamao
   </div>
 
 </body>
