@@ -1,92 +1,121 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Admin Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel</title>
+
   <style>
-    body{
-      margin:0;
+    body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      background:#0f172a;
-      color:white;
-      padding:15px;
+      background: linear-gradient(180deg, #020617, #0f172a);
+      color: #ffffff;
     }
-    h2{
-      text-align:center;
-      margin-bottom:20px;
+
+    .header {
+      background: #020617;
+      padding: 16px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
     }
-    .card{
-      background:#111827;
-      border-radius:12px;
-      padding:15px;
-      margin-bottom:15px;
+
+    .section {
+      background: #020617;
+      margin: 15px;
+      padding: 16px;
+      border-radius: 14px;
     }
-    .title{
-      font-size:16px;
-      font-weight:bold;
-      margin-bottom:10px;
+
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 12px;
     }
-    .row{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:10px;
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 14px;
     }
-    button{
-      padding:10px 14px;
-      border:none;
-      border-radius:8px;
-      font-size:14px;
-      font-weight:bold;
+
+    button {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
     }
-    .approve{
-      background:#22c55e;
-      color:black;
-    }
-    .reject{
-      background:#ef4444;
-      color:white;
-    }
-    .disable{
-      background:#f59e0b;
-      color:black;
+
+    .approve { background: #22c55e; color: #000; }
+    .reject { background: #ef4444; color: #fff; }
+    .toggle { background: #f59e0b; color: #000; }
+
+    .back {
+      margin: 15px;
+      color: #38bdf8;
+      cursor: pointer;
+      font-size: 14px;
     }
   </style>
 </head>
 
 <body>
 
-<h2>Admin Dashboard</h2>
+  <div class="header">
+    Admin Panel
+  </div>
 
-<div class="card">
-  <div class="title">Pending Payments</div>
-  <div class="row">
-    <span>User: Rahul | ₹50</span>
-    <button class="approve">Approve</button>
+  <div class="back" onclick="location.href='index.html'">
+    ← Back to Home
   </div>
-  <div class="row">
-    <span>User: Aman | ₹100</span>
-    <button class="reject">Reject</button>
-  </div>
-</div>
 
-<div class="card">
-  <div class="title">App Controls</div>
-  <div class="row">
-    <span>Disable Join</span>
-    <button class="disable">OFF</button>
-  </div>
-  <div class="row">
-    <span>Disable Create</span>
-    <button class="disable">OFF</button>
-  </div>
-</div>
+  <!-- Pending Payments -->
+  <div class="section">
+    <div class="title">Pending Payments</div>
 
-<div class="card">
-  <div class="title">Latest Tournaments</div>
-  <p>Free Fire Solo</p>
-  <p>BGMI Squad</p>
-</div>
+    <div class="row">
+      <span>User: Rahul | ₹50</span>
+      <button class="approve">Approve</button>
+    </div>
+
+    <div class="row">
+      <span>User: Aman | ₹100</span>
+      <button class="reject">Reject</button>
+    </div>
+  </div>
+
+  <!-- App Controls -->
+  <div class="section">
+    <div class="title">App Controls</div>
+
+    <div class="row">
+      <span>Disable Join</span>
+      <button class="toggle">OFF</button>
+    </div>
+
+    <div class="row">
+      <span>Disable Create</span>
+      <button class="toggle">OFF</button>
+    </div>
+  </div>
+
+  <!-- Latest Tournaments -->
+  <div class="section">
+    <div class="title">Latest Tournaments</div>
+    <div class="row">
+      <span>BGMI Battle</span>
+      <button class="reject">Delete</button>
+    </div>
+    <div class="row">
+      <span>Free Fire Squad</span>
+      <button class="reject">Delete</button>
+    </div>
+  </div>
 
 </body>
-</html>
+    </html>
