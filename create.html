@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Tournament</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body{
+      margin:0;
+      font-family: Arial, sans-serif;
+      background:#0f172a;
+      color:white;
+      padding:15px;
+    }
+    h2{
+      text-align:center;
+      margin-bottom:20px;
+    }
+    .box{
+      background:#111827;
+      border-radius:12px;
+      padding:15px;
+      margin-bottom:15px;
+    }
+    label{
+      font-size:14px;
+      color:#cbd5f5;
+    }
+    input, textarea, select{
+      width:100%;
+      padding:12px;
+      margin-top:6px;
+      margin-bottom:12px;
+      border-radius:8px;
+      border:none;
+      outline:none;
+      font-size:15px;
+    }
+    textarea{
+      height:120px;
+      resize:none;
+    }
+    .btn{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:10px;
+      font-size:17px;
+      background:#ef4444;
+      color:white;
+      font-weight:bold;
+    }
+    .note{
+      font-size:13px;
+      color:#9ca3af;
+      margin-top:10px;
+      text-align:center;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Create Tournament</h2>
+
+<div class="box">
+  <label>Tournament Name</label>
+  <input placeholder="Enter tournament name">
+
+  <label>Game Name</label>
+  <input placeholder="Free Fire / BGMI / Ludo">
+
+  <label>Game Mode</label>
+  <select>
+    <option>Solo</option>
+    <option>Duo</option>
+    <option>Squad</option>
+  </select>
+
+  <label>Prize Amount (₹)</label>
+  <input placeholder="e.g. 1000">
+
+  <label>Joining Fee (₹)</label>
+  <input placeholder="e.g. 50">
+
+  <label>Max Players</label>
+  <input placeholder="e.g. 48">
+
+  <label>Date & Time</label>
+  <input placeholder="DD/MM/YYYY - HH:MM">
+
+  <label>Game Rules</label>
+  <textarea placeholder="Write tournament rules here..."></textarea>
+
+  <button class="btn">CREATE TOURNAMENT</button>
+
+  <div class="note">
+    Security + commission may apply.  
+    Amount will be refunded after match completion.
+  </div>
+</div>
+
+</body>
+</html>
