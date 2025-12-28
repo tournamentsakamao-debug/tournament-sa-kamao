@@ -1,73 +1,105 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Join Tournament</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
-    body{
-      margin:0;
+    body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      background:#0f172a;
-      color:white;
-      padding:15px;
+      background: linear-gradient(180deg, #020617, #0f172a);
+      color: #ffffff;
     }
-    h2{
-      text-align:center;
-      margin-bottom:20px;
+
+    .header {
+      background: #020617;
+      padding: 16px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
     }
-    .card{
-      background:#111827;
-      border-radius:12px;
-      padding:15px;
-      margin-bottom:15px;
+
+    .back {
+      margin: 15px;
+      color: #38bdf8;
+      cursor: pointer;
+      font-size: 14px;
     }
-    .title{
-      font-size:18px;
-      font-weight:bold;
+
+    .tournament {
+      background: #020617;
+      margin: 15px;
+      padding: 16px;
+      border-radius: 14px;
     }
-    .prize{
-      color:#22c55e;
-      font-size:16px;
-      margin-top:5px;
+
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 6px;
     }
-    .info{
-      font-size:14px;
-      color:#cbd5f5;
-      margin-top:5px;
+
+    .prize {
+      color: #22c55e;
+      font-size: 18px;
+      margin: 6px 0;
     }
-    button{
-      width:100%;
-      padding:12px;
-      margin-top:10px;
-      border:none;
-      border-radius:10px;
-      font-size:16px;
-      background:#22c55e;
-      color:black;
-      font-weight:bold;
+
+    .info {
+      font-size: 14px;
+      opacity: 0.9;
+      margin: 4px 0;
+    }
+
+    .join-btn {
+      width: 100%;
+      padding: 14px;
+      margin-top: 12px;
+      background: #22c55e;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
 </head>
 
 <body>
 
-<h2>Join Tournament</h2>
+  <div class="header">
+    Join Tournament
+  </div>
 
-<div class="card">
-  <div class="title">Free Fire Solo</div>
-  <div class="prize">Prize: ₹500</div>
-  <div class="info">Entry: ₹50</div>
-  <div class="info">Players: 12 / 48</div>
-  <button>JOIN NOW</button>
-</div>
+  <div class="back" onclick="location.href='index.html'">
+    ← Back to Home
+  </div>
 
-<div class="card">
-  <div class="title">BGMI Squad</div>
-  <div class="prize">Prize: ₹1500</div>
-  <div class="info">Entry: ₹100</div>
-  <div class="info">Players: 32 / 100</div>
-  <button>JOIN NOW</button>
-</div>
+  <!-- Tournament Card 1 -->
+  <div class="tournament">
+    <div class="title">Free Fire Squad</div>
+    <div class="prize">Prize: ₹500</div>
+    <div class="info">Players: 12 / 48</div>
+    <div class="info">Date: 15 May 2025 | Time: 7:00 PM</div>
+
+    <button class="join-btn" onclick="location.href='details.html'">
+      JOIN NOW (₹20)
+    </button>
+  </div>
+
+  <!-- Tournament Card 2 -->
+  <div class="tournament">
+    <div class="title">BGMI Solo</div>
+    <div class="prize">Prize: ₹300</div>
+    <div class="info">Players: 30 / 100</div>
+    <div class="info">Date: 16 May 2025 | Time: 6:00 PM</div>
+
+    <button class="join-btn" onclick="location.href='details.html'">
+      JOIN NOW (₹10)
+    </button>
+  </div>
 
 </body>
-</html>
+  </html>
