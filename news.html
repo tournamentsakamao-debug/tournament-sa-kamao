@@ -1,82 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>News & Updates</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body{
-      margin:0;
-      font-family: Arial, sans-serif;
-      background:#0f172a;
-      color:white;
-      padding:15px;
-    }
-    h2{
-      text-align:center;
-      margin-bottom:20px;
-    }
-    .news{
-      background:#111827;
-      border-radius:12px;
-      padding:15px;
-      margin-bottom:15px;
-    }
-    .tag{
-      display:inline-block;
-      background:#2563eb;
-      padding:4px 10px;
-      border-radius:20px;
-      font-size:12px;
-      margin-bottom:8px;
-    }
-    .title{
-      font-size:16px;
-      font-weight:bold;
-      margin-bottom:6px;
-    }
-    .desc{
-      font-size:14px;
-      color:#cbd5f5;
-    }
-    .poll button{
-      margin-top:10px;
-      margin-right:8px;
-      padding:8px 12px;
-      border:none;
-      border-radius:8px;
-      background:#22c55e;
-      color:black;
-      font-weight:bold;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>News & Updates</title>
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(180deg,#020617,#0f172a);
+  color:#fff;
+}
+.header{
+  background:#020617;
+  padding:16px;
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+}
+.back{
+  margin:15px;
+  color:#38bdf8;
+  font-size:14px;
+  cursor:pointer;
+}
+.card{
+  background:#020617;
+  margin:15px;
+  padding:16px;
+  border-radius:14px;
+}
+.tag{
+  font-size:12px;
+  background:#2563eb;
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:20px;
+  margin-bottom:6px;
+}
+.title{
+  font-size:18px;
+  font-weight:bold;
+  margin-bottom:6px;
+}
+.desc{
+  font-size:14px;
+  opacity:0.9;
+}
+</style>
 </head>
 
 <body>
 
-<h2>Today News</h2>
+<div class="header">News & Updates</div>
 
-<div class="news">
+<div class="back" onclick="location.href='index.html'">← Back to Home</div>
+
+<div class="card">
   <div class="tag">IMPORTANT</div>
-  <div class="title">New Tournament This Weekend!</div>
+  <div class="title">Big Tournament Coming</div>
   <div class="desc">
-    Big prizes available. Join early to secure your slot.
+    High prize pool tournament will start this weekend.
   </div>
 </div>
 
-<div class="news">
+<div class="card">
   <div class="tag">SPONSOR</div>
-  <div class="title">Powered by XYZ Gaming</div>
+  <div class="title">Sponsored by XYZ Gaming</div>
   <div class="desc">
-    Thanks to our sponsor for supporting Tournament Sa Kamao.
+    Thanks for supporting Tournament Sa Kamao.
   </div>
-</div>
-
-<div class="news poll">
-  <div class="tag">POLL</div>
-  <div class="title">Which game next?</div>
-  <button>BGMI</button>
-  <button>Free Fire</button>
-  <button>Ludo</button>
 </div>
 
 </body>
