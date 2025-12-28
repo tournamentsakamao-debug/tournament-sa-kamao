@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body{
+      margin:0;
+      font-family: Arial, sans-serif;
+      background:#0f172a;
+      color:white;
+      padding:15px;
+    }
+    h2{
+      text-align:center;
+      margin-bottom:20px;
+    }
+    .card{
+      background:#111827;
+      border-radius:12px;
+      padding:15px;
+      margin-bottom:15px;
+    }
+    .title{
+      font-size:16px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+    .row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+    }
+    button{
+      padding:10px 14px;
+      border:none;
+      border-radius:8px;
+      font-size:14px;
+      font-weight:bold;
+    }
+    .approve{
+      background:#22c55e;
+      color:black;
+    }
+    .reject{
+      background:#ef4444;
+      color:white;
+    }
+    .disable{
+      background:#f59e0b;
+      color:black;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Admin Dashboard</h2>
+
+<div class="card">
+  <div class="title">Pending Payments</div>
+  <div class="row">
+    <span>User: Rahul | ₹50</span>
+    <button class="approve">Approve</button>
+  </div>
+  <div class="row">
+    <span>User: Aman | ₹100</span>
+    <button class="reject">Reject</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="title">App Controls</div>
+  <div class="row">
+    <span>Disable Join</span>
+    <button class="disable">OFF</button>
+  </div>
+  <div class="row">
+    <span>Disable Create</span>
+    <button class="disable">OFF</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="title">Latest Tournaments</div>
+  <p>Free Fire Solo</p>
+  <p>BGMI Squad</p>
+</div>
+
+</body>
+</html>
