@@ -1,63 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Wallet</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
-    body{
-      margin:0;
+    body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      background:#0f172a;
-      color:white;
-      padding:15px;
+      background: linear-gradient(180deg, #020617, #0f172a);
+      color: #ffffff;
     }
-    h2{
-      text-align:center;
-      margin-bottom:20px;
+
+    .header {
+      background: #020617;
+      padding: 16px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
     }
-    .balance{
-      background:#111827;
-      border-radius:14px;
-      padding:25px;
-      text-align:center;
-      margin-bottom:20px;
+
+    .back {
+      margin: 15px;
+      color: #38bdf8;
+      cursor: pointer;
+      font-size: 14px;
     }
-    .amount{
-      font-size:32px;
-      font-weight:bold;
-      color:#22c55e;
+
+    .balance-box {
+      background: #020617;
+      margin: 20px;
+      padding: 24px;
+      border-radius: 18px;
+      text-align: center;
     }
-    .btn{
-      width:100%;
-      padding:14px;
-      border:none;
-      border-radius:10px;
-      font-size:16px;
-      margin-top:12px;
-      font-weight:bold;
+
+    .balance-label {
+      font-size: 14px;
+      opacity: 0.8;
     }
-    .add{
-      background:#22c55e;
-      color:black;
+
+    .balance {
+      font-size: 34px;
+      font-weight: bold;
+      color: #22c55e;
+      margin-top: 8px;
     }
-    .donate{
-      background:#3b82f6;
-      color:white;
+
+    .btn {
+      width: 90%;
+      margin: 14px auto;
+      padding: 16px;
+      display: block;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .add {
+      background: #22c55e;
+      color: #000;
+    }
+
+    .donate {
+      background: #3b82f6;
+      color: #fff;
     }
   </style>
 </head>
 
 <body>
 
-<h2>Wallet</h2>
+  <div class="header">
+    Wallet
+  </div>
 
-<div class="balance">
-  <div>Your Balance</div>
-  <div class="amount">₹0</div>
-</div>
+  <div class="back" onclick="location.href='index.html'">
+    ← Back to Home
+  </div>
 
-<button class="btn add">ADD MONEY</button>
-<button class="btn donate">DONATE</button>
+  <div class="balance-box">
+    <div class="balance-label">Available Balance</div>
+    <div class="balance">₹0</div>
+  </div>
+
+  <button class="btn add" onclick="location.href='payment.html'">
+    ADD MONEY
+  </button>
+
+  <button class="btn donate" onclick="location.href='payment.html'">
+    DONATE
+  </button>
 
 </body>
-</html> 
+</html>
