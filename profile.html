@@ -1,48 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>User Profile</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile</title>
+
   <style>
-    body{
-      margin:0;
+    body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      background:#0f172a;
-      color:white;
-      padding:20px;
+      background: linear-gradient(180deg, #020617, #0f172a);
+      color: #ffffff;
     }
-    .card{
-      background:#111827;
-      border-radius:15px;
-      padding:20px;
-      text-align:center;
+
+    .header {
+      background: #020617;
+      padding: 16px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
     }
-    .avatar{
-      width:90px;
-      height:90px;
-      border-radius:50%;
-      background:#22c55e;
-      margin:auto;
-      line-height:90px;
-      font-size:36px;
-      font-weight:bold;
-      margin-bottom:10px;
+
+    .back {
+      margin: 15px;
+      color: #38bdf8;
+      cursor: pointer;
+      font-size: 14px;
     }
-    .info{
-      margin-top:8px;
-      color:#cbd5f5;
+
+    .card {
+      background: #020617;
+      margin: 20px;
+      padding: 20px;
+      border-radius: 18px;
+      text-align: center;
+    }
+
+    .avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: #22c55e;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: bold;
+      margin: 0 auto 12px;
+    }
+
+    .name {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .info {
+      font-size: 14px;
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+
+    .btn {
+      width: 90%;
+      margin: 14px auto;
+      padding: 14px;
+      display: block;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .settings {
+      background: #3b82f6;
+      color: #fff;
+    }
+
+    .logout {
+      background: #ef4444;
+      color: #fff;
     }
   </style>
 </head>
+
 <body>
 
-<div class="card">
-  <div class="avatar">U</div>
-  <h2>User Name</h2>
-  <div class="info">UID: 123456789</div>
-  <div class="info">Wallet Balance: ₹500</div>
-  <div class="info">Joined Tournaments: 12</div>
-</div>
+  <div class="header">
+    Profile
+  </div>
+
+  <div class="back" onclick="location.href='index.html'">
+    ← Back to Home
+  </div>
+
+  <div class="card">
+    <div class="avatar">U</div>
+    <div class="name">User Name</div>
+    <div class="info">Game UID: 123456789</div>
+    <div class="info">Wallet Balance: ₹0</div>
+    <div class="info">Joined Tournaments: 0</div>
+  </div>
+
+  <button class="btn settings" onclick="location.href='settings.html'">
+    SETTINGS
+  </button>
+
+  <button class="btn logout">
+    LOGOUT
+  </button>
 
 </body>
 </html>
