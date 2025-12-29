@@ -38,6 +38,21 @@ body{
   font-size:15px;
 }
 
+/* MUSIC TOGGLE */
+.music-toggle{
+  position:fixed;
+  top:14px;
+  right:14px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#000;
+  padding:10px 14px;
+  border-radius:14px;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+  z-index:10;
+}
+
 /* CARD */
 .card{
   margin:14px;
@@ -143,12 +158,14 @@ body{
   color:var(--blue);
 }
 
-/* SPACE FOR NAV */
 .spacer{height:80px}
 </style>
 </head>
 
 <body>
+
+<!-- MUSIC TOGGLE -->
+<div class="music-toggle" onclick="toggleMusic()">🎵 MUSIC</div>
 
 <!-- SEARCH -->
 <div class="topbar">
@@ -157,7 +174,7 @@ body{
   </div>
 </div>
 
-<!-- TOURNAMENT 1 -->
+<!-- TOURNAMENT -->
 <div class="card">
   <div class="banner">BGMI Battle Clash</div>
   <div class="body">
@@ -173,22 +190,6 @@ body{
   </div>
 </div>
 
-<!-- TOURNAMENT 2 -->
-<div class="card">
-  <div class="banner">Free Fire Daily Cup</div>
-  <div class="body">
-    <div class="line">Organiser: Aman</div>
-    <div class="line">Game: Free Fire • Mode: Solo</div>
-    <div class="prize">₹1,500</div>
-    <div class="row">
-      <div>Entry Fee: ₹30</div>
-      <div>Players: 48 / 100</div>
-    </div>
-    <div class="line">Thursday • 16 May • 8:00 PM</div>
-    <button class="join">JOIN NOW</button>
-  </div>
-</div>
-
 <div class="spacer"></div>
 
 <!-- BOTTOM NAV -->
@@ -200,22 +201,46 @@ body{
   <div class="nav-item"><span>👤</span>Profile</div>
 </div>
 
-<!-- TOUCH SOUND -->
+<!-- AUDIO -->
 <audio id="tapSound" src="click.mp3" preload="auto"></audio>
+<audio id="bgm" src="bgm.mp3" loop preload="auto"></audio>
 
 <script>
 const tapSound=document.getElementById("tapSound");
+const bgm=document.getElementById("bgm");
+let musicOn=false;
 
+/* Touch sound */
 function playTap(){
   tapSound.currentTime=0;
   tapSound.play().catch(()=>{});
 }
 
+/* Start music on first interaction */
+document.addEventListener("click",()=>{
+  if(!musicOn){
+    bgm.volume=0.25;
+    bgm.play().then(()=>musicOn=true).catch(()=>{});
+  }
+},{once:true});
+
+/* Toggle music */
+function toggleMusic(){
+  if(musicOn){
+    bgm.pause();
+    musicOn=false;
+  }else{
+    bgm.volume=0.25;
+    bgm.play().then(()=>musicOn=true).catch(()=>{});
+  }
+}
+
+/* Apply tap sound everywhere */
 document.addEventListener("click",e=>{
-  const el=e.target.closest(".nav-item,.join,.card,button");
+  const el=e.target.closest(".nav-item,.join,.card,button,.music-toggle");
   if(el) playTap();
 });
 </script>
 
 </body>
-    </html>
+</html>
