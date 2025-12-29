@@ -12,87 +12,29 @@ body{
   background:radial-gradient(circle at top,#1e1b4b,#020617 60%);
   color:#fff;
 }
-
-.header{
-  padding:16px;
-  text-align:center;
-  font-size:20px;
-  font-weight:bold;
-}
-
-.back{
-  position:absolute;
-  left:15px;
-  top:18px;
-  color:#38bdf8;
-  text-decoration:none;
-  font-size:14px;
-}
-
+.header{padding:16px;text-align:center;font-size:20px;font-weight:bold}
+.back{position:absolute;left:15px;top:18px;color:#38bdf8;text-decoration:none;font-size:14px}
 :root{
-  --neon-blue:#38bdf8;
-  --neon-purple:#a855f7;
-  --glass-bg:rgba(15,23,42,0.6);
-  --glass-border:rgba(255,255,255,0.08);
+  --neon-blue:#38bdf8;--neon-purple:#a855f7;
+  --glass-bg:rgba(15,23,42,0.6);--glass-border:rgba(255,255,255,0.08);
 }
-
 .glass{
-  background:var(--glass-bg);
-  backdrop-filter: blur(14px);
-  border:1px solid var(--glass-border);
-  border-radius:18px;
-  box-shadow:
-    0 0 25px rgba(168,85,247,0.15),
-    inset 0 0 20px rgba(56,189,248,0.08);
+  background:var(--glass-bg);backdrop-filter: blur(14px);
+  border:1px solid var(--glass-border);border-radius:18px;
+  box-shadow:0 0 25px rgba(168,85,247,.15), inset 0 0 20px rgba(56,189,248,.08);
 }
-
-.form{
-  margin:15px;
-  padding:16px;
-}
-
-.label{
-  font-size:13px;
-  opacity:0.75;
-  margin-top:12px;
-}
-
-.input{
-  width:100%;
-  margin-top:6px;
-  padding:12px;
-  border-radius:12px;
-  border:none;
-  outline:none;
-  font-size:14px;
-}
-
+.section{margin:15px;padding:16px}
+.label{font-size:13px;opacity:.75;margin-top:12px}
+.input{width:100%;margin-top:6px;padding:12px;border-radius:12px;border:none;outline:none;font-size:14px}
 .neon-btn{
-  margin-top:18px;
-  width:100%;
-  padding:14px;
+  margin-top:18px;width:100%;padding:14px;
   background:linear-gradient(135deg,var(--neon-blue),var(--neon-purple));
-  color:#fff;
-  border:none;
-  border-radius:16px;
-  font-size:15px;
-  font-weight:800;
-  cursor:pointer;
-  box-shadow:
-    0 0 15px rgba(56,189,248,0.7),
-    0 0 35px rgba(168,85,247,0.6);
+  color:#fff;border:none;border-radius:16px;font-size:15px;font-weight:800;cursor:pointer;
+  box-shadow:0 0 15px rgba(56,189,248,.7),0 0 35px rgba(168,85,247,.6)
 }
-
-.neon-btn:active{
-  transform:scale(0.96);
-}
-
-.note{
-  margin:15px;
-  padding:14px;
-  font-size:13px;
-  opacity:0.75;
-}
+.success{display:none;margin:15px;padding:14px;border-radius:14px;background:#14532d}
+.error{display:none;margin:15px;padding:14px;border-radius:14px;background:#7f1d1d}
+.note{margin:15px;padding:14px;font-size:13px;opacity:.75}
 </style>
 </head>
 
@@ -101,36 +43,83 @@ body{
 <a class="back" href="index.html">← Back</a>
 <div class="header">Create Tournament</div>
 
-<div class="form glass">
-
+<div class="section glass">
   <div class="label">Tournament Name</div>
-  <input class="input" placeholder="Enter tournament name">
+  <input id="tname" class="input" placeholder="Enter tournament name" required>
 
   <div class="label">Game Name</div>
-  <input class="input" placeholder="Free Fire / BGMI / etc">
+  <input id="gname" class="input" placeholder="Free Fire / BGMI / etc" required>
 
   <div class="label">Prize Amount (₹)</div>
-  <input class="input" placeholder="e.g. 1000">
+  <input id="prize" class="input" placeholder="e.g. 1000" required>
 
   <div class="label">Entry Fee (₹)</div>
-  <input class="input" placeholder="e.g. 50">
+  <input id="entry" class="input" placeholder="e.g. 50" required>
 
   <div class="label">Max Players</div>
-  <input class="input" placeholder="e.g. 48">
+  <input id="maxp" class="input" placeholder="e.g. 48" required>
 
-  <div class="label">Date & Time</div>
-  <input class="input" placeholder="15 May, 9:00 PM">
+  <div class="label">Date</div>
+  <input id="date" class="input" placeholder="15 May" required>
 
-  <button class="neon-btn">
-    CREATE TOURNAMENT
-  </button>
+  <div class="label">Time</div>
+  <input id="time" class="input" placeholder="9:00 PM" required>
 
+  <button class="neon-btn" onclick="submitCreate()">CREATE TOURNAMENT</button>
 </div>
+
+<div id="ok" class="success">Tournament submitted. Pending admin approval.</div>
+<div id="err" class="error">Failed to submit. Try again.</div>
 
 <div class="note glass">
-  Note: Tournament creation requires security amount.
-  After approval, tournament will be visible to all users.
+  Creation requires security amount. Tournament will be visible after admin approval.
 </div>
+
+<script>
+/* ====== GOOGLE FORM POST ======
+ONE-TIME SETUP:
+1) Google Form banao (Create Tournament)
+2) Fields (Short answer):
+   - Tournament Name
+   - Game Name
+   - Prize
+   - Entry Fee
+   - Max Players
+   - Date
+   - Time
+3) Responses → Link to Sheet
+4) Form ka POST URL + entry IDs yahan paste karo
+================================ */
+const FORM_POST_URL = "PASTE_YOUR_GOOGLE_FORM_POST_URL_HERE";
+
+function submitCreate(){
+  const tname = document.getElementById('tname').value.trim();
+  const gname = document.getElementById('gname').value.trim();
+  const prize = document.getElementById('prize').value.trim();
+  const entry = document.getElementById('entry').value.trim();
+  const maxp  = document.getElementById('maxp').value.trim();
+  const date  = document.getElementById('date').value.trim();
+  const time  = document.getElementById('time').value.trim();
+
+  if(!tname||!gname||!prize||!entry||!maxp||!date||!time){
+    alert("All fields required"); return;
+  }
+
+  const data = new FormData();
+  // 👇 entry.XXXXX ko apne Form ke IDs se replace karo
+  data.append('entry.1111111111', tname);
+  data.append('entry.2222222222', gname);
+  data.append('entry.3333333333', prize);
+  data.append('entry.4444444444', entry);
+  data.append('entry.5555555555', maxp);
+  data.append('entry.6666666666', date);
+  data.append('entry.7777777777', time);
+
+  fetch(FORM_POST_URL, { method:'POST', mode:'no-cors', body:data })
+    .then(()=>{ document.getElementById('ok').style.display='block'; })
+    .catch(()=>{ document.getElementById('err').style.display='block'; });
+}
+</script>
 
 </body>
 </html>
