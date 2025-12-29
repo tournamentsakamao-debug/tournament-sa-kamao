@@ -9,115 +9,168 @@
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:radial-gradient(circle at top,#1e1b4b,#020617 60%);
+  background:radial-gradient(circle at top,#1e1b4b,#020617 65%);
   color:#fff;
 }
-.header{padding:16px;text-align:center;font-size:20px;font-weight:bold}
-.back{position:absolute;left:15px;top:18px;color:#38bdf8;text-decoration:none;font-size:14px}
-:root{
-  --neon-blue:#38bdf8;--neon-purple:#a855f7;
-  --glass-bg:rgba(15,23,42,0.6);--glass-border:rgba(255,255,255,0.08);
+
+.header{
+  padding:16px;
+  text-align:center;
+  font-size:22px;
+  font-weight:700;
 }
-.glass{
-  background:var(--glass-bg);backdrop-filter: blur(14px);
-  border:1px solid var(--glass-border);border-radius:18px;
-  box-shadow:0 0 25px rgba(168,85,247,.15), inset 0 0 20px rgba(56,189,248,.08);
+
+.container{
+  margin:15px;
+  background:rgba(15,23,42,0.6);
+  backdrop-filter:blur(14px);
+  border-radius:18px;
+  padding:16px;
+  border:1px solid rgba(255,255,255,0.08);
 }
-.section{margin:15px;padding:16px}
-.label{font-size:13px;opacity:.75;margin-top:12px}
-.input{width:100%;margin-top:6px;padding:12px;border-radius:12px;border:none;outline:none;font-size:14px}
-.neon-btn{
-  margin-top:18px;width:100%;padding:14px;
-  background:linear-gradient(135deg,var(--neon-blue),var(--neon-purple));
-  color:#fff;border:none;border-radius:16px;font-size:15px;font-weight:800;cursor:pointer;
-  box-shadow:0 0 15px rgba(56,189,248,.7),0 0 35px rgba(168,85,247,.6)
+
+label{
+  font-size:14px;
+  margin-top:12px;
+  display:block;
+  opacity:.9;
 }
-.success{display:none;margin:15px;padding:14px;border-radius:14px;background:#14532d}
-.error{display:none;margin:15px;padding:14px;border-radius:14px;background:#7f1d1d}
-.note{margin:15px;padding:14px;font-size:13px;opacity:.75}
+
+input, select{
+  width:100%;
+  margin-top:6px;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+  outline:none;
+  background:#020617;
+  color:#fff;
+  font-size:15px;
+}
+
+input::placeholder{opacity:.5}
+
+button{
+  margin-top:20px;
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:16px;
+  font-size:16px;
+  font-weight:800;
+  background:linear-gradient(135deg,#38bdf8,#a855f7);
+  color:#000;
+  box-shadow:0 0 25px rgba(168,85,247,.7);
+}
+
+.note{
+  text-align:center;
+  margin-top:10px;
+  font-size:13px;
+  opacity:.8;
+}
 </style>
 </head>
 
 <body>
 
-<a class="back" href="index.html">← Back</a>
 <div class="header">Create Tournament</div>
 
-<div class="section glass">
-  <div class="label">Tournament Name</div>
-  <input id="tname" class="input" placeholder="Enter tournament name" required>
+<div class="container">
 
-  <div class="label">Game Name</div>
-  <input id="gname" class="input" placeholder="Free Fire / BGMI / etc" required>
+<label>Tournament Name</label>
+<input id="tname" placeholder="Tournament name (3–30 letters)" maxlength="30">
 
-  <div class="label">Prize Amount (₹)</div>
-  <input id="prize" class="input" placeholder="e.g. 1000" required>
+<label>Game Name</label>
+<select id="game">
+  <option value="">Select Game</option>
+</select>
 
-  <div class="label">Entry Fee (₹)</div>
-  <input id="entry" class="input" placeholder="e.g. 50" required>
+<label>Prize Money (₹)</label>
+<input id="prize" type="number" placeholder="Max ₹1,00,00,000">
 
-  <div class="label">Max Players</div>
-  <input id="maxp" class="input" placeholder="e.g. 48" required>
+<label>Entry Fee (₹)</label>
+<input id="fee" type="number" placeholder="Max ₹10,00,000">
 
-  <div class="label">Date</div>
-  <input id="date" class="input" placeholder="15 May" required>
+<label>Max Players</label>
+<input id="players" type="number" placeholder="1 – 1000">
 
-  <div class="label">Time</div>
-  <input id="time" class="input" placeholder="9:00 PM" required>
+<label>Date</label>
+<input id="date" type="date">
 
-  <button class="neon-btn" onclick="submitCreate()">CREATE TOURNAMENT</button>
-</div>
+<label>Time</label>
+<select id="time">
+  <option value="">Select Time</option>
+  <option>10:00 AM</option>
+  <option>12:00 PM</option>
+  <option>2:00 PM</option>
+  <option>4:00 PM</option>
+  <option>6:00 PM</option>
+  <option>8:00 PM</option>
+  <option>10:00 PM</option>
+</select>
 
-<div id="ok" class="success">Tournament submitted. Pending admin approval.</div>
-<div id="err" class="error">Failed to submit. Try again.</div>
+<button onclick="createTournament()">Create Tournament (₹100 Security)</button>
 
-<div class="note glass">
-  Creation requires security amount. Tournament will be visible after admin approval.
+<div class="note">₹100 security money will be deducted</div>
+
 </div>
 
 <script>
-/* ====== GOOGLE FORM POST ======
-ONE-TIME SETUP:
-1) Google Form banao (Create Tournament)
-2) Fields (Short answer):
-   - Tournament Name
-   - Game Name
-   - Prize
-   - Entry Fee
-   - Max Players
-   - Date
-   - Time
-3) Responses → Link to Sheet
-4) Form ka POST URL + entry IDs yahan paste karo
-================================ */
-const FORM_POST_URL = "PASTE_YOUR_GOOGLE_FORM_POST_URL_HERE";
+/* ===== ADMIN GAME LIST (YAHI ADD KARNA) ===== */
+const adminGames = [
+ "Free Fire","BGMI","PUBG","COD Mobile","Valorant","CS GO","Fortnite",
+ "Apex Legends","Ludo","Chess","Clash Royale","FIFA","eFootball",
+ "Rocket League","Brawl Stars","Among Us","Dota 2","League of Legends",
+ "Minecraft","GTA Online","Rainbow Six","Overwatch","Paladins",
+ "Warzone","Fall Guys","Stumble Guys","Carrom","8 Ball Pool"
+];
 
-function submitCreate(){
-  const tname = document.getElementById('tname').value.trim();
-  const gname = document.getElementById('gname').value.trim();
-  const prize = document.getElementById('prize').value.trim();
-  const entry = document.getElementById('entry').value.trim();
-  const maxp  = document.getElementById('maxp').value.trim();
-  const date  = document.getElementById('date').value.trim();
-  const time  = document.getElementById('time').value.trim();
+const gameSelect=document.getElementById("game");
+adminGames.forEach(g=>{
+ let o=document.createElement("option");
+ o.value=g; o.textContent=g;
+ gameSelect.appendChild(o);
+});
 
-  if(!tname||!gname||!prize||!entry||!maxp||!date||!time){
-    alert("All fields required"); return;
-  }
+function createTournament(){
+ const name=document.getElementById("tname").value.trim();
+ const game=gameSelect.value;
+ const prize=+document.getElementById("prize").value;
+ const fee=+document.getElementById("fee").value;
+ const players=+document.getElementById("players").value;
+ const date=document.getElementById("date").value;
+ const time=document.getElementById("time").value;
 
-  const data = new FormData();
-  // 👇 entry.XXXXX ko apne Form ke IDs se replace karo
-  data.append('entry.1111111111', tname);
-  data.append('entry.2222222222', gname);
-  data.append('entry.3333333333', prize);
-  data.append('entry.4444444444', entry);
-  data.append('entry.5555555555', maxp);
-  data.append('entry.6666666666', date);
-  data.append('entry.7777777777', time);
+ if(name.length<3){
+   alert("Tournament name minimum 3 letters");
+   return;
+ }
 
-  fetch(FORM_POST_URL, { method:'POST', mode:'no-cors', body:data })
-    .then(()=>{ document.getElementById('ok').style.display='block'; })
-    .catch(()=>{ document.getElementById('err').style.display='block'; });
+ if(!game){alert("Select game");return;}
+
+ if(prize<=0 || prize>10000000){
+   alert("Prize limit ₹1 crore");
+   return;
+ }
+
+ if(fee<0 || fee>1000000){
+   alert("Entry fee limit ₹10 lakh");
+   return;
+ }
+
+ if(players<1 || players>1000){
+   alert("Max players 1–1000");
+   return;
+ }
+
+ if(!date || !time){
+   alert("Date & time required");
+   return;
+ }
+
+ /* YAHAN GOOGLE FORM SUBMIT / SHEET CONNECT HOGA */
+ alert("Tournament Created Successfully");
 }
 </script>
 
