@@ -9,8 +9,9 @@
 :root{
   --bg:#020617;
   --card:#0f172a;
-  --neon-blue:#38bdf8;
-  --neon-purple:#a855f7;
+  --blue:#38bdf8;
+  --purple:#a855f7;
+  --green:#22c55e;
   --text:#e5e7eb;
 }
 
@@ -18,114 +19,88 @@
 
 body{
   margin:0;
-  font-family: "Segoe UI", sans-serif;
-  background:
-    radial-gradient(circle at top,#1e1b4b,#020617 65%);
+  font-family:Segoe UI, sans-serif;
+  background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
   color:var(--text);
 }
 
-/* HEADER */
-.header{
-  padding:20px;
-  text-align:center;
-  font-size:22px;
-  font-weight:800;
-  letter-spacing:1px;
-  background:linear-gradient(90deg,var(--neon-blue),var(--neon-purple));
-  -webkit-background-clip:text;
-  color:transparent;
-}
-
-/* ACTION BUTTONS */
-.actions{
+/* TOP BAR */
+.topbar{
   display:flex;
-  gap:14px;
-  padding:15px;
+  align-items:center;
+  gap:12px;
+  padding:14px;
 }
-
-.action-btn{
-  flex:1;
-  padding:18px;
-  border:none;
-  border-radius:18px;
-  font-size:16px;
-  font-weight:800;
+.back{
+  font-size:20px;
   cursor:pointer;
+}
+.search{
+  flex:1;
+}
+.search input{
+  width:100%;
+  padding:14px;
+  border-radius:16px;
+  border:none;
+  background:#020617;
   color:#fff;
-  box-shadow:0 0 25px rgba(168,85,247,0.4);
-}
-
-.join-btn{
-  background:linear-gradient(135deg,#22c55e,#16a34a);
-}
-
-.create-btn{
-  background:linear-gradient(135deg,#3b82f6,#9333ea);
-}
-
-/* SECTION TITLE */
-.section-title{
-  padding:0 15px;
-  margin-top:10px;
-  font-size:18px;
-  font-weight:700;
-  opacity:0.9;
+  font-size:15px;
 }
 
 /* TOURNAMENT CARD */
 .card{
-  margin:15px;
+  margin:14px;
   background:var(--card);
   border-radius:22px;
   overflow:hidden;
-  box-shadow:
-    0 0 30px rgba(56,189,248,0.15);
+  box-shadow:0 0 25px rgba(168,85,247,.25);
 }
 
-.card img{
-  width:100%;
-  height:180px;
-  object-fit:cover;
+.banner{
+  height:160px;
+  background:linear-gradient(135deg,#312e81,#020617);
+  display:flex;
+  align-items:end;
+  padding:12px;
+  font-size:18px;
+  font-weight:900;
 }
 
-.card-body{
+.body{
   padding:14px;
 }
 
-.game-name{
-  font-size:18px;
-  font-weight:800;
-}
-
-.meta{
+.line{
   font-size:13px;
-  opacity:0.7;
-  margin:6px 0;
+  opacity:.75;
+  margin:4px 0;
 }
 
 .prize{
-  font-size:20px;
+  font-size:22px;
   font-weight:900;
-  color:#22c55e;
-  margin-top:4px;
+  color:var(--green);
+  margin:6px 0;
 }
 
-.card-footer{
+.row{
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  margin-top:10px;
+  font-size:13px;
+  margin:6px 0;
 }
 
-.join-now{
-  padding:12px 18px;
-  border-radius:14px;
+.join{
+  margin-top:10px;
+  width:100%;
+  padding:14px;
   border:none;
-  background:linear-gradient(135deg,var(--neon-blue),var(--neon-purple));
+  border-radius:16px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
   color:#fff;
-  font-weight:800;
-  cursor:pointer;
-  box-shadow:0 0 20px rgba(168,85,247,0.6);
+  font-weight:900;
+  font-size:16px;
 }
 
 /* BOTTOM NAV */
@@ -134,71 +109,73 @@ body{
   bottom:0;
   left:0;
   right:0;
+  height:64px;
   background:#020617;
   display:flex;
   justify-content:space-around;
-  padding:12px 0;
-  box-shadow:0 -6px 25px rgba(168,85,247,0.25);
+  align-items:center;
+  box-shadow:0 -6px 25px rgba(168,85,247,.3);
 }
-
-.nav a{
-  color:#94a3b8;
+.nav div{
   font-size:12px;
-  text-decoration:none;
-  font-weight:600;
+  text-align:center;
+  color:#94a3b8;
 }
-
-.nav a.active{
-  color:var(--neon-blue);
+.nav .active{
+  color:var(--blue);
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">TOURNAMENT HUB</div>
-
-<div class="actions">
-  <button class="action-btn join-btn">JOIN TOURNAMENT</button>
-  <button class="action-btn create-btn">CREATE TOURNAMENT</button>
-</div>
-
-<div class="section-title">🔥 Live Tournaments</div>
-
-<!-- CARD 1 -->
-<div class="card">
-  <img src="https://images.unsplash.com/photo-1606112219348-204d7d8b94ee">
-  <div class="card-body">
-    <div class="game-name">BGMI Battle Clash</div>
-    <div class="meta">Squad • Today 7:00 PM</div>
-    <div class="prize">₹2,000 Prize</div>
-    <div class="card-footer">
-      <div class="meta">Entry ₹50</div>
-      <button class="join-now">JOIN</button>
-    </div>
+<!-- TOP -->
+<div class="topbar">
+  <div class="back">←</div>
+  <div class="search">
+    <input placeholder="Search tournament, prize, game">
   </div>
 </div>
 
-<!-- CARD 2 -->
+<!-- TOURNAMENT 1 -->
 <div class="card">
-  <img src="https://images.unsplash.com/photo-1556438064-2d7646166914">
-  <div class="card-body">
-    <div class="game-name">COD Warzone</div>
-    <div class="meta">Solo • Tomorrow 6:00 PM</div>
-    <div class="prize">₹1,500 Prize</div>
-    <div class="card-footer">
-      <div class="meta">Entry ₹30</div>
-      <button class="join-now">JOIN</button>
+  <div class="banner">BGMI Battle Clash</div>
+  <div class="body">
+    <div class="line">Organiser: Rahul</div>
+    <div class="line">Game: BGMI • Mode: Squad</div>
+    <div class="prize">₹2,000</div>
+    <div class="row">
+      <div>Entry Fee: ₹50</div>
+      <div>Players: 32 / 100</div>
     </div>
+    <div class="line">Wednesday • 15 May • 7:00 PM</div>
+    <button class="join">JOIN NOW</button>
+  </div>
+</div>
+
+<!-- TOURNAMENT 2 -->
+<div class="card">
+  <div class="banner">Free Fire Daily Cup</div>
+  <div class="body">
+    <div class="line">Organiser: Aman</div>
+    <div class="line">Game: Free Fire • Mode: Solo</div>
+    <div class="prize">₹1,500</div>
+    <div class="row">
+      <div>Entry Fee: ₹30</div>
+      <div>Players: 48 / 100</div>
+    </div>
+    <div class="line">Thursday • 16 May • 8:00 PM</div>
+    <button class="join">JOIN NOW</button>
   </div>
 </div>
 
 <!-- BOTTOM NAV -->
 <div class="nav">
-  <a class="active">Home</a>
-  <a>Tournaments</a>
-  <a>Wallet</a>
-  <a>Profile</a>
+  <div class="active">Home</div>
+  <div>Tournaments</div>
+  <div>Wallet</div>
+  <div>My</div>
+  <div>Profile</div>
 </div>
 
 </body>
