@@ -24,19 +24,9 @@ body{
   color:var(--text);
 }
 
-/* TOP BAR */
+/* SEARCH BAR */
 .topbar{
-  display:flex;
-  align-items:center;
-  gap:12px;
   padding:14px;
-}
-.back{
-  font-size:22px;
-  cursor:pointer;
-}
-.search{
-  flex:1;
 }
 .search input{
   width:100%;
@@ -48,13 +38,18 @@ body{
   font-size:15px;
 }
 
-/* TOURNAMENT CARD */
+/* CARD */
 .card{
   margin:14px;
   background:var(--card);
   border-radius:22px;
   overflow:hidden;
   box-shadow:0 0 25px rgba(168,85,247,.25);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.card:active{
+  transform:scale(0.97);
+  box-shadow:0 0 35px rgba(56,189,248,.45);
 }
 
 .banner{
@@ -67,9 +62,7 @@ body{
   font-weight:900;
 }
 
-.body{
-  padding:14px;
-}
+.body{padding:14px}
 
 .line{
   font-size:13px;
@@ -91,6 +84,7 @@ body{
   margin:6px 0;
 }
 
+/* JOIN BUTTON */
 .join{
   margin-top:10px;
   width:100%;
@@ -101,6 +95,11 @@ body{
   color:#fff;
   font-weight:900;
   font-size:16px;
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.join:active{
+  transform:scale(0.95);
+  box-shadow:0 0 35px rgba(168,85,247,.8);
 }
 
 /* BOTTOM NAV */
@@ -123,24 +122,36 @@ body{
   align-items:center;
   font-size:11px;
   color:#94a3b8;
+  transition:transform .12s ease, color .12s ease;
 }
 
 .nav-item span{
   font-size:22px;
-  line-height:1;
+  transition:transform .12s ease, text-shadow .12s ease;
+}
+
+.nav-item:active span{
+  transform:scale(1.2);
+  text-shadow:0 0 12px rgba(56,189,248,.9);
+}
+
+.nav-item:active{
+  color:var(--blue);
 }
 
 .nav-item.active{
   color:var(--blue);
 }
+
+/* SPACE FOR NAV */
+.spacer{height:80px}
 </style>
 </head>
 
 <body>
 
-<!-- TOP -->
+<!-- SEARCH -->
 <div class="topbar">
-  <div class="back">←</div>
   <div class="search">
     <input placeholder="Search tournament, prize, game">
   </div>
@@ -178,29 +189,33 @@ body{
   </div>
 </div>
 
-<!-- BOTTOM NAV WITH ICONS -->
+<div class="spacer"></div>
+
+<!-- BOTTOM NAV -->
 <div class="nav">
-  <div class="nav-item active">
-    <span>🏠</span>
-    Home
-  </div>
-  <div class="nav-item">
-    <span>🎮</span>
-    Tournaments
-  </div>
-  <div class="nav-item">
-    <span>💰</span>
-    Wallet
-  </div>
-  <div class="nav-item">
-    <span>🏆</span>
-    My
-  </div>
-  <div class="nav-item">
-    <span>👤</span>
-    Profile
-  </div>
+  <div class="nav-item active"><span>🏠</span>Home</div>
+  <div class="nav-item"><span>🎮</span>Tournaments</div>
+  <div class="nav-item"><span>💰</span>Wallet</div>
+  <div class="nav-item"><span>🏆</span>My</div>
+  <div class="nav-item"><span>👤</span>Profile</div>
 </div>
 
+<!-- TOUCH SOUND -->
+<audio id="tapSound" src="click.mp3" preload="auto"></audio>
+
+<script>
+const tapSound=document.getElementById("tapSound");
+
+function playTap(){
+  tapSound.currentTime=0;
+  tapSound.play().catch(()=>{});
+}
+
+document.addEventListener("click",e=>{
+  const el=e.target.closest(".nav-item,.join,.card,button");
+  if(el) playTap();
+});
+</script>
+
 </body>
-</html>
+    </html>
