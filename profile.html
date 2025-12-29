@@ -1,116 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Profile</title>
+<meta charset="UTF-8">
+<title>Profile | Tournament Sa Kamao</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(180deg, #020617, #0f172a);
-      color: #ffffff;
-    }
-
-    .header {
-      background: #020617;
-      padding: 16px;
-      text-align: center;
-      font-size: 22px;
-      font-weight: bold;
-    }
-
-    .back {
-      margin: 15px;
-      color: #38bdf8;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .card {
-      background: #020617;
-      margin: 20px;
-      padding: 20px;
-      border-radius: 18px;
-      text-align: center;
-    }
-
-    .avatar {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: #22c55e;
-      color: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 36px;
-      font-weight: bold;
-      margin: 0 auto 12px;
-    }
-
-    .name {
-      font-size: 22px;
-      font-weight: bold;
-      margin-bottom: 6px;
-    }
-
-    .info {
-      font-size: 14px;
-      opacity: 0.85;
-      margin-bottom: 6px;
-    }
-
-    .btn {
-      width: 90%;
-      margin: 14px auto;
-      padding: 14px;
-      display: block;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 14px;
-      border: none;
-      cursor: pointer;
-    }
-
-    .settings {
-      background: #3b82f6;
-      color: #fff;
-    }
-
-    .logout {
-      background: #ef4444;
-      color: #fff;
-    }
-  </style>
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:linear-gradient(180deg,#020617,#0f172a);
+  color:#fff;
+}
+.header{
+  padding:16px;
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+}
+.back{
+  margin:12px 16px;
+  color:#38bdf8;
+  font-size:14px;
+  cursor:pointer;
+}
+.card{
+  background:#020617;
+  margin:14px;
+  padding:16px;
+  border-radius:14px;
+}
+.row{
+  display:flex;
+  justify-content:space-between;
+  margin:8px 0;
+  font-size:14px;
+}
+.edit-btn{
+  margin-top:12px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:#3b82f6;
+  color:#fff;
+  font-weight:bold;
+  font-size:15px;
+}
+.note{
+  margin:14px;
+  padding:14px;
+  background:#0f172a;
+  border-radius:12px;
+  font-size:13px;
+  opacity:.9;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="header">
-    Profile
-  </div>
+<div class="header">My Profile</div>
+<div class="back" onclick="history.back()">← Back</div>
 
-  <div class="back" onclick="location.href='index.html'">
-    ← Back to Home
-  </div>
+<div class="card">
+  <div class="row"><span>Name</span><span>Player Name</span></div>
+  <div class="row"><span>Game UID</span><span>XXXXXXXX</span></div>
+  <div class="row"><span>Total Matches</span><span>0</span></div>
+  <div class="row"><span>Wins</span><span>0</span></div>
 
-  <div class="card">
-    <div class="avatar">U</div>
-    <div class="name">User Name</div>
-    <div class="info">Game UID: 123456789</div>
-    <div class="info">Wallet Balance: ₹0</div>
-    <div class="info">Joined Tournaments: 0</div>
-  </div>
+  <button class="edit-btn">EDIT PROFILE</button>
+</div>
 
-  <button class="btn settings" onclick="location.href='settings.html'">
-    SETTINGS
-  </button>
+<div class="note">
+  Profile data will be updated automatically after tournament participation.
+</div>
 
-  <button class="btn logout">
-    LOGOUT
-  </button>
+<script>
+/*
+ FUTURE-PROOF:
+ - Profile data Google Sheet / API se load hoga
+ - Abhi static UI only
+*/
+</script>
 
 </body>
 </html>
