@@ -6,13 +6,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ===== BASE THEME ===== */
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:linear-gradient(180deg,#020617,#0f172a);
+  background:
+    radial-gradient(circle at top, #1e1b4b, #020617 60%);
   color:#fff;
 }
 
+/* Header */
 .header{
   padding:16px;
   text-align:center;
@@ -20,68 +23,7 @@ body{
   font-weight:bold;
 }
 
-.wallet{
-  margin:15px;
-  padding:16px;
-  background:#0f172a;
-  border-radius:14px;
-  font-size:16px;
-}
-
-.buttons{
-  display:flex;
-  gap:12px;
-  margin:15px;
-}
-
-.btn{
-  flex:1;
-  padding:16px;
-  border:none;
-  border-radius:14px;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.btn:disabled{
-  opacity:0.4;
-  cursor:not-allowed;
-}
-
-.join{background:#22c55e;color:#000}
-.create{background:#3b82f6;color:#fff}
-
-.news{
-  margin:15px;
-  padding:14px;
-  background:#020617;
-  border-radius:14px;
-  font-size:14px;
-}
-
-.nav{
-  display:flex;
-  justify-content:space-around;
-  margin:20px 0;
-  font-size:14px;
-}
-
-.nav a{
-  color:#38bdf8;
-  text-decoration:none;
-}
-
-.maintenance{
-  margin:15px;
-  padding:16px;
-  background:#7f1d1d;
-  border-radius:14px;
-  text-align:center;
-  display:none;
-}
-  /* ===== NEON GAMING UI ADDON ===== */
-
+/* ===== NEON GAMING UI ADDON ===== */
 :root{
   --neon-blue:#38bdf8;
   --neon-purple:#a855f7;
@@ -89,45 +31,60 @@ body{
   --glass-border:rgba(255,255,255,0.08);
 }
 
-body{
-  background:
-    radial-gradient(circle at top, #1e1b4b, #020617 60%);
-}
-
-/* Glass Card */
 .glass{
   background:var(--glass-bg);
   backdrop-filter: blur(14px);
   border:1px solid var(--glass-border);
+  border-radius:16px;
   box-shadow:
     0 0 25px rgba(168,85,247,0.15),
     inset 0 0 20px rgba(56,189,248,0.08);
 }
 
-/* Neon Buttons */
+/* Wallet */
+.wallet{
+  margin:15px;
+  padding:16px;
+  font-size:18px;
+}
+
+/* Buttons */
+.buttons{
+  display:flex;
+  gap:12px;
+  margin:15px;
+}
+
 .neon-btn{
+  flex:1;
   position:relative;
   color:#fff;
   background:linear-gradient(135deg,var(--neon-blue),var(--neon-purple));
   border:none;
   border-radius:16px;
   padding:16px;
+  font-size:16px;
   font-weight:800;
   letter-spacing:1px;
+  cursor:pointer;
   box-shadow:
     0 0 15px rgba(56,189,248,0.7),
     0 0 35px rgba(168,85,247,0.6);
+}
+
+.neon-btn:disabled{
+  opacity:0.4;
+  cursor:not-allowed;
 }
 
 .neon-btn:active{
   transform:scale(0.96);
 }
 
-/* Tournament Card */
+/* News / Cards */
 .t-card{
   margin:15px;
   padding:16px;
-  border-radius:18px;
 }
 
 .t-title{
@@ -136,25 +93,34 @@ body{
 }
 
 .t-sub{
-  font-size:13px;
-  opacity:0.7;
+  font-size:14px;
+  opacity:0.75;
+  margin-top:6px;
 }
 
-/* Wallet Highlight */
-.wallet{
-  font-size:18px;
-  box-shadow:
-    0 0 25px rgba(56,189,248,0.35);
+/* Maintenance */
+.maintenance{
+  margin:15px;
+  padding:16px;
+  background:#7f1d1d;
+  border-radius:14px;
+  text-align:center;
+  display:none;
 }
 
-/* Bottom Nav Glow */
+/* Bottom Nav */
 .nav{
+  display:flex;
+  justify-content:space-around;
   background:rgba(2,6,23,0.8);
-  padding:10px 0;
+  padding:12px 0;
   box-shadow:0 -8px 30px rgba(168,85,247,0.25);
 }
 
 .nav a{
+  color:#38bdf8;
+  text-decoration:none;
+  font-size:14px;
   font-weight:600;
 }
 </style>
@@ -165,20 +131,27 @@ body{
 <div class="header">Tournament Sa Kamao</div>
 
 <div id="maintenanceBox" class="maintenance">
-  App is under maintenance. Please try later.
+  App is under maintenance. Please try again later.
 </div>
 
-<div class="wallet" id="walletBox">
+<div class="wallet glass" id="walletBox">
   Wallet Balance: ₹0
 </div>
 
 <div class="buttons">
-  <button id="joinBtn" class="btn join" onclick="location.href='join.html'">JOIN</button>
-  <button id="createBtn" class="btn create" onclick="location.href='create.html'">CREATE</button>
+  <button id="joinBtn" class="neon-btn" onclick="location.href='join.html'">
+    JOIN
+  </button>
+  <button id="createBtn" class="neon-btn" onclick="location.href='create.html'">
+    CREATE
+  </button>
 </div>
 
-<div class="news">
-  Today News / Announcement will appear here
+<div class="t-card glass">
+  <div class="t-title">Today News</div>
+  <div class="t-sub">
+    Tournament updates, announcements, ads or sponsorships will appear here.
+  </div>
 </div>
 
 <div class="nav">
@@ -186,14 +159,13 @@ body{
   <a href="wallet.html">Wallet</a>
   <a href="profile.html">Profile</a>
   <a href="admin.html">Admin</a>
-
   <a href="rules.html">Rules</a>
-<a href="refund.html">Refund</a>
-<a href="about.html">About</a>
-  
+  <a href="refund.html">Refund</a>
+  <a href="about.html">About</a>
 </div>
 
 <script>
+/* ===== SYSTEM SETTINGS FROM GOOGLE SHEET ===== */
 const SHEET_ID = "1Jf-LmbUP1z7YPCE01dy3TKe6PKR3lw2qDEenp-2uLjA";
 const SYSTEM_URL =
   `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=System_Settings`;
@@ -204,8 +176,8 @@ fetch(SYSTEM_URL)
     const rows = csv.split("\n").slice(1);
     const map = {};
     rows.forEach(r=>{
-      const c=r.split(",");
-      map[c[0]] = (c[1]||"").trim();
+      const c = r.split(",");
+      map[c[0]] = (c[1] || "").trim();
     });
 
     if (map.maintenance === "TRUE") {
@@ -222,7 +194,8 @@ fetch(SYSTEM_URL)
 
     if (map.wallet_enabled === "FALSE")
       document.getElementById("walletBox").style.display="none";
-  });
+  })
+  .catch(err => console.log("System settings load failed"));
 </script>
 
 </body>
