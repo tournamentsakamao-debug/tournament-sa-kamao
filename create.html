@@ -2,139 +2,135 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Create Tournament | Tournament Sa Kamao</title>
+<title>Create Tournament</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:linear-gradient(180deg,#020617,#0f172a);
+  background:radial-gradient(circle at top,#1e1b4b,#020617 60%);
   color:#fff;
 }
+
 .header{
   padding:16px;
   text-align:center;
-  font-size:22px;
+  font-size:20px;
   font-weight:bold;
 }
+
 .back{
-  margin:12px 16px;
+  position:absolute;
+  left:15px;
+  top:18px;
   color:#38bdf8;
+  text-decoration:none;
   font-size:14px;
-  cursor:pointer;
 }
-.card{
-  background:#020617;
-  margin:14px;
+
+:root{
+  --neon-blue:#38bdf8;
+  --neon-purple:#a855f7;
+  --glass-bg:rgba(15,23,42,0.6);
+  --glass-border:rgba(255,255,255,0.08);
+}
+
+.glass{
+  background:var(--glass-bg);
+  backdrop-filter: blur(14px);
+  border:1px solid var(--glass-border);
+  border-radius:18px;
+  box-shadow:
+    0 0 25px rgba(168,85,247,0.15),
+    inset 0 0 20px rgba(56,189,248,0.08);
+}
+
+.form{
+  margin:15px;
   padding:16px;
-  border-radius:14px;
 }
-label{
+
+.label{
   font-size:13px;
-  opacity:.85;
+  opacity:0.75;
+  margin-top:12px;
 }
-input, select, textarea{
+
+.input{
   width:100%;
   margin-top:6px;
-  margin-bottom:12px;
   padding:12px;
-  border-radius:10px;
+  border-radius:12px;
   border:none;
-  background:#0f172a;
-  color:#fff;
+  outline:none;
+  font-size:14px;
 }
-textarea{min-height:90px; resize:vertical;}
-button{
+
+.neon-btn{
+  margin-top:18px;
   width:100%;
   padding:14px;
+  background:linear-gradient(135deg,var(--neon-blue),var(--neon-purple));
+  color:#fff;
   border:none;
-  border-radius:12px;
-  font-size:16px;
-  font-weight:bold;
+  border-radius:16px;
+  font-size:15px;
+  font-weight:800;
   cursor:pointer;
+  box-shadow:
+    0 0 15px rgba(56,189,248,0.7),
+    0 0 35px rgba(168,85,247,0.6);
 }
-.primary{background:#3b82f6;color:#fff}
+
+.neon-btn:active{
+  transform:scale(0.96);
+}
+
 .note{
-  margin:14px;
+  margin:15px;
   padding:14px;
-  background:#7c2d12;
-  border-radius:12px;
   font-size:13px;
-}
-.success{
-  display:none;
-  margin:14px;
-  padding:14px;
-  background:#14532d;
-  border-radius:12px;
-  font-size:14px;
+  opacity:0.75;
 }
 </style>
 </head>
 
 <body>
 
+<a class="back" href="index.html">← Back</a>
 <div class="header">Create Tournament</div>
-<div class="back" onclick="location.href='index.html'">← Back</div>
 
-<div class="note">
-  Security deposit may be required. After approval, tournament will be visible to players.
+<div class="form glass">
+
+  <div class="label">Tournament Name</div>
+  <input class="input" placeholder="Enter tournament name">
+
+  <div class="label">Game Name</div>
+  <input class="input" placeholder="Free Fire / BGMI / etc">
+
+  <div class="label">Prize Amount (₹)</div>
+  <input class="input" placeholder="e.g. 1000">
+
+  <div class="label">Entry Fee (₹)</div>
+  <input class="input" placeholder="e.g. 50">
+
+  <div class="label">Max Players</div>
+  <input class="input" placeholder="e.g. 48">
+
+  <div class="label">Date & Time</div>
+  <input class="input" placeholder="15 May, 9:00 PM">
+
+  <button class="neon-btn">
+    CREATE TOURNAMENT
+  </button>
+
 </div>
 
-<div class="card">
-  <form id="createForm">
-    <label>Game Name</label>
-    <input required placeholder="e.g. Free Fire / BGMI">
-
-    <label>Tournament Name</label>
-    <input required placeholder="e.g. TSK Weekly Clash">
-
-    <label>Prize (₹)</label>
-    <input type="number" required placeholder="e.g. 1000">
-
-    <label>Entry Fee (₹)</label>
-    <input type="number" required placeholder="e.g. 50">
-
-    <label>Mode</label>
-    <select>
-      <option>Solo</option>
-      <option>Duo</option>
-      <option>Squad</option>
-    </select>
-
-    <label>Max Players</label>
-    <input type="number" required placeholder="e.g. 48">
-
-    <label>Date</label>
-    <input type="date" required>
-
-    <label>Time</label>
-    <input type="time" required>
-
-    <label>Rules / Description</label>
-    <textarea placeholder="Enter rules, room ID timing, etc."></textarea>
-
-    <button class="primary" type="submit">CREATE TOURNAMENT</button>
-  </form>
+<div class="note glass">
+  Note: Tournament creation requires security amount.
+  After approval, tournament will be visible to all users.
 </div>
-
-<div id="successBox" class="success">
-  Tournament submitted for approval.
-</div>
-
-<script>
-/* FUTURE-PROOF:
-   - Is page par abhi submit local hai
-   - Baad me yahin fetch() laga kar Google Sheet / API jod denge
-   - HTML dubara edit nahi karna padega
-*/
-document.getElementById("createForm").addEventListener("submit", function(e){
-  e.preventDefault();
-  document.getElementById("successBox").style.display = "block";
-  this.reset();
-});
-</script>
 
 </body>
 </html>
