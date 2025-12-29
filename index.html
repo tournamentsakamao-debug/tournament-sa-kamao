@@ -6,197 +6,134 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ===== BASE THEME ===== */
-body{
+/* ===== GLOBAL RESET ===== */
+*{
+  box-sizing:border-box;
   margin:0;
-  font-family:Arial, sans-serif;
-  background:
-    radial-gradient(circle at top, #1e1b4b, #020617 60%);
-  color:#fff;
+  padding:0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
-/* Header */
-.header{
-  padding:16px;
-  text-align:center;
-  font-size:22px;
-  font-weight:bold;
-}
-
-/* ===== NEON GAMING UI ADDON ===== */
+/* ===== ROOT COLORS ===== */
 :root{
-  --neon-blue:#38bdf8;
-  --neon-purple:#a855f7;
-  --glass-bg:rgba(15,23,42,0.6);
-  --glass-border:rgba(255,255,255,0.08);
+  --bg-dark:#020617;
+  --glass:rgba(15,23,42,0.6);
+  --border:rgba(255,255,255,0.08);
+  --blue:#38bdf8;
+  --purple:#a855f7;
 }
 
-.glass{
-  background:var(--glass-bg);
-  backdrop-filter: blur(14px);
-  border:1px solid var(--glass-border);
-  border-radius:16px;
+/* ===== BODY ===== */
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top, #1e1b4b, #020617 70%);
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* ===== MAIN CARD ===== */
+.app{
+  width:100%;
+  max-width:420px;
+  padding:28px;
+}
+
+/* ===== TITLE ===== */
+.title{
+  text-align:center;
+  font-size:30px;
+  font-weight:800;
+  letter-spacing:1px;
+  margin-bottom:12px;
+}
+
+.subtitle{
+  text-align:center;
+  font-size:14px;
+  opacity:0.7;
+  margin-bottom:30px;
+}
+
+/* ===== GLASS CARD ===== */
+.card{
+  background:var(--glass);
+  backdrop-filter: blur(16px);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:30px 20px;
   box-shadow:
-    0 0 25px rgba(168,85,247,0.15),
+    0 0 40px rgba(168,85,247,0.25),
     inset 0 0 20px rgba(56,189,248,0.08);
 }
 
-/* Wallet */
-.wallet{
-  margin:15px;
-  padding:16px;
+/* ===== BUTTONS ===== */
+.btn{
+  width:100%;
+  padding:18px;
+  margin-bottom:16px;
   font-size:18px;
-}
-
-/* Buttons */
-.buttons{
-  display:flex;
-  gap:12px;
-  margin:15px;
-}
-
-.neon-btn{
-  flex:1;
-  position:relative;
-  color:#fff;
-  background:linear-gradient(135deg,var(--neon-blue),var(--neon-purple));
-  border:none;
-  border-radius:16px;
-  padding:16px;
-  font-size:16px;
   font-weight:800;
-  letter-spacing:1px;
+  border:none;
+  border-radius:18px;
+  color:#fff;
   cursor:pointer;
+  letter-spacing:1px;
+  transition:0.2s ease;
+}
+
+.join{
+  background:linear-gradient(135deg,var(--blue),var(--purple));
   box-shadow:
-    0 0 15px rgba(56,189,248,0.7),
-    0 0 35px rgba(168,85,247,0.6);
+    0 0 20px rgba(56,189,248,0.8),
+    0 0 40px rgba(168,85,247,0.6);
 }
 
-.neon-btn:disabled{
-  opacity:0.4;
-  cursor:not-allowed;
+.create{
+  background:linear-gradient(135deg,var(--purple),#7c3aed);
+  box-shadow:
+    0 0 20px rgba(168,85,247,0.9),
+    0 0 40px rgba(124,58,237,0.6);
 }
 
-.neon-btn:active{
+.btn:active{
   transform:scale(0.96);
 }
 
-/* News / Cards */
-.t-card{
-  margin:15px;
-  padding:16px;
-}
-
-.t-title{
-  font-size:18px;
-  font-weight:700;
-}
-
-.t-sub{
-  font-size:14px;
-  opacity:0.75;
-  margin-top:6px;
-}
-
-/* Maintenance */
-.maintenance{
-  margin:15px;
-  padding:16px;
-  background:#7f1d1d;
-  border-radius:14px;
+/* ===== FOOTER ===== */
+.footer{
   text-align:center;
-  display:none;
-}
-
-/* Bottom Nav */
-.nav{
-  display:flex;
-  justify-content:space-around;
-  background:rgba(2,6,23,0.8);
-  padding:12px 0;
-  box-shadow:0 -8px 30px rgba(168,85,247,0.25);
-}
-
-.nav a{
-  color:#38bdf8;
-  text-decoration:none;
-  font-size:14px;
-  font-weight:600;
+  font-size:12px;
+  opacity:0.5;
+  margin-top:22px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">Tournament Sa Kamao</div>
+<div class="app">
 
-<div id="maintenanceBox" class="maintenance">
-  App is under maintenance. Please try again later.
-</div>
+  <div class="title">TOURNAMENT HUB</div>
+  <div class="subtitle">Compete • Win • Dominate</div>
 
-<div class="wallet glass" id="walletBox">
-  Wallet Balance: ₹0
-</div>
+  <div class="card">
+    <button class="btn join" onclick="location.href='join.html'">
+      🎮 JOIN TOURNAMENT
+    </button>
 
-<div class="buttons">
-  <button id="joinBtn" class="neon-btn" onclick="location.href='join.html'">
-    JOIN
-  </button>
-  <button id="createBtn" class="neon-btn" onclick="location.href='create.html'">
-    CREATE
-  </button>
-</div>
-
-<div class="t-card glass">
-  <div class="t-title">Today News</div>
-  <div class="t-sub">
-    Tournament updates, announcements, ads or sponsorships will appear here.
+    <button class="btn create" onclick="location.href='create.html'">
+      ➕ CREATE TOURNAMENT
+    </button>
   </div>
+
+  <div class="footer">
+    Powered by Admin
+  </div>
+
 </div>
-
-<div class="nav">
-  <a href="news.html">News</a>
-  <a href="wallet.html">Wallet</a>
-  <a href="profile.html">Profile</a>
-  <a href="admin.html">Admin</a>
-  <a href="rules.html">Rules</a>
-  <a href="refund.html">Refund</a>
-  <a href="about.html">About</a>
-</div>
-
-<script>
-/* ===== SYSTEM SETTINGS FROM GOOGLE SHEET ===== */
-const SHEET_ID = "1Jf-LmbUP1z7YPCE01dy3TKe6PKR3lw2qDEenp-2uLjA";
-const SYSTEM_URL =
-  `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=System_Settings`;
-
-fetch(SYSTEM_URL)
-  .then(r => r.text())
-  .then(csv => {
-    const rows = csv.split("\n").slice(1);
-    const map = {};
-    rows.forEach(r=>{
-      const c = r.split(",");
-      map[c[0]] = (c[1] || "").trim();
-    });
-
-    if (map.maintenance === "TRUE") {
-      document.getElementById("maintenanceBox").style.display="block";
-      document.getElementById("joinBtn").disabled = true;
-      document.getElementById("createBtn").disabled = true;
-    }
-
-    if (map.join_enabled === "FALSE")
-      document.getElementById("joinBtn").disabled = true;
-
-    if (map.create_enabled === "FALSE")
-      document.getElementById("createBtn").disabled = true;
-
-    if (map.wallet_enabled === "FALSE")
-      document.getElementById("walletBox").style.display="none";
-  })
-  .catch(err => console.log("System settings load failed"));
-</script>
 
 </body>
 </html>
