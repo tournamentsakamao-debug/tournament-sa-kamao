@@ -2,137 +2,141 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Admin Panel | Tournament Sa Kamao</title>
+<title>Admin Panel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:linear-gradient(180deg,#020617,#0f172a);
+  background:radial-gradient(circle at top,#1e1b4b,#020617 60%);
   color:#fff;
 }
+
 .header{
   padding:16px;
   text-align:center;
-  font-size:22px;
+  font-size:20px;
   font-weight:bold;
 }
+
 .back{
-  margin:12px 16px;
+  position:absolute;
+  left:15px;
+  top:18px;
   color:#38bdf8;
+  text-decoration:none;
   font-size:14px;
-  cursor:pointer;
 }
-.card{
-  background:#020617;
-  margin:14px;
+
+:root{
+  --neon-blue:#38bdf8;
+  --neon-purple:#a855f7;
+  --glass-bg:rgba(15,23,42,0.6);
+  --glass-border:rgba(255,255,255,0.08);
+}
+
+.glass{
+  background:var(--glass-bg);
+  backdrop-filter: blur(14px);
+  border:1px solid var(--glass-border);
+  border-radius:18px;
+  box-shadow:
+    0 0 25px rgba(168,85,247,0.15),
+    inset 0 0 20px rgba(56,189,248,0.08);
+}
+
+.section{
+  margin:15px;
   padding:16px;
-  border-radius:14px;
 }
-.row{
+
+.section h3{
+  margin-top:0;
+  font-size:16px;
+}
+
+/* Toggle */
+.toggle{
   display:flex;
   justify-content:space-between;
   align-items:center;
   margin:10px 0;
-  font-size:14px;
 }
-.toggle{
-  width:44px;
-  height:24px;
-  background:#334155;
-  border-radius:20px;
-  position:relative;
+
+.toggle input{
+  width:22px;
+  height:22px;
 }
-.toggle::after{
-  content:"";
-  position:absolute;
-  top:3px;
-  left:3px;
-  width:18px;
-  height:18px;
-  background:#fff;
-  border-radius:50%;
-}
-.section-title{
-  font-size:16px;
-  margin-bottom:8px;
-}
-.btn{
+
+/* Button */
+.neon-btn{
   width:100%;
-  padding:12px;
-  margin-top:8px;
-  border:none;
-  border-radius:12px;
-  background:#3b82f6;
-  color:#fff;
-  font-weight:bold;
-  font-size:15px;
-}
-.danger{background:#7f1d1d}
-.note{
-  margin:14px;
   padding:14px;
-  background:#0f172a;
-  border-radius:12px;
-  font-size:13px;
-  opacity:.9;
+  margin-top:12px;
+  background:linear-gradient(135deg,var(--neon-blue),var(--neon-purple));
+  color:#fff;
+  border:none;
+  border-radius:16px;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:
+    0 0 15px rgba(56,189,248,0.7),
+    0 0 35px rgba(168,85,247,0.6);
+}
+
+.neon-btn:active{
+  transform:scale(0.96);
 }
 </style>
 </head>
 
 <body>
 
+<a class="back" href="index.html">← Back</a>
 <div class="header">Admin Panel</div>
-<div class="back" onclick="history.back()">← Back</div>
 
-<div class="card">
-  <div class="section-title">System Controls</div>
+<!-- System Control -->
+<div class="section glass">
+  <h3>System Control</h3>
 
-  <div class="row">
+  <div class="toggle">
     <span>Maintenance Mode</span>
-    <div class="toggle"></div>
+    <input type="checkbox">
   </div>
 
-  <div class="row">
+  <div class="toggle">
     <span>Join Enabled</span>
-    <div class="toggle"></div>
+    <input type="checkbox" checked>
   </div>
 
-  <div class="row">
+  <div class="toggle">
     <span>Create Enabled</span>
-    <div class="toggle"></div>
+    <input type="checkbox" checked>
   </div>
 
-  <div class="row">
-    <span>Wallet Enabled</span>
-    <div class="toggle"></div>
-  </div>
 </div>
 
-<div class="card">
-  <div class="section-title">Approvals</div>
-  <button class="btn">Payment Approvals</button>
-  <button class="btn">Tournament Approvals</button>
+<!-- Tournament Actions -->
+<div class="section glass">
+  <h3>Tournament Actions</h3>
+
+  <button class="neon-btn">View All Tournaments</button>
+  <button class="neon-btn">Approve / Reject Players</button>
+  <button class="neon-btn">Delete Tournament</button>
+
 </div>
 
-<div class="card">
-  <div class="section-title">Actions</div>
-  <button class="btn danger">Disable App (Emergency)</button>
-</div>
+<!-- Payment Actions -->
+<div class="section glass">
+  <h3>Payments</h3>
 
-<div class="note">
-  Admin changes will reflect across the app automatically.
-</div>
+  <button class="neon-btn">View Payments</button>
+  <button class="neon-btn">Approve Payment</button>
+  <button class="neon-btn">Refund User</button>
 
-<script>
-/*
- FUTURE-PROOF:
- - Toggles Google Sheet (System_Settings) se sync honge
- - Approval lists API / Sheet se load hongi
- - Abhi UI locked for safety
-*/
-</script>
+</div>
 
 </body>
 </html>
