@@ -6,145 +6,195 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{
+/* ===== RESET ===== */
+*{
+  box-sizing:border-box;
   margin:0;
-  font-family:Arial, sans-serif;
-  background:radial-gradient(circle at top,#1e1b4b,#020617 65%);
+  padding:0;
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+
+/* ===== THEME ===== */
+:root{
+  --bg:#020617;
+  --glass:rgba(15,23,42,.65);
+  --border:rgba(255,255,255,.08);
+  --blue:#38bdf8;
+  --purple:#a855f7;
+  --danger:#ef4444;
+}
+
+body{
+  min-height:100vh;
+  background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
   color:#fff;
 }
 
-.header{
-  padding:16px;
-  text-align:center;
-  font-size:22px;
-  font-weight:700;
+/* ===== LAYOUT ===== */
+.wrapper{
+  max-width:420px;
+  margin:auto;
+  padding:18px;
 }
 
-.container{
-  margin:15px;
-  background:rgba(15,23,42,0.6);
-  backdrop-filter:blur(14px);
+/* ===== GAME BANNER ===== */
+.banner{
+  height:200px;
+  border-radius:24px;
+  margin-bottom:18px;
+  background:
+    linear-gradient(180deg,rgba(2,6,23,.15),rgba(2,6,23,.95)),
+    url('https://images.unsplash.com/photo-1606813909355-bb3c55a7b0b0?auto=format&fit=crop&w=900&q=60')
+    center/cover no-repeat;
+  box-shadow:0 0 45px rgba(168,85,247,.45);
+  display:flex;
+  align-items:end;
+  padding:18px;
+}
+
+.banner h1{
+  font-size:24px;
+  font-weight:900;
+}
+
+/* ===== INFO STRIP ===== */
+.info{
+  display:flex;
+  gap:12px;
+  margin-bottom:18px;
+}
+.info .box{
+  flex:1;
+  background:var(--glass);
+  border:1px solid var(--border);
   border-radius:18px;
-  padding:16px;
-  border:1px solid rgba(255,255,255,0.08);
+  padding:14px;
+  text-align:center;
+  backdrop-filter:blur(14px);
 }
-
-label{
-  font-size:14px;
-  margin-top:12px;
+.info .box span{
   display:block;
-  opacity:.9;
+  font-size:12px;
+  opacity:.7;
+}
+.info .box strong{
+  font-size:18px;
+  font-weight:800;
 }
 
-input, select{
+/* ===== CARD ===== */
+.card{
+  background:var(--glass);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:20px;
+  box-shadow:
+    inset 0 0 20px rgba(56,189,248,.08),
+    0 0 25px rgba(168,85,247,.25);
+}
+
+/* ===== FORM ===== */
+label{
+  display:block;
+  margin-top:14px;
+  font-size:13px;
+  opacity:.85;
+}
+
+input{
   width:100%;
   margin-top:6px;
-  padding:14px;
-  border-radius:14px;
+  padding:15px;
+  border-radius:16px;
   border:none;
   outline:none;
   background:#020617;
   color:#fff;
-  font-size:15px;
+  font-size:16px;
 }
-
 input::placeholder{opacity:.5}
 
-button{
-  margin-top:20px;
+/* ===== BUTTON ===== */
+.btn{
   width:100%;
-  padding:16px;
+  margin-top:26px;
+  padding:18px;
   border:none;
-  border-radius:16px;
-  font-size:16px;
-  font-weight:800;
-  background:linear-gradient(135deg,#22c55e,#4ade80);
+  border-radius:22px;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:1px;
+  cursor:pointer;
   color:#000;
-  box-shadow:0 0 25px rgba(34,197,94,.6);
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  box-shadow:
+    0 0 25px rgba(56,189,248,.9),
+    0 0 45px rgba(168,85,247,.7);
 }
+.btn:active{transform:scale(.96)}
 
 .note{
+  margin-top:12px;
   text-align:center;
-  margin-top:10px;
-  font-size:13px;
-  opacity:.8;
+  font-size:12px;
+  opacity:.7;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">Join Tournament</div>
+<div class="wrapper">
 
-<div class="container">
+  <!-- BANNER -->
+  <div class="banner">
+    <h1>Join Tournament</h1>
+  </div>
 
-<label>Player Name</label>
-<input id="pname" placeholder="Your name (3–20 letters)" maxlength="20">
+  <!-- PRIZE / ENTRY -->
+  <div class="info">
+    <div class="box">
+      <span>Prize</span>
+      <strong id="prizeText">₹50,000</strong>
+    </div>
+    <div class="box">
+      <span>Entry Fee</span>
+      <strong id="feeText">₹50</strong>
+    </div>
+  </div>
 
-<label>Game UID</label>
-<input id="uid" placeholder="Enter your game UID" maxlength="20">
+  <!-- JOIN CARD -->
+  <div class="card">
 
-<label>Select Game</label>
-<select id="game">
-  <option value="">Select Game</option>
-</select>
+    <label>Player Name</label>
+    <input id="pname" placeholder="Your in-game name" maxlength="20">
 
-<label>Tournament Name</label>
-<input id="tournament" placeholder="Tournament name">
+    <label>Game UID</label>
+    <input id="uid" placeholder="Enter game UID">
 
-<button onclick="joinTournament()">Join Now</button>
+    <button class="btn" onclick="submitJoin()">
+      JOIN NOW
+    </button>
 
-<div class="note">
-  After joining, go to Payment page to submit UTR / Screenshot
-</div>
+    <div class="note">
+      Entry fee will be collected after verification
+    </div>
 
+  </div>
 </div>
 
 <script>
-/* ===== ADMIN GAME LIST (SAME AS CREATE PAGE) ===== */
-const adminGames = [
- "Free Fire","BGMI","PUBG","COD Mobile","Valorant","CS GO","Fortnite",
- "Apex Legends","Ludo","Chess","Clash Royale","FIFA","eFootball",
- "Rocket League","Brawl Stars","Among Us","Dota 2","League of Legends",
- "Minecraft","GTA Online","Rainbow Six","Overwatch","Paladins",
- "Warzone","Fall Guys","Stumble Guys","Carrom","8 Ball Pool"
-];
+/* ===== VALIDATION ===== */
+function submitJoin(){
+  const name=pname.value.trim();
+  const id=uid.value.trim();
 
-const gameSelect=document.getElementById("game");
-adminGames.forEach(g=>{
- let o=document.createElement("option");
- o.value=g; o.textContent=g;
- gameSelect.appendChild(o);
-});
+  if(name.length<3) return alert("Enter valid player name");
+  if(id.length<4) return alert("Enter valid game UID");
 
-function joinTournament(){
- const name=document.getElementById("pname").value.trim();
- const uid=document.getElementById("uid").value.trim();
- const game=gameSelect.value;
- const tname=document.getElementById("tournament").value.trim();
-
- if(name.length<3){
-   alert("Player name minimum 3 letters");
-   return;
- }
-
- if(uid.length<5){
-   alert("Enter valid Game UID");
-   return;
- }
-
- if(!game){
-   alert("Select game");
-   return;
- }
-
- if(!tname){
-   alert("Tournament name required");
-   return;
- }
-
- /* YAHAN JOIN GOOGLE FORM / SHEET CONNECT HOGA */
- alert("Joined successfully. Please proceed to payment.");
+  // BACKEND CONNECT YAHAN HOGA (Google Form)
+  alert("Joined successfully (demo). Backend will connect here.");
 }
 </script>
 
