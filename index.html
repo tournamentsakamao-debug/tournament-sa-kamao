@@ -1,99 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tournament Sa Kamao</title>
+<meta charset="UTF-8">
+<title>Tournament Sa Kamao</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(180deg, #020617, #0f172a);
-      color: #ffffff;
-      text-align: center;
-    }
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:linear-gradient(180deg,#020617,#0f172a);
+  color:#fff;
+}
 
-    .header {
-      background: #020617;
-      padding: 18px;
-      font-size: 24px;
-      font-weight: bold;
-    }
+.header{
+  padding:16px;
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+}
 
-    .wallet {
-      margin: 15px;
-      padding: 14px;
-      background: #020617;
-      border-radius: 12px;
-      font-size: 18px;
-    }
+.wallet{
+  margin:15px;
+  padding:16px;
+  background:#0f172a;
+  border-radius:14px;
+  font-size:16px;
+}
 
-    .btn {
-      width: 90%;
-      padding: 16px;
-      margin: 12px auto;
-      display: block;
-      font-size: 18px;
-      font-weight: bold;
-      border-radius: 14px;
-      border: none;
-      cursor: pointer;
-    }
+.buttons{
+  display:flex;
+  gap:12px;
+  margin:15px;
+}
 
-    .join-btn {
-      background: #22c55e;
-      color: #000;
-    }
+.btn{
+  flex:1;
+  padding:16px;
+  border:none;
+  border-radius:14px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
 
-    .create-btn {
-      background: #ef4444;
-      color: #fff;
-    }
+.btn:disabled{
+  opacity:0.4;
+  cursor:not-allowed;
+}
 
-    .card {
-      background: #020617;
-      margin: 20px;
-      padding: 18px;
-      border-radius: 16px;
-      font-size: 16px;
-      opacity: 0.95;
-    }
+.join{background:#22c55e;color:#000}
+.create{background:#3b82f6;color:#fff}
 
-    .footer {
-      margin: 25px 0;
-      font-size: 13px;
-      opacity: 0.7;
-    }
-  </style>
+.news{
+  margin:15px;
+  padding:14px;
+  background:#020617;
+  border-radius:14px;
+  font-size:14px;
+}
+
+.nav{
+  display:flex;
+  justify-content:space-around;
+  margin:20px 0;
+  font-size:14px;
+}
+
+.nav a{
+  color:#38bdf8;
+  text-decoration:none;
+}
+
+.maintenance{
+  margin:15px;
+  padding:16px;
+  background:#7f1d1d;
+  border-radius:14px;
+  text-align:center;
+  display:none;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="header">
-    Tournament Sa Kamao
-  </div>
+<div class="header">Tournament Sa Kamao</div>
 
-  <div class="wallet">
-    Wallet Balance: ₹0
-  </div>
+<div id="maintenanceBox" class="maintenance">
+  App is under maintenance. Please try later.
+</div>
 
-  <button class="btn join-btn" onclick="location.href='join.html'">
-    JOIN TOURNAMENT
-  </button>
+<div class="wallet" id="walletBox">
+  Wallet Balance: ₹0
+</div>
 
-  <button class="btn create-btn" onclick="location.href='create.html'">
-    CREATE TOURNAMENT
-  </button>
+<div class="buttons">
+  <button id="joinBtn" class="btn join" onclick="location.href='join.html'">JOIN</button>
+  <button id="createBtn" class="btn create" onclick="location.href='create.html'">CREATE</button>
+</div>
 
-  <div class="card">
-    Play tournaments, win prizes, and earn money.<br>
-    <b>Simple • Fast • Trusted</b>
-  </div>
+<div class="news">
+  Today News / Announcement will appear here
+</div>
 
-  <div class="footer">
-    © 2025 Tournament Sa Kamao
-  </div>
+<div class="nav">
+  <a href="news.html">News</a>
+  <a href="wallet.html">Wallet</a>
+  <a href="profile.html">Profile</a>
+  <a href="admin.html">Admin</a>
+</div>
+
+<script>
+const SHEET_ID = "1Jf-LmbUP1z7YPCE01dy3TKe6PKR3lw2qDEenp-2uLjA";
+const SYSTEM_URL =
+  `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=System_Settings`;
+
+fetch(SYSTEM_URL)
+  .then(r => r.text())
+  .then(csv => {
+    const rows = csv.split("\n").slice(1);
+    const map = {};
+    rows.forEach(r=>{
+      const c=r.split(",");
+      map[c[0]] = (c[1]||"").trim();
+    });
+
+    if (map.maintenance === "TRUE") {
+      document.getElementById("maintenanceBox").style.display="block";
+      document.getElementById("joinBtn").disabled = true;
+      document.getElementById("createBtn").disabled = true;
+    }
+
+    if (map.join_enabled === "FALSE")
+      document.getElementById("joinBtn").disabled = true;
+
+    if (map.create_enabled === "FALSE")
+      document.getElementById("createBtn").disabled = true;
+
+    if (map.wallet_enabled === "FALSE")
+      document.getElementById("walletBox").style.display="none";
+  });
+</script>
 
 </body>
 </html>
