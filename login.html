@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Welcome | Tournament Sa Kamao</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --bg:#020617;
+  --card:#0f172a;
+  --blue:#38bdf8;
+  --purple:#a855f7;
+  --text:#e5e7eb;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  height:100vh;
+  font-family:Segoe UI, sans-serif;
+  background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* CARD */
+.login-card{
+  width:90%;
+  max-width:380px;
+  background:var(--card);
+  border-radius:24px;
+  padding:28px 22px;
+  box-shadow:0 0 40px rgba(168,85,247,.35);
+  text-align:center;
+}
+
+/* TITLE */
+.app-name{
+  font-size:26px;
+  font-weight:900;
+  margin-bottom:6px;
+}
+.tagline{
+  font-size:13px;
+  opacity:.7;
+  margin-bottom:24px;
+}
+
+/* INPUT */
+input{
+  width:100%;
+  padding:16px;
+  border-radius:16px;
+  border:none;
+  background:#020617;
+  color:#fff;
+  font-size:16px;
+  margin-bottom:20px;
+  text-align:center;
+}
+
+/* BUTTON */
+.start-btn{
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:18px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;
+  font-size:18px;
+  font-weight:900;
+}
+
+/* FOOTER NOTE */
+.note{
+  margin-top:16px;
+  font-size:12px;
+  opacity:.6;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-card">
+  <div class="app-name">Tournament Sa Kamao</div>
+  <div class="tagline">Enter the arena. Play. Win.</div>
+
+  <input type="text" placeholder="Enter your nickname">
+
+  <button class="start-btn" onclick="location.href='index.html'">
+    ENTER APP
+  </button>
+
+  <div class="note">
+    Nickname visible to organisers & admin
+  </div>
+</div>
+
+<!-- GLOBAL MUSIC & TOUCH -->
+<script src="assets/music.js"></script>
+<script src="assets/touch.js"></script>
+
+</body>
+</html>
