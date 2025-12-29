@@ -12,154 +12,110 @@ body{
   background:radial-gradient(circle at top,#1e1b4b,#020617 60%);
   color:#fff;
 }
-
-.header{
-  padding:16px;
-  text-align:center;
-  font-size:20px;
-  font-weight:bold;
-}
-
-.hidden{ display:none; }
+.header{padding:16px;text-align:center;font-size:20px;font-weight:bold}
+.hidden{display:none}
+.back{position:absolute;left:15px;top:18px;color:#38bdf8;text-decoration:none;font-size:14px}
 
 :root{
-  --neon-blue:#38bdf8;
-  --neon-purple:#a855f7;
-  --glass-bg:rgba(15,23,42,0.6);
-  --glass-border:rgba(255,255,255,0.08);
+  --neon-blue:#38bdf8;--neon-purple:#a855f7;
+  --glass-bg:rgba(15,23,42,0.6);--glass-border:rgba(255,255,255,0.08);
 }
-
 .glass{
-  background:var(--glass-bg);
-  backdrop-filter: blur(14px);
-  border:1px solid var(--glass-border);
-  border-radius:18px;
-  box-shadow:
-    0 0 25px rgba(168,85,247,0.15),
-    inset 0 0 20px rgba(56,189,248,0.08);
+  background:var(--glass-bg);backdrop-filter: blur(14px);
+  border:1px solid var(--glass-border);border-radius:18px;
+  box-shadow:0 0 25px rgba(168,85,247,.15), inset 0 0 20px rgba(56,189,248,.08);
 }
+.section{margin:15px;padding:16px}
+.toggle{display:flex;justify-content:space-between;align-items:center;margin:12px 0}
+.toggle label{font-size:14px}
+.toggle input{width:22px;height:22px}
 
-.section{
-  margin:15px;
-  padding:16px;
-}
-
-.section h3{
-  margin-top:0;
-  font-size:16px;
-}
-
-/* Toggle */
-.toggle{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin:10px 0;
-}
-
-.toggle input{
-  width:22px;
-  height:22px;
-}
-
-/* Button */
 .neon-btn{
-  width:100%;
-  padding:14px;
-  margin-top:12px;
+  width:100%;padding:14px;margin-top:12px;
   background:linear-gradient(135deg,var(--neon-blue),var(--neon-purple));
-  color:#fff;
-  border:none;
-  border-radius:16px;
-  font-size:15px;
-  font-weight:800;
-  cursor:pointer;
-  box-shadow:
-    0 0 15px rgba(56,189,248,0.7),
-    0 0 35px rgba(168,85,247,0.6);
+  color:#fff;border:none;border-radius:16px;font-size:15px;font-weight:800;cursor:pointer;
+  box-shadow:0 0 15px rgba(56,189,248,.7),0 0 35px rgba(168,85,247,.6)
 }
-
-.neon-btn:active{
-  transform:scale(0.96);
-}
-
-.input{
-  width:100%;
-  margin-top:10px;
-  padding:12px;
-  border-radius:12px;
-  border:none;
-  outline:none;
-  font-size:14px;
-}
+.input{width:100%;padding:12px;border-radius:12px;border:none;outline:none;font-size:14px;margin-top:10px}
+.msg{display:none;margin:15px;padding:14px;border-radius:14px}
+.ok{background:#14532d}
+.err{background:#7f1d1d}
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN / KEY SCREEN -->
+<a class="back" href="index.html">← Back</a>
+
+<!-- ADMIN KEY -->
 <div id="loginBox" class="section glass">
   <div class="header">Admin Access</div>
-  <p style="opacity:.8;font-size:13px;">Enter admin key to continue</p>
-  <input id="adminKeyInput" class="input" placeholder="Enter admin key">
-  <button class="neon-btn" onclick="checkKey()">UNLOCK</button>
+  <input id="key" class="input" placeholder="Enter admin key">
+  <button class="neon-btn" onclick="unlock()">UNLOCK</button>
 </div>
 
-<!-- ADMIN PANEL -->
-<div id="adminPanel" class="hidden">
+<!-- PANEL -->
+<div id="panel" class="hidden">
 
-  <div class="header">Admin Panel</div>
+  <div class="header">System Controls</div>
 
-  <!-- System Control -->
   <div class="section glass">
-    <h3>System Control</h3>
-
     <div class="toggle">
-      <span>Maintenance Mode</span>
-      <input type="checkbox">
+      <label>Maintenance Mode</label>
+      <input id="maintenance" type="checkbox">
+    </div>
+    <div class="toggle">
+      <label>Join Enabled</label>
+      <input id="join_enabled" type="checkbox" checked>
+    </div>
+    <div class="toggle">
+      <label>Create Enabled</label>
+      <input id="create_enabled" type="checkbox" checked>
     </div>
 
-    <div class="toggle">
-      <span>Join Enabled</span>
-      <input type="checkbox" checked>
-    </div>
-
-    <div class="toggle">
-      <span>Create Enabled</span>
-      <input type="checkbox" checked>
-    </div>
+    <button class="neon-btn" onclick="save()">SAVE SETTINGS</button>
   </div>
 
-  <!-- Tournament Actions -->
-  <div class="section glass">
-    <h3>Tournament Actions</h3>
-    <button class="neon-btn">View All Tournaments</button>
-    <button class="neon-btn">Approve / Reject Players</button>
-    <button class="neon-btn">Delete Tournament</button>
-  </div>
-
-  <!-- Payment Actions -->
-  <div class="section glass">
-    <h3>Payments</h3>
-    <button class="neon-btn">View Payments</button>
-    <button class="neon-btn">Approve Payment</button>
-    <button class="neon-btn">Refund User</button>
-  </div>
-
+  <div id="ok" class="msg ok">Settings saved. App will update on refresh.</div>
+  <div id="err" class="msg err">Failed to save. Try again.</div>
 </div>
 
 <script>
-/* ===== ADMIN KEY (CHANGE THIS) ===== */
-const ADMIN_KEY = "TSK_ADMIN_2025"; // ← apna strong key yahin change karo
+/* ===== CHANGE THESE ===== */
+const ADMIN_KEY = "TSK_ADMIN_2025";
+/* Google Form POST URL (System_Settings Update Form) */
+const FORM_POST_URL = "PASTE_SYSTEM_SETTINGS_FORM_POST_URL_HERE";
 
-function checkKey(){
-  const val = document.getElementById("adminKeyInput").value;
-  if(val === ADMIN_KEY){
-    document.getElementById("loginBox").style.display="none";
-    document.getElementById("adminPanel").classList.remove("hidden");
-  }else{
-    alert("Invalid admin key");
+/* Unlock */
+function unlock(){
+  if(document.getElementById('key').value === ADMIN_KEY){
+    document.getElementById('loginBox').style.display='none';
+    document.getElementById('panel').classList.remove('hidden');
+  } else {
+    alert("Invalid key");
   }
+}
+
+/* Save settings to Google Sheet via Form */
+function save(){
+  const m = document.getElementById('maintenance').checked ? "TRUE":"FALSE";
+  const j = document.getElementById('join_enabled').checked ? "TRUE":"FALSE";
+  const c = document.getElementById('create_enabled').checked ? "TRUE":"FALSE";
+
+  const fd = new FormData();
+  /* Replace entry IDs with your Form field IDs */
+  fd.append('entry.1111111111','maintenance');
+  fd.append('entry.2222222222',m);
+
+  fd.append('entry.3333333333','join_enabled');
+  fd.append('entry.4444444444',j);
+
+  fd.append('entry.5555555555','create_enabled');
+  fd.append('entry.6666666666',c);
+
+  fetch(FORM_POST_URL,{method:'POST',mode:'no-cors',body:fd})
+    .then(()=>{document.getElementById('ok').style.display='block';})
+    .catch(()=>{document.getElementById('err').style.display='block';});
 }
 </script>
 
