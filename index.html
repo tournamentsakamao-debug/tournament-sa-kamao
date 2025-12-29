@@ -32,7 +32,7 @@ body{
   padding:14px;
 }
 .back{
-  font-size:20px;
+  font-size:22px;
   cursor:pointer;
 }
 .search{
@@ -109,19 +109,28 @@ body{
   bottom:0;
   left:0;
   right:0;
-  height:64px;
+  height:72px;
   background:#020617;
   display:flex;
   justify-content:space-around;
   align-items:center;
   box-shadow:0 -6px 25px rgba(168,85,247,.3);
 }
-.nav div{
-  font-size:12px;
-  text-align:center;
+
+.nav-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  font-size:11px;
   color:#94a3b8;
 }
-.nav .active{
+
+.nav-item span{
+  font-size:22px;
+  line-height:1;
+}
+
+.nav-item.active{
   color:var(--blue);
 }
 </style>
@@ -169,13 +178,28 @@ body{
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
+<!-- BOTTOM NAV WITH ICONS -->
 <div class="nav">
-  <div class="active">Home</div>
-  <div>Tournaments</div>
-  <div>Wallet</div>
-  <div>My</div>
-  <div>Profile</div>
+  <div class="nav-item active">
+    <span>🏠</span>
+    Home
+  </div>
+  <div class="nav-item">
+    <span>🎮</span>
+    Tournaments
+  </div>
+  <div class="nav-item">
+    <span>💰</span>
+    Wallet
+  </div>
+  <div class="nav-item">
+    <span>🏆</span>
+    My
+  </div>
+  <div class="nav-item">
+    <span>👤</span>
+    Profile
+  </div>
 </div>
 
 </body>
