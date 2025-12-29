@@ -1,121 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Panel</title>
+<meta charset="UTF-8">
+<title>Admin Panel | Tournament Sa Kamao</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(180deg, #020617, #0f172a);
-      color: #ffffff;
-    }
-
-    .header {
-      background: #020617;
-      padding: 16px;
-      text-align: center;
-      font-size: 22px;
-      font-weight: bold;
-    }
-
-    .section {
-      background: #020617;
-      margin: 15px;
-      padding: 16px;
-      border-radius: 14px;
-    }
-
-    .title {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 12px;
-    }
-
-    .row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
-
-    button {
-      padding: 8px 14px;
-      border: none;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .approve { background: #22c55e; color: #000; }
-    .reject { background: #ef4444; color: #fff; }
-    .toggle { background: #f59e0b; color: #000; }
-
-    .back {
-      margin: 15px;
-      color: #38bdf8;
-      cursor: pointer;
-      font-size: 14px;
-    }
-  </style>
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:linear-gradient(180deg,#020617,#0f172a);
+  color:#fff;
+}
+.header{
+  padding:16px;
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+}
+.back{
+  margin:12px 16px;
+  color:#38bdf8;
+  font-size:14px;
+  cursor:pointer;
+}
+.card{
+  background:#020617;
+  margin:14px;
+  padding:16px;
+  border-radius:14px;
+}
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:10px 0;
+  font-size:14px;
+}
+.toggle{
+  width:44px;
+  height:24px;
+  background:#334155;
+  border-radius:20px;
+  position:relative;
+}
+.toggle::after{
+  content:"";
+  position:absolute;
+  top:3px;
+  left:3px;
+  width:18px;
+  height:18px;
+  background:#fff;
+  border-radius:50%;
+}
+.section-title{
+  font-size:16px;
+  margin-bottom:8px;
+}
+.btn{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border:none;
+  border-radius:12px;
+  background:#3b82f6;
+  color:#fff;
+  font-weight:bold;
+  font-size:15px;
+}
+.danger{background:#7f1d1d}
+.note{
+  margin:14px;
+  padding:14px;
+  background:#0f172a;
+  border-radius:12px;
+  font-size:13px;
+  opacity:.9;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="header">
-    Admin Panel
+<div class="header">Admin Panel</div>
+<div class="back" onclick="history.back()">← Back</div>
+
+<div class="card">
+  <div class="section-title">System Controls</div>
+
+  <div class="row">
+    <span>Maintenance Mode</span>
+    <div class="toggle"></div>
   </div>
 
-  <div class="back" onclick="location.href='index.html'">
-    ← Back to Home
+  <div class="row">
+    <span>Join Enabled</span>
+    <div class="toggle"></div>
   </div>
 
-  <!-- Pending Payments -->
-  <div class="section">
-    <div class="title">Pending Payments</div>
-
-    <div class="row">
-      <span>User: Rahul | ₹50</span>
-      <button class="approve">Approve</button>
-    </div>
-
-    <div class="row">
-      <span>User: Aman | ₹100</span>
-      <button class="reject">Reject</button>
-    </div>
+  <div class="row">
+    <span>Create Enabled</span>
+    <div class="toggle"></div>
   </div>
 
-  <!-- App Controls -->
-  <div class="section">
-    <div class="title">App Controls</div>
-
-    <div class="row">
-      <span>Disable Join</span>
-      <button class="toggle">OFF</button>
-    </div>
-
-    <div class="row">
-      <span>Disable Create</span>
-      <button class="toggle">OFF</button>
-    </div>
+  <div class="row">
+    <span>Wallet Enabled</span>
+    <div class="toggle"></div>
   </div>
+</div>
 
-  <!-- Latest Tournaments -->
-  <div class="section">
-    <div class="title">Latest Tournaments</div>
-    <div class="row">
-      <span>BGMI Battle</span>
-      <button class="reject">Delete</button>
-    </div>
-    <div class="row">
-      <span>Free Fire Squad</span>
-      <button class="reject">Delete</button>
-    </div>
-  </div>
+<div class="card">
+  <div class="section-title">Approvals</div>
+  <button class="btn">Payment Approvals</button>
+  <button class="btn">Tournament Approvals</button>
+</div>
+
+<div class="card">
+  <div class="section-title">Actions</div>
+  <button class="btn danger">Disable App (Emergency)</button>
+</div>
+
+<div class="note">
+  Admin changes will reflect across the app automatically.
+</div>
+
+<script>
+/*
+ FUTURE-PROOF:
+ - Toggles Google Sheet (System_Settings) se sync honge
+ - Approval lists API / Sheet se load hongi
+ - Abhi UI locked for safety
+*/
+</script>
 
 </body>
-    </html>
+</html>
