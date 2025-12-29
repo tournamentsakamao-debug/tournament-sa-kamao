@@ -20,14 +20,7 @@ body{
   font-weight:bold;
 }
 
-.back{
-  position:absolute;
-  left:15px;
-  top:18px;
-  color:#38bdf8;
-  text-decoration:none;
-  font-size:14px;
-}
+.hidden{ display:none; }
 
 :root{
   --neon-blue:#38bdf8;
@@ -89,54 +82,86 @@ body{
 .neon-btn:active{
   transform:scale(0.96);
 }
+
+.input{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  outline:none;
+  font-size:14px;
+}
 </style>
 </head>
 
 <body>
 
-<a class="back" href="index.html">← Back</a>
-<div class="header">Admin Panel</div>
+<!-- LOGIN / KEY SCREEN -->
+<div id="loginBox" class="section glass">
+  <div class="header">Admin Access</div>
+  <p style="opacity:.8;font-size:13px;">Enter admin key to continue</p>
+  <input id="adminKeyInput" class="input" placeholder="Enter admin key">
+  <button class="neon-btn" onclick="checkKey()">UNLOCK</button>
+</div>
 
-<!-- System Control -->
-<div class="section glass">
-  <h3>System Control</h3>
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="hidden">
 
-  <div class="toggle">
-    <span>Maintenance Mode</span>
-    <input type="checkbox">
+  <div class="header">Admin Panel</div>
+
+  <!-- System Control -->
+  <div class="section glass">
+    <h3>System Control</h3>
+
+    <div class="toggle">
+      <span>Maintenance Mode</span>
+      <input type="checkbox">
+    </div>
+
+    <div class="toggle">
+      <span>Join Enabled</span>
+      <input type="checkbox" checked>
+    </div>
+
+    <div class="toggle">
+      <span>Create Enabled</span>
+      <input type="checkbox" checked>
+    </div>
   </div>
 
-  <div class="toggle">
-    <span>Join Enabled</span>
-    <input type="checkbox" checked>
+  <!-- Tournament Actions -->
+  <div class="section glass">
+    <h3>Tournament Actions</h3>
+    <button class="neon-btn">View All Tournaments</button>
+    <button class="neon-btn">Approve / Reject Players</button>
+    <button class="neon-btn">Delete Tournament</button>
   </div>
 
-  <div class="toggle">
-    <span>Create Enabled</span>
-    <input type="checkbox" checked>
+  <!-- Payment Actions -->
+  <div class="section glass">
+    <h3>Payments</h3>
+    <button class="neon-btn">View Payments</button>
+    <button class="neon-btn">Approve Payment</button>
+    <button class="neon-btn">Refund User</button>
   </div>
 
 </div>
 
-<!-- Tournament Actions -->
-<div class="section glass">
-  <h3>Tournament Actions</h3>
+<script>
+/* ===== ADMIN KEY (CHANGE THIS) ===== */
+const ADMIN_KEY = "TSK_ADMIN_2025"; // ← apna strong key yahin change karo
 
-  <button class="neon-btn">View All Tournaments</button>
-  <button class="neon-btn">Approve / Reject Players</button>
-  <button class="neon-btn">Delete Tournament</button>
-
-</div>
-
-<!-- Payment Actions -->
-<div class="section glass">
-  <h3>Payments</h3>
-
-  <button class="neon-btn">View Payments</button>
-  <button class="neon-btn">Approve Payment</button>
-  <button class="neon-btn">Refund User</button>
-
-</div>
+function checkKey(){
+  const val = document.getElementById("adminKeyInput").value;
+  if(val === ADMIN_KEY){
+    document.getElementById("loginBox").style.display="none";
+    document.getElementById("adminPanel").classList.remove("hidden");
+  }else{
+    alert("Invalid admin key");
+  }
+}
+</script>
 
 </body>
 </html>
