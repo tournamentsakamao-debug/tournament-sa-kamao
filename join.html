@@ -2,104 +2,114 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Join Tournament | Tournament Sa Kamao</title>
+<title>Join Tournament</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:linear-gradient(180deg,#020617,#0f172a);
+  background:radial-gradient(circle at top,#1e1b4b,#020617 60%);
   color:#fff;
 }
+
 .header{
   padding:16px;
   text-align:center;
-  font-size:22px;
+  font-size:20px;
   font-weight:bold;
 }
+
 .back{
-  margin:12px 16px;
+  position:absolute;
+  left:15px;
+  top:18px;
   color:#38bdf8;
+  text-decoration:none;
   font-size:14px;
-  cursor:pointer;
 }
-.card{
-  background:#020617;
-  margin:14px;
+
+:root{
+  --neon-blue:#38bdf8;
+  --neon-purple:#a855f7;
+  --glass-bg:rgba(15,23,42,0.6);
+  --glass-border:rgba(255,255,255,0.08);
+}
+
+.glass{
+  background:var(--glass-bg);
+  backdrop-filter: blur(14px);
+  border:1px solid var(--glass-border);
+  border-radius:18px;
+  box-shadow:
+    0 0 25px rgba(168,85,247,0.15),
+    inset 0 0 20px rgba(56,189,248,0.08);
+}
+
+.t-card{
+  margin:15px;
   padding:16px;
-  border-radius:14px;
 }
-.card h3{margin:0 0 6px}
-.card p{margin:4px 0;font-size:14px;opacity:.9}
-.join-btn{
-  margin-top:10px;
-  padding:12px;
+
+.t-title{
+  font-size:18px;
+  font-weight:700;
+}
+
+.t-sub{
+  font-size:13px;
+  opacity:0.75;
+  margin:6px 0;
+}
+
+.neon-btn{
+  margin-top:12px;
   width:100%;
+  padding:14px;
+  background:linear-gradient(135deg,var(--neon-blue),var(--neon-purple));
+  color:#fff;
   border:none;
-  border-radius:10px;
-  background:#22c55e;
-  color:#000;
-  font-weight:bold;
+  border-radius:16px;
   font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:
+    0 0 15px rgba(56,189,248,0.7),
+    0 0 35px rgba(168,85,247,0.6);
 }
-.loading{
-  text-align:center;
-  margin:40px;
-  opacity:.8;
+
+.neon-btn:active{
+  transform:scale(0.96);
 }
 </style>
 </head>
 
 <body>
 
+<a class="back" href="index.html">← Back</a>
 <div class="header">Join Tournament</div>
-<div class="back" onclick="location.href='index.html'">← Back</div>
 
-<div id="tournament-list">
-  <div class="loading">Loading tournaments...</div>
+<!-- Tournament Card 1 -->
+<div class="t-card glass">
+  <div class="t-title">Free Fire Clash</div>
+  <div class="t-sub">Prize: ₹500</div>
+  <div class="t-sub">Entry: ₹50 • Players: 10/48</div>
+  <div class="t-sub">Time: Today 9:00 PM</div>
+  <button class="neon-btn" onclick="location.href='payment.html'">
+    JOIN NOW
+  </button>
 </div>
 
-<script>
-const SHEET_ID = "1Jf-LmbUP1z7YPCE01dy3TKe6PKR3lw2qDEenp-2uLjA";
-const TOURNAMENTS_URL =
-  `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Tournaments`;
-
-fetch(TOURNAMENTS_URL)
-  .then(res => res.text())
-  .then(csv => {
-    const rows = csv.split("\n").slice(1);
-    const container = document.getElementById("tournament-list");
-    container.innerHTML = "";
-
-    rows.forEach(row => {
-      const c = row.split(",");
-      const status = (c[7] || "").trim(); // status
-
-      if (status === "ON") {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-          <h3>${c[2]}</h3>
-          <p><b>Game:</b> ${c[1]}</p>
-          <p><b>Prize:</b> ₹${c[3]}</p>
-          <p><b>Entry Fee:</b> ₹${c[4]}</p>
-          <p><b>Date:</b> ${c[5]} | ${c[6]}</p>
-          <button class="join-btn" onclick="location.href='details.html'">JOIN NOW</button>
-        `;
-        container.appendChild(card);
-      }
-    });
-
-    if (container.innerHTML === "") {
-      container.innerHTML = "<div class='loading'>No active tournaments</div>";
-    }
-  })
-  .catch(() => {
-    document.getElementById("tournament-list").innerHTML =
-      "<div class='loading'>Failed to load tournaments</div>";
-  });
-</script>
+<!-- Tournament Card 2 -->
+<div class="t-card glass">
+  <div class="t-title">BGMI Solo Battle</div>
+  <div class="t-sub">Prize: ₹1000</div>
+  <div class="t-sub">Entry: ₹100 • Players: 22/64</div>
+  <div class="t-sub">Time: Tomorrow 6:00 PM</div>
+  <button class="neon-btn" onclick="location.href='payment.html'">
+    JOIN NOW
+  </button>
+</div>
 
 </body>
 </html>
