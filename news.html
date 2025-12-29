@@ -2,50 +2,58 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>News | Tournament Sa Kamao</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>News & Updates</title>
+
 <style>
 body{
   margin:0;
-  font-family:Arial,sans-serif;
+  font-family:Arial, sans-serif;
   background:linear-gradient(180deg,#020617,#0f172a);
   color:#fff;
 }
 .header{
-  background:#020617;
   padding:16px;
   text-align:center;
   font-size:22px;
   font-weight:bold;
 }
 .back{
-  margin:15px;
+  margin:12px 16px;
   color:#38bdf8;
   font-size:14px;
   cursor:pointer;
 }
 .card{
   background:#020617;
-  margin:15px;
+  margin:14px;
   padding:16px;
   border-radius:14px;
 }
-.tag{
-  font-size:12px;
-  background:#2563eb;
-  display:inline-block;
-  padding:4px 10px;
-  border-radius:20px;
-  margin-bottom:6px;
+.card h3{
+  margin:0 0 6px;
+  font-size:16px;
 }
-.title{
-  font-size:18px;
-  font-weight:bold;
-  margin-bottom:6px;
-}
-.desc{
+.card p{
+  margin:0;
   font-size:14px;
-  opacity:0.9;
+  opacity:.9;
+}
+.badge{
+  display:inline-block;
+  margin-bottom:8px;
+  padding:4px 8px;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:bold;
+}
+.info{background:#1d4ed8}
+.alert{background:#7f1d1d}
+.ad{background:#78350f}
+.loading{
+  text-align:center;
+  margin:40px;
+  opacity:.8;
 }
 </style>
 </head>
@@ -53,24 +61,37 @@ body{
 <body>
 
 <div class="header">News & Updates</div>
+<div class="back" onclick="history.back()">← Back</div>
 
-<div class="back" onclick="location.href='index.html'">← Back to Home</div>
-
-<div class="card">
-  <div class="tag">IMPORTANT</div>
-  <div class="title">Big Tournament Coming</div>
-  <div class="desc">
-    High prize pool tournament will start this weekend.
-  </div>
+<div id="news-list">
+  <div class="loading">Loading news...</div>
 </div>
 
-<div class="card">
-  <div class="tag">SPONSOR</div>
-  <div class="title">Sponsored by XYZ Gaming</div>
-  <div class="desc">
-    Thanks for supporting Tournament Sa Kamao.
-  </div>
-</div>
+<script>
+/*
+ FUTURE-PROOF:
+ - News Google Sheet / API se load hoga
+ - Abhi static placeholders
+*/
+const newsData = [
+  { type:"info", title:"Welcome to Tournament Sa Kamao", text:"Daily tournaments are now live." },
+  { type:"alert", title:"Maintenance Notice", text:"Wallet services may be slow tonight." },
+  { type:"ad", title:"Sponsored", text:"Play more, win more rewards." }
+];
+
+const list = document.getElementById("news-list");
+list.innerHTML = "";
+newsData.forEach(n=>{
+  const card=document.createElement("div");
+  card.className="card";
+  card.innerHTML=`
+    <span class="badge ${n.type}">${n.type.toUpperCase()}</span>
+    <h3>${n.title}</h3>
+    <p>${n.text}</p>
+  `;
+  list.appendChild(card);
+});
+</script>
 
 </body>
 </html>
