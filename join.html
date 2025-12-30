@@ -49,6 +49,8 @@ body{
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
   color:#000;
   font-weight:900;
+  cursor:pointer;
+  transition:transform .12s ease;
 }
 .back:active{transform:scale(.9)}
 .h1{font-size:18px;font-weight:900}
@@ -105,8 +107,12 @@ input{
   font-size:18px;
   font-weight:900;
   box-shadow:0 0 36px rgba(168,85,247,.75);
+  transition:transform .12s ease, box-shadow .12s ease;
 }
-.join-btn:active{transform:scale(.95)}
+.join-btn:active{
+  transform:scale(.95);
+  box-shadow:0 0 30px rgba(168,85,247,.9);
+}
 
 /* POPUP */
 .popup{
@@ -143,15 +149,18 @@ input{
 <body>
 
 <script>
-/* LOGIN CHECK */
-if(!localStorage.getItem("nickname")){
+/* ===== SESSION CHECK ===== */
+if(!localStorage.getItem("username")){
   location.href="login.html";
+}
+if(!localStorage.getItem("wallet")){
+  localStorage.setItem("wallet","0");
 }
 </script>
 
 <!-- HEADER -->
 <div class="header">
-  <div class="back" onclick="history.back()">←</div>
+  <div class="back" onclick="goBack()">←</div>
   <div class="h1">Join Tournament</div>
 </div>
 
@@ -203,16 +212,19 @@ if(!localStorage.getItem("nickname")){
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* MUSIC */
+/* ===== MUSIC ===== */
 const bgm=document.getElementById("bgm");
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
 
-/* TOUCH SOUND */
+/* ===== TAP SOUND ===== */
 document.addEventListener("touchstart",()=>{
   tap.currentTime=0;
   tap.play().catch(()=>{});
 });
+
+/* ===== BLOCK LONG PRESS ===== */
+document.addEventListener("contextmenu",e=>e.preventDefault());
 
 /* INPUT VALIDATION */
 gname.addEventListener("input",()=>{
@@ -221,6 +233,11 @@ gname.addEventListener("input",()=>{
 guid.addEventListener("input",()=>{
   guid.value=guid.value.replace(/[^a-zA-Z0-9]/g,"");
 });
+
+/* BACK */
+function goBack(){
+  location.href="index.html";
+}
 
 /* JOIN LOGIC */
 function joinTournament(){
@@ -237,14 +254,14 @@ function joinTournament(){
     return;
   }
 
-  // frontend deduction (backend later)
-  localStorage.setItem("wallet", wallet-fee);
+  wallet -= fee;
+  localStorage.setItem("wallet", wallet);
 
-  let slot = Number(slots.innerText)+1;
+  let slot = Number(slots.innerText) + 1;
   slots.innerText = slot;
-  slotInfo.innerText = "Your Slot Number: "+slot;
+  slotInfo.innerText = "Your Slot Number: " + slot;
 
-  showPop("Successfully joined! Slot No: "+slot);
+  showPop("Successfully joined! Slot No: " + slot);
 }
 
 /* POPUP */
