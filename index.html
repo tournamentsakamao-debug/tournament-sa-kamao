@@ -2,171 +2,244 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Home | Tournament Sa Kamao</title>
+<title>Tournament Sa Kamao</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 :root{
-  --bg:#020617; --card:#0f172a; --blue:#38bdf8; --purple:#a855f7; --text:#e5e7eb;
-  --muted:#94a3b8; --glass:rgba(15,23,42,.65);
+  --bg:#020617;
+  --card:#0f172a;
+  --blue:#38bdf8;
+  --purple:#a855f7;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
 }
+
 *{box-sizing:border-box}
+
 body{
-  margin:0; font-family:Segoe UI, system-ui, sans-serif; color:var(--text);
+  margin:0;
+  font-family:Segoe UI,system-ui,sans-serif;
   background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
+  color:var(--text);
 }
-.container{padding:14px 14px 90px}
+
+/* ---------- TOP ---------- */
 .top{
-  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:14px;
 }
-.hi{font-weight:900; font-size:18px}
+.hi{
+  font-size:18px;
+  font-weight:900;
+}
+
+/* ---------- SEARCH ---------- */
 .search{
-  margin:12px 0 6px; position:relative;
+  margin:12px 14px;
+  position:relative;
 }
 .search input{
-  width:100%; padding:14px 14px 14px 44px; border-radius:16px; border:none;
-  background:#020617; color:#fff; font-size:15px;
+  width:100%;
+  padding:16px 16px 16px 46px;
+  border:none;
+  border-radius:18px;
+  background:#020617;
+  color:#fff;
+  font-size:15px;
 }
 .search span{
-  position:absolute; left:14px; top:50%; transform:translateY(-50%);
-  opacity:.7;
+  position:absolute;
+  left:16px;
+  top:50%;
+  transform:translateY(-50%);
+  opacity:.6;
 }
 
-/* Cards */
-.list{display:grid; grid-template-columns:1fr; gap:12px}
+/* ---------- TOURNAMENT LIST ---------- */
+.list{
+  padding:0 14px 120px;
+  display:grid;
+  gap:14px;
+}
+
 .card{
-  background:var(--glass); backdrop-filter:blur(14px);
+  background:rgba(15,23,42,.65);
+  backdrop-filter:blur(14px);
   border:1px solid rgba(255,255,255,.08);
-  border-radius:18px; padding:14px;
-  box-shadow:0 0 25px rgba(168,85,247,.15);
-}
-.banner{
-  height:120px; border-radius:14px;
-  background:linear-gradient(135deg,#2563eb,#7c3aed);
-}
-.meta{display:flex; justify-content:space-between; margin-top:10px; gap:10px}
-.title{font-weight:900; font-size:16px}
-.org{font-size:12px; color:var(--muted)}
-.badges{display:flex; gap:6px; flex-wrap:wrap}
-.badge{
-  font-size:11px; padding:6px 8px; border-radius:999px;
-  background:#020617; border:1px solid rgba(255,255,255,.08);
-}
-.row{display:flex; justify-content:space-between; align-items:center; margin-top:10px}
-.prize{font-size:18px; font-weight:900}
-.cta{
-  border:none; border-radius:14px; padding:12px 16px;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  color:#fff; font-weight:900;
+  border-radius:22px;
+  padding:14px;
+  box-shadow:0 0 28px rgba(168,85,247,.18);
+  transition:.15s;
 }
 
-/* Bottom Nav */
+.card:active{
+  transform:scale(.97);
+}
+
+.banner{
+  height:130px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  margin-bottom:10px;
+}
+
+.title{
+  font-size:18px;
+  font-weight:900;
+}
+.org{
+  font-size:12px;
+  color:var(--muted);
+}
+
+.badges{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+.badge{
+  font-size:11px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:#020617;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:12px;
+}
+
+.prize{
+  font-size:20px;
+  font-weight:900;
+}
+
+.join{
+  padding:12px 18px;
+  border:none;
+  border-radius:16px;
+  font-weight:900;
+  color:#fff;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  box-shadow:0 0 20px rgba(168,85,247,.6);
+}
+
+/* ---------- BOTTOM NAV ---------- */
 .nav{
-  position:fixed; left:0; right:0; bottom:0;
-  background:rgba(2,6,23,.9); backdrop-filter:blur(12px);
-  display:grid; grid-template-columns:repeat(5,1fr); gap:2px;
-  padding:8px 6px; border-top:1px solid rgba(255,255,255,.08);
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:rgba(2,6,23,.9);
+  backdrop-filter:blur(14px);
+  border-top:1px solid rgba(255,255,255,.08);
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  padding:8px 4px;
 }
+
 .nav a{
-  text-decoration:none; color:#c7d2fe; font-size:11px;
-  display:flex; flex-direction:column; align-items:center; gap:4px;
-  padding:8px 6px; border-radius:12px;
+  text-decoration:none;
+  color:#c7d2fe;
+  font-size:11px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  padding:8px 4px;
+  border-radius:14px;
 }
-.nav a.active{color:#fff; background:rgba(168,85,247,.15)}
-.icon{font-size:18px}
+
+.nav a:active{
+  transform:scale(.9);
+}
+
+.nav .active{
+  background:rgba(168,85,247,.18);
+  color:#fff;
+}
+
+.icon{
+  font-size:18px;
+}
 </style>
 </head>
 
 <body>
 
 <script>
-// FIRST-INSTALL CHECK (LOCKED)
-if(!localStorage.getItem('nickname')){
-  location.href='login.html';
+/* ---- LOGIN CHECK ---- */
+if(!localStorage.getItem("nickname")){
+  location.href="login.html";
 }
 </script>
 
-<div class="container">
+<div class="top">
+  <div class="hi">Hi, <span id="nick"></span> 👋</div>
+</div>
 
-  <div class="top">
-    <div class="hi">Hi, <span id="nick"></span> 👋</div>
-  </div>
+<div class="search">
+  <span>🔍</span>
+  <input id="search" placeholder="Search tournament or prize">
+</div>
 
-  <div class="search">
-    <span>🔍</span>
-    <input id="q" placeholder="Search by tournament name or prize">
-  </div>
+<div class="list" id="list">
 
-  <div class="list" id="list">
-    <!-- CARD 1 -->
-    <div class="card" data-text="free fire squad 5000">
-      <div class="banner"></div>
-      <div class="meta">
-        <div>
-          <div class="title">Free Fire Squad Cup</div>
-          <div class="org">by CreatorX</div>
-        </div>
-        <div class="badges">
-          <div class="badge">Squad</div>
-          <div class="badge">Today</div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="prize">₹5,000</div>
-        <button class="cta" onclick="goJoin()">JOIN</button>
-      </div>
+  <!-- TOURNAMENT CARD -->
+  <div class="card" data-search="free fire squad 5000" data-id="T001">
+    <div class="banner"></div>
+
+    <div class="title">Free Fire Squad Cup</div>
+    <div class="org">By CreatorX</div>
+
+    <div class="badges">
+      <div class="badge">Free Fire</div>
+      <div class="badge">Squad</div>
+      <div class="badge">Today</div>
     </div>
 
-    <!-- CARD 2 -->
-    <div class="card" data-text="bgmi solo 2000">
-      <div class="banner"></div>
-      <div class="meta">
-        <div>
-          <div class="title">BGMI Solo Showdown</div>
-          <div class="org">by ProHost</div>
-        </div>
-        <div class="badges">
-          <div class="badge">Solo</div>
-          <div class="badge">Tomorrow</div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="prize">₹2,000</div>
-        <button class="cta" onclick="goJoin()">JOIN</button>
-      </div>
+    <div class="row">
+      <div class="prize">₹5,000</div>
+      <button class="join" onclick="openTournament('T001')">JOIN</button>
     </div>
   </div>
 
 </div>
 
-<!-- Bottom Nav -->
+<!-- BOTTOM NAV -->
 <nav class="nav">
-  <a class="active" href="index.html"><div class="icon">🏠</div>Home</a>
+  <a class="active"><div class="icon">🏠</div>Home</a>
   <a href="index.html"><div class="icon">🎮</div>Tournaments</a>
   <a href="wallet.html"><div class="icon">💼</div>Wallet</a>
   <a href="my.html"><div class="icon">📊</div>My</a>
   <a href="profile.html"><div class="icon">👤</div>Profile</a>
 </nav>
 
-<!-- Global UX -->
+<!-- GLOBAL UX -->
 <script src="assets/music.js"></script>
 <script src="assets/touch.js"></script>
 
 <script>
-document.getElementById('nick').textContent =
-  localStorage.getItem('nickname') || 'Player';
+/* Nickname */
+document.getElementById("nick").textContent =
+  localStorage.getItem("nickname");
 
-// Search (client-side demo)
-const q=document.getElementById('q');
-q.addEventListener('input',()=>{
-  const v=q.value.toLowerCase();
-  document.querySelectorAll('.card').forEach(c=>{
-    c.style.display = c.dataset.text.includes(v) ? '' : 'none';
+/* Search */
+document.getElementById("search").addEventListener("input",e=>{
+  let v=e.target.value.toLowerCase();
+  document.querySelectorAll(".card").forEach(c=>{
+    c.style.display = c.dataset.search.includes(v) ? "" : "none";
   });
 });
 
-function goJoin(){
-  location.href='join.html';
+/* Open tournament */
+function openTournament(id){
+  localStorage.setItem("currentTournament",id);
+  location.href="tournament.html";
 }
 </script>
 
