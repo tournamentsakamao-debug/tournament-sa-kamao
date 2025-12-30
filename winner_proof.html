@@ -17,7 +17,7 @@
   --muted:#94a3b8;
 }
 
-*{box-sizing:border-box}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 
 body{
   margin:0;
@@ -49,6 +49,11 @@ body{
   color:#000;
   font-weight:900;
   cursor:pointer;
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.back:active{
+  transform:scale(.9);
+  box-shadow:0 0 20px rgba(168,85,247,.8);
 }
 .h1{font-size:18px;font-weight:900}
 
@@ -80,10 +85,7 @@ input,textarea{
   margin-top:6px;
 }
 
-textarea{
-  min-height:100px;
-  resize:none;
-}
+textarea{min-height:100px;resize:none}
 
 .note{
   font-size:12px;
@@ -112,8 +114,12 @@ textarea{
   font-size:18px;
   font-weight:900;
   box-shadow:0 0 36px rgba(168,85,247,.75);
+  transition:transform .12s ease, box-shadow .12s ease;
 }
-.btn:active{transform:scale(.95)}
+.btn:active{
+  transform:scale(.95);
+  box-shadow:0 0 40px rgba(168,85,247,1);
+}
 
 /* STATUS */
 .status{
@@ -131,14 +137,20 @@ textarea{
 <body>
 
 <script>
-if(!localStorage.getItem("nickname")){
+/* LOGIN CHECK (username OR nickname) */
+if(!localStorage.getItem("username") && !localStorage.getItem("nickname")){
   location.href="login.html";
+}
+
+/* ensure wallet exists */
+if(!localStorage.getItem("wallet")){
+  localStorage.setItem("wallet","0");
 }
 </script>
 
 <!-- HEADER -->
 <div class="header">
-  <div class="back" onclick="location.href='index.html'">←</div>
+  <div class="back" onclick="goBack()">←</div>
   <div class="h1">Winner Proof</div>
 </div>
 
@@ -183,7 +195,7 @@ if(!localStorage.getItem("nickname")){
 
 </div>
 
-<button class="btn" onclick="submitProof()">SUBMIT PROOF</button>
+<button class="btn" id="submitBtn" onclick="submitProof()">SUBMIT PROOF</button>
 
 <!-- SOUND -->
 <audio id="tap" src="assets/tap.mp3"></audio>
@@ -195,22 +207,43 @@ const bgm=document.getElementById("bgm");
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
 
-/* TOUCH SOUND */
+/* GLOBAL TAP SOUND */
 document.addEventListener("touchstart",()=>{
   const s=document.getElementById("tap");
   s.currentTime=0;
   s.play().catch(()=>{});
 });
 
-/* DEMO SUBMIT */
+/* BACK */
+function goBack(){
+  location.href="index.html";
+}
+
+/* SUBMIT PROOF (demo logic) */
+let submitted=false;
+
 function submitProof(){
+  if(submitted) return;
+  submitted=true;
+
+  const btn=document.getElementById("submitBtn");
   const box=document.getElementById("statusBox");
+
+  btn.innerText="SUBMITTING...";
+  btn.disabled=true;
+
   box.className="status pending";
   box.innerText="⏳ Proof submitted. Admin reviewing...";
 
   setTimeout(()=>{
     box.className="status success";
     box.innerText="✅ Approved! Amount added to wallet.";
+
+    /* demo wallet credit */
+    let w=Number(localStorage.getItem("wallet")||0);
+    localStorage.setItem("wallet",w+2000);
+
+    btn.innerText="SUBMITTED";
   },4000);
 }
 </script>
