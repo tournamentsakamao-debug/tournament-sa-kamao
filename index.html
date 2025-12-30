@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Tournament Sa Kamao</title>
+<title>Create Tournament | Tournament Sa Kamao</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ================= ROOT ================= */
 :root{
   --bg:#020617;
   --card:#0f172a;
   --blue:#38bdf8;
   --purple:#a855f7;
   --green:#22c55e;
+  --red:#ef4444;
   --text:#e5e7eb;
   --muted:#94a3b8;
 }
@@ -26,40 +26,56 @@ body{
   color:var(--text);
 }
 
-/* ================= TOP ACTION ================= */
-.topbar{
-  padding:14px;
+/* ================= HEADER ================= */
+.header{
+  position:sticky;
+  top:0;
+  z-index:10;
   display:flex;
+  align-items:center;
   gap:12px;
+  padding:14px;
+  background:rgba(2,6,23,.92);
+  backdrop-filter:blur(12px);
 }
-.action{
-  flex:1;
-  padding:16px;
-  border-radius:18px;
-  border:none;
-  font-size:17px;
-  font-weight:900;
-  color:#fff;
+.back{
+  width:42px;
+  height:42px;
+  border-radius:14px;
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:8px;
+  font-size:20px;
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
-  transition:transform .12s ease, box-shadow .12s ease;
+  color:#000;
+  font-weight:900;
 }
-.action.join{
-  background:linear-gradient(135deg,#22c55e,#16a34a);
-}
-.action:active{
-  transform:scale(.95);
-  box-shadow:0 0 30px rgba(168,85,247,.9);
+.back:active{transform:scale(.9)}
+.h1{
+  font-size:18px;
+  font-weight:900;
 }
 
-/* ================= SEARCH ================= */
-.search{
-  padding:0 14px 14px;
+/* ================= FORM ================= */
+.container{
+  padding:14px 14px 120px;
 }
-.search input{
+
+.card{
+  background:var(--card);
+  border-radius:22px;
+  padding:14px;
+  margin-bottom:14px;
+  box-shadow:0 0 26px rgba(168,85,247,.25);
+}
+
+.label{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:12px;
+}
+
+input,select,textarea{
   width:100%;
   padding:14px;
   border-radius:16px;
@@ -67,208 +83,220 @@ body{
   background:#020617;
   color:#fff;
   font-size:15px;
+  margin-top:6px;
 }
 
-/* ================= TOURNAMENT CARD ================= */
-.card{
-  position:relative;
-  margin:14px;
-  background:var(--card);
-  border-radius:22px;
-  overflow:hidden;
-  box-shadow:0 0 26px rgba(168,85,247,.25);
-  cursor:pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* invisible tap layer */
-.card-tap{
-  position:absolute;
-  inset:0;
-  z-index:1;
-}
-
-.banner{
-  height:150px;
-  background:linear-gradient(135deg,#312e81,#020617);
-  display:flex;
-  align-items:end;
-  padding:12px;
-  font-size:18px;
-  font-weight:900;
-  position:relative;
-  z-index:2;
-}
-
-.body{
-  padding:14px;
-  position:relative;
-  z-index:2;
-}
-
-.line{
-  font-size:13px;
-  opacity:.8;
-  margin:4px 0;
-}
-
-.prize{
-  font-size:22px;
-  font-weight:900;
-  color:var(--green);
-  margin:6px 0;
+textarea{
+  min-height:110px;
+  resize:none;
 }
 
 .row{
   display:flex;
-  justify-content:space-between;
+  gap:10px;
+}
+.row > div{flex:1}
+
+.security{
+  margin-top:12px;
+  padding:12px;
+  border-radius:16px;
+  background:rgba(34,197,94,.12);
+  border:1px solid rgba(34,197,94,.4);
+  color:#22c55e;
   font-size:13px;
-  margin:6px 0;
 }
 
-.join-btn{
-  margin-top:10px;
-  width:100%;
-  padding:14px;
+/* ================= CREATE BUTTON ================= */
+.create-btn{
+  position:fixed;
+  bottom:16px;
+  left:16px;
+  right:16px;
+  padding:16px;
   border:none;
-  border-radius:16px;
+  border-radius:20px;
   background:linear-gradient(135deg,var(--blue),var(--purple));
   color:#fff;
+  font-size:18px;
   font-weight:900;
-  font-size:16px;
-  position:relative;
-  z-index:3;
-  cursor:pointer;
-  -webkit-tap-highlight-color: transparent;
+  box-shadow:0 0 36px rgba(168,85,247,.75);
 }
-.join-btn:active{
-  transform:scale(.95);
-  box-shadow:0 0 30px rgba(168,85,247,.8);
-}
+.create-btn:active{transform:scale(.95)}
 
-/* ================= BOTTOM NAV ================= */
-.nav{
+/* ================= POPUP ================= */
+.popup{
   position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  height:72px;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:99;
+}
+.popbox{
   background:#020617;
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-  box-shadow:0 -6px 25px rgba(168,85,247,.3);
+  border-radius:22px;
+  padding:18px;
+  width:85%;
+  max-width:360px;
+  box-shadow:0 0 30px rgba(168,85,247,.6);
 }
-.nav-item{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  font-size:11px;
-  color:#94a3b8;
+.popbox h3{margin:0 0 6px}
+.popbox p{font-size:14px;opacity:.85}
+.popbox button{
+  width:100%;
+  margin-top:12px;
+  padding:12px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,var(--red),#f97316);
+  color:#fff;
+  font-weight:900;
 }
-.nav-item span{
-  font-size:22px;
-  transition:transform .12s ease;
-}
-.nav-item:active span{
-  transform:scale(1.2);
-}
-.nav-item.active{
-  color:var(--blue);
-}
-
-.spacer{height:90px}
 </style>
 </head>
 
 <body>
 
 <script>
-/* ================= LOGIN CHECK ================= */
+/* LOGIN CHECK */
 if(!localStorage.getItem("nickname")){
   location.href="login.html";
 }
 </script>
 
-<!-- ================= TOP JOIN / CREATE ================= -->
-<div class="topbar">
-  <button class="action join" onclick="goJoin()">🎮 JOIN</button>
-  <button class="action" onclick="goCreate()">➕ CREATE</button>
+<!-- HEADER -->
+<div class="header">
+  <div class="back" onclick="goBack()">←</div>
+  <div class="h1">Create Tournament</div>
 </div>
 
-<!-- ================= SEARCH ================= -->
-<div class="search">
-  <input placeholder="Search tournament or prize">
-</div>
+<div class="container">
+  <div class="card">
 
-<!-- ================= TOURNAMENT CARD ================= -->
-<div class="card">
-  <div class="card-tap"></div>
+    <div class="label">Tournament Name</div>
+    <input id="tname" maxlength="40" placeholder="Enter tournament name">
 
-  <div class="banner">BGMI Battle Clash</div>
+    <div class="label">Game</div>
+    <select id="game">
+      <option value="">Select game</option>
+      <option>BGMI</option>
+      <option>Free Fire</option>
+      <option>COD Mobile</option>
+      <option>Ludo</option>
+    </select>
 
-  <div class="body">
-    <div class="line">Organiser: Rahul</div>
-    <div class="line">Game: BGMI • Mode: Squad</div>
-    <div class="prize">₹2,000</div>
+    <div class="label">Mode</div>
+    <select id="mode">
+      <option value="">Select mode</option>
+      <option>Solo</option>
+      <option>Duo</option>
+      <option>Squad</option>
+    </select>
+
     <div class="row">
-      <div>Entry Fee: ₹50</div>
-      <div>Players: 32 / 100</div>
+      <div>
+        <div class="label">Prize Money (₹)</div>
+        <input id="prize" type="number" max="10000000" placeholder="Max 1 Crore">
+      </div>
+      <div>
+        <div class="label">Entry Fee (₹)</div>
+        <input id="fee" type="number" max="1000000" placeholder="Max 10 Lakh">
+      </div>
     </div>
-    <div class="line">Wednesday • 15 May • 7:00 PM</div>
-    <button class="join-btn">JOIN NOW</button>
+
+    <div class="row">
+      <div>
+        <div class="label">Max Players</div>
+        <input id="players" type="number" max="1000" placeholder="Up to 1000">
+      </div>
+      <div>
+        <div class="label">Date</div>
+        <input id="date" type="date">
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <div class="label">Time</div>
+        <input id="time" type="time">
+      </div>
+      <div>
+        <div class="label">Day</div>
+        <input id="day" placeholder="Auto" disabled>
+      </div>
+    </div>
+
+    <div class="label">Rules</div>
+    <textarea id="rules" placeholder="Write tournament rules"></textarea>
+
+    <div class="security">
+      ₹100 security amount will be held & returned after tournament completion.
+    </div>
+
   </div>
 </div>
 
-<div class="spacer"></div>
+<button class="create-btn" onclick="createTournament()">CREATE TOURNAMENT</button>
 
-<!-- ================= BOTTOM NAV ================= -->
-<div class="nav">
-  <div class="nav-item active"><span>🏠</span>Home</div>
-  <div class="nav-item"><span>🎮</span>Tournaments</div>
-  <div class="nav-item"><span>💰</span>Wallet</div>
-  <div class="nav-item"><span>🏆</span>My</div>
-  <div class="nav-item"><span>👤</span>Profile</div>
+<!-- POPUP -->
+<div class="popup" id="popup">
+  <div class="popbox">
+    <h3>Error</h3>
+    <p id="pmsg"></p>
+    <button onclick="closePop()">OK</button>
+  </div>
 </div>
 
-<!-- ================= SOUND ================= -->
+<!-- SOUND -->
 <audio id="tap" src="assets/tap.mp3"></audio>
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* ================= MUSIC ================= */
+/* MUSIC */
 const bgm=document.getElementById("bgm");
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
 
-/* ================= TOUCH SOUND ================= */
+/* TOUCH SOUND */
 document.addEventListener("touchstart",()=>{
   const s=document.getElementById("tap");
   s.currentTime=0;
   s.play().catch(()=>{});
 });
 
-/* ================= BLOCK LONG PRESS / GITHUB TAB ================= */
+/* BLOCK LONG PRESS */
 document.addEventListener("contextmenu",e=>e.preventDefault());
 
-/* ================= NAV FUNCTIONS ================= */
-function goCreate(){
-  location.href="create.html";
+/* AUTO DAY */
+date.addEventListener("change",()=>{
+  const d=new Date(date.value);
+  if(!isNaN(d)) day.value=d.toLocaleDateString("en-US",{weekday:"long"});
+});
+
+/* POPUP */
+function showPop(msg){
+  pmsg.innerText=msg;
+  popup.style.display="flex";
 }
-function goJoin(){
-  // future join list
+function closePop(){
+  popup.style.display="none";
 }
 
-/* ================= CLICK ISOLATION ================= */
-document.querySelector(".join-btn").addEventListener("click",function(e){
-  e.stopPropagation();
+/* ACTIONS */
+function goBack(){
+  location.href="index.html";
+}
+
+function createTournament(){
+  if(!tname.value || !game.value || !mode.value || !prize.value){
+    showPop("Please fill all required fields");
+    return;
+  }
+  // next: database + payment
   location.href="payment.html";
-});
-
-document.querySelector(".card-tap").addEventListener("click",function(e){
-  e.preventDefault();
-  location.href="tournament.html";
-});
+}
 </script>
 
 </body>
