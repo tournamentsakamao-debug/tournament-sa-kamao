@@ -17,7 +17,7 @@
   --muted:#94a3b8;
 }
 
-*{box-sizing:border-box}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 
 body{
   margin:0;
@@ -50,28 +50,20 @@ body{
   color:#000;
   font-weight:900;
   cursor:pointer;
+  transition:transform .12s ease;
 }
 .back:active{transform:scale(.9)}
-.h1{
-  font-size:18px;
-  font-weight:900;
-}
+.h1{font-size:18px;font-weight:900}
 
 /* ===== FORM ===== */
-.container{
-  padding:14px 14px 120px;
-}
+.container{padding:14px 14px 120px}
 .card{
   background:var(--card);
   border-radius:22px;
   padding:14px;
   box-shadow:0 0 26px rgba(168,85,247,.25);
 }
-.label{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:12px;
-}
+.label{font-size:12px;color:var(--muted);margin-top:12px}
 input,select,textarea{
   width:100%;
   padding:14px;
@@ -82,14 +74,8 @@ input,select,textarea{
   font-size:15px;
   margin-top:6px;
 }
-textarea{
-  min-height:110px;
-  resize:none;
-}
-.row{
-  display:flex;
-  gap:10px;
-}
+textarea{min-height:110px;resize:none}
+.row{display:flex;gap:10px}
 .row>div{flex:1}
 
 .security{
@@ -115,8 +101,12 @@ textarea{
   color:#fff;
   font-size:18px;
   font-weight:900;
+  transition:transform .12s ease, box-shadow .12s ease;
 }
-.create-btn:active{transform:scale(.95)}
+.create-btn:active{
+  transform:scale(.95);
+  box-shadow:0 0 30px rgba(168,85,247,.9);
+}
 
 /* ===== POPUP ===== */
 .popup{
@@ -152,15 +142,18 @@ textarea{
 <body>
 
 <script>
-/* LOGIN CHECK */
+/* ===== SESSION + WALLET SAFE INIT ===== */
 if(!localStorage.getItem("username")){
   location.href="login.html";
+}
+if(!localStorage.getItem("wallet")){
+  localStorage.setItem("wallet","0");
 }
 </script>
 
 <!-- HEADER -->
 <div class="header">
-  <div class="back" onclick="location.href='index.html'">←</div>
+  <div class="back" onclick="goBack()">←</div>
   <div class="h1">Create Tournament</div>
 </div>
 
@@ -231,15 +224,13 @@ if(!localStorage.getItem("username")){
 </div>
 </div>
 
-<button class="create-btn" onclick="createTournament()">
-CREATE TOURNAMENT • ₹100
-</button>
+<button class="create-btn" onclick="createTournament()">CREATE TOURNAMENT • ₹100</button>
 
 <div class="popup" id="popup">
-<div class="popbox">
-<p id="pmsg"></p>
-<button onclick="popup.style.display='none'">OK</button>
-</div>
+  <div class="popbox">
+    <p id="pmsg"></p>
+    <button onclick="popup.style.display='none'">OK</button>
+  </div>
 </div>
 
 <!-- SOUND -->
@@ -247,22 +238,22 @@ CREATE TOURNAMENT • ₹100
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* MUSIC */
+/* ===== MUSIC ===== */
 const bgm=document.getElementById("bgm");
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
 
-/* TAP SOUND */
+/* ===== TAP SOUND ===== */
 document.addEventListener("touchstart",()=>{
   const s=document.getElementById("tap");
   s.currentTime=0;
   s.play().catch(()=>{});
 });
 
-/* BLOCK LONG PRESS */
+/* ===== BLOCK LONG PRESS ===== */
 document.addEventListener("contextmenu",e=>e.preventDefault());
 
-/* VALIDATIONS */
+/* ===== VALIDATIONS ===== */
 tname.addEventListener("input",()=>{
   tname.value=tname.value.replace(/[^a-zA-Z ]/g,"");
 });
@@ -275,7 +266,6 @@ date.addEventListener("change",()=>{
   if(!isNaN(d)) day.value=d.toLocaleDateString("en-US",{weekday:"long"});
 });
 
-/* RULES COUNT */
 rules.addEventListener("input",()=>{
   let w=rules.value.trim().split(/\s+/).filter(Boolean);
   if(w.length>1000){
@@ -285,17 +275,32 @@ rules.addEventListener("input",()=>{
   ruleCount.innerText=w.length+" / 1000 words";
 });
 
-/* CREATE */
+/* ===== ACTIONS ===== */
+function goBack(){
+  location.href="index.html";
+}
+
 function createTournament(){
   if(!tname.value||!game.value||!mode.value||!prize.value){
     pmsg.innerText="Fill all required fields correctly";
     popup.style.display="flex";
     return;
   }
-  /* wallet logic later */
-  location.href="payment.html";
+
+  let wallet=parseInt(localStorage.getItem("wallet")||"0");
+
+  if(wallet<100){
+    location.href="payment.html";
+    return;
+  }
+
+  wallet-=100;
+  localStorage.setItem("wallet",wallet);
+
+  /* future: save tournament to DB */
+  location.href="index.html";
 }
 </script>
 
 </body>
-  </html>
+</html>
