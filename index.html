@@ -71,12 +71,21 @@ body{
 
 /* ================= TOURNAMENT CARD ================= */
 .card{
+  position:relative;
   margin:14px;
   background:var(--card);
   border-radius:22px;
   overflow:hidden;
   box-shadow:0 0 26px rgba(168,85,247,.25);
 }
+
+/* invisible tap layer */
+.card-tap{
+  position:absolute;
+  inset:0;
+  z-index:1;
+}
+
 .banner{
   height:150px;
   background:linear-gradient(135deg,#312e81,#020617);
@@ -85,25 +94,36 @@ body{
   padding:12px;
   font-size:18px;
   font-weight:900;
+  position:relative;
+  z-index:2;
 }
-.body{padding:14px}
+
+.body{
+  padding:14px;
+  position:relative;
+  z-index:2;
+}
+
 .line{
   font-size:13px;
   opacity:.8;
   margin:4px 0;
 }
+
 .prize{
   font-size:22px;
   font-weight:900;
   color:var(--green);
   margin:6px 0;
 }
+
 .row{
   display:flex;
   justify-content:space-between;
   font-size:13px;
   margin:6px 0;
 }
+
 .join-btn{
   margin-top:10px;
   width:100%;
@@ -114,6 +134,8 @@ body{
   color:#fff;
   font-weight:900;
   font-size:16px;
+  position:relative;
+  z-index:3;
 }
 .join-btn:active{
   transform:scale(.95);
@@ -166,8 +188,8 @@ if(!localStorage.getItem("nickname")){
 
 <!-- ================= TOP JOIN / CREATE ================= -->
 <div class="topbar">
-  <button class="action join" onclick="goJoin(event)">🎮 JOIN</button>
-  <button class="action" onclick="goCreate(event)">➕ CREATE</button>
+  <button class="action join" onclick="goJoin()">🎮 JOIN</button>
+  <button class="action" onclick="goCreate()">➕ CREATE</button>
 </div>
 
 <!-- ================= SEARCH ================= -->
@@ -176,8 +198,11 @@ if(!localStorage.getItem("nickname")){
 </div>
 
 <!-- ================= TOURNAMENT CARD ================= -->
-<div class="card" onclick="openTournament(event)">
+<div class="card">
+  <div class="card-tap" onclick="openTournament()"></div>
+
   <div class="banner">BGMI Battle Clash</div>
+
   <div class="body">
     <div class="line">Organiser: Rahul</div>
     <div class="line">Game: BGMI • Mode: Squad</div>
@@ -187,7 +212,7 @@ if(!localStorage.getItem("nickname")){
       <div>Players: 32 / 100</div>
     </div>
     <div class="line">Wednesday • 15 May • 7:00 PM</div>
-    <button class="join-btn" onclick="joinTournament(event)">JOIN NOW</button>
+    <button class="join-btn" onclick="joinTournament()">JOIN NOW</button>
   </div>
 </div>
 
@@ -219,23 +244,20 @@ document.addEventListener("touchstart",()=>{
   s.play().catch(()=>{});
 });
 
-/* ================= NAV / CARD FUNCTIONS ================= */
-function goCreate(e){
-  e.stopPropagation();
+/* ================= NAV FUNCTIONS ================= */
+function goCreate(){
   location.href="create.html";
 }
-function goJoin(e){
-  e.stopPropagation();
+function goJoin(){
+  // future join list
 }
-function joinTournament(e){
-  e.stopPropagation();
+function joinTournament(){
   location.href="payment.html";
 }
-function openTournament(e){
-  e.stopPropagation();
+function openTournament(){
   location.href="tournament.html";
 }
 </script>
 
 </body>
-</html>
+  </html>
