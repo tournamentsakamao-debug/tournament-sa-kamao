@@ -6,91 +6,194 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+:root{
+  --bg:#020617;
+  --card:#0f172a;
+  --blue:#38bdf8;
+  --purple:#a855f7;
+  --green:#22c55e;
+  --red:#ef4444;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+}
+
+*{box-sizing:border-box}
+
 body{
   margin:0;
-  font-family:Arial, sans-serif;
-  background:linear-gradient(180deg,#020617,#0f172a);
-  color:#fff;
+  font-family:Segoe UI,system-ui,sans-serif;
+  background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
+  color:var(--text);
 }
+
+/* HEADER */
 .header{
-  padding:16px;
-  text-align:center;
-  font-size:22px;
-  font-weight:bold;
+  position:sticky;
+  top:0;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  background:rgba(2,6,23,.92);
+  backdrop-filter:blur(12px);
 }
 .back{
-  margin:12px 16px;
-  color:#38bdf8;
-  font-size:14px;
+  width:42px;height:42px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  background:linear-gradient(135deg,#60a5fa,#38bdf8);
+  color:#000;
+  font-weight:900;
   cursor:pointer;
 }
+.h1{font-size:18px;font-weight:900}
+
+/* CONTENT */
+.container{padding:14px 14px 140px}
+
+.card{
+  background:var(--card);
+  border-radius:22px;
+  padding:16px;
+  margin-bottom:14px;
+  box-shadow:0 0 26px rgba(168,85,247,.25);
+}
+
+/* BALANCE */
 .balance{
-  margin:16px;
-  padding:18px;
-  background:#0f172a;
-  border-radius:14px;
   text-align:center;
 }
 .balance h2{
-  margin:0;
+  margin:6px 0;
   font-size:28px;
+  color:var(--green);
 }
 .balance p{
-  margin:6px 0 0;
   font-size:13px;
-  opacity:.85;
+  color:var(--muted);
 }
-.card{
-  background:#020617;
-  margin:14px;
-  padding:16px;
-  border-radius:14px;
-}
+
+/* ACTION BUTTONS */
 .row{
   display:flex;
-  justify-content:space-between;
-  font-size:14px;
-  margin:6px 0;
-  opacity:.9;
+  gap:12px;
+  margin-top:12px;
 }
-.note{
-  margin:14px;
+.btn{
+  flex:1;
   padding:14px;
-  background:#0f172a;
-  border-radius:12px;
-  font-size:13px;
-  opacity:.9;
+  border:none;
+  border-radius:18px;
+  font-size:15px;
+  font-weight:900;
+  color:#fff;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+}
+.btn.withdraw{
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+}
+.btn:active{transform:scale(.95)}
+
+/* HISTORY */
+.history{
+  font-size:14px;
+}
+.item{
+  padding:12px;
+  border-radius:14px;
+  background:#020617;
+  margin-top:10px;
+}
+.item.green{color:#22c55e}
+.item.red{color:#ef4444}
+
+.label{
+  font-size:12px;
+  color:var(--muted);
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">Wallet</div>
-<div class="back" onclick="history.back()">← Back</div>
+<script>
+if(!localStorage.getItem("nickname")){
+  location.href="login.html";
+}
+</script>
 
-<div class="balance">
-  <h2>₹0</h2>
+<!-- HEADER -->
+<div class="header">
+  <div class="back" onclick="history.back()">←</div>
+  <div class="h1">My Wallet</div>
+</div>
+
+<div class="container">
+
+<!-- BALANCE -->
+<div class="card balance">
   <p>Available Balance</p>
+  <h2>₹1,250</h2>
 </div>
 
+<!-- ACTIONS -->
 <div class="card">
-  <h3>Recent Activity</h3>
-  <div class="row"><span>Join Tournament</span><span>-₹50</span></div>
-  <div class="row"><span>Prize Won</span><span>+₹200</span></div>
-  <div class="row"><span>Refund</span><span>+₹50</span></div>
+  <div class="row">
+    <button class="btn" onclick="addMoney()">➕ ADD MONEY</button>
+    <button class="btn withdraw" onclick="withdrawMoney()">💸 WITHDRAW</button>
+  </div>
 </div>
 
-<div class="note">
-  Wallet balance updates after admin approval.
+<!-- HISTORY -->
+<div class="card history">
+  <div class="label">Transaction History</div>
+
+  <div class="item green">
+    + ₹500 <br>
+    <small>Tournament Win • 15 May</small>
+  </div>
+
+  <div class="item red">
+    - ₹100 <br>
+    <small>Joined Tournament • BGMI</small>
+  </div>
+
+  <div class="item green">
+    + ₹300 <br>
+    <small>Referral Bonus</small>
+  </div>
 </div>
+
+</div>
+
+<!-- SOUND -->
+<audio id="tap" src="assets/tap.mp3"></audio>
+<audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/*
- FUTURE-PROOF:
- - Wallet balance + history Google Sheet / API se aayega
- - HTML dubara change nahi karna padega
-*/
+/* MUSIC */
+const bgm=document.getElementById("bgm");
+bgm.volume=0.35;
+bgm.play().catch(()=>{});
+
+/* TOUCH SOUND */
+document.addEventListener("touchstart",()=>{
+  const s=document.getElementById("tap");
+  s.currentTime=0;
+  s.play().catch(()=>{});
+});
+
+/* ACTIONS */
+function addMoney(){
+  location.href="payment.html";
+}
+function withdrawMoney(){
+  location.href="withdraw.html";
+}
 </script>
 
 </body>
