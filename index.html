@@ -44,11 +44,15 @@ body{
   justify-content:center;
   gap:8px;
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
+  transition:transform .12s ease, box-shadow .12s ease;
 }
 .action.join{
   background:linear-gradient(135deg,#22c55e,#16a34a);
 }
-.action:active{transform:scale(.95)}
+.action:active{
+  transform:scale(.95);
+  box-shadow:0 0 30px rgba(168,85,247,.8);
+}
 
 /* ===== SEARCH ===== */
 .search{
@@ -116,8 +120,12 @@ body{
   font-size:16px;
   z-index:3;
   position:relative;
+  transition:transform .12s ease, box-shadow .12s ease;
 }
-.join-btn:active{transform:scale(.95)}
+.join-btn:active{
+  transform:scale(.95);
+  box-shadow:0 0 30px rgba(168,85,247,.8);
+}
 
 /* ===== BOTTOM NAV ===== */
 .nav{
@@ -137,20 +145,35 @@ body{
   align-items:center;
   font-size:11px;
   color:#94a3b8;
+  cursor:pointer;
 }
 .nav-item span{font-size:22px}
 .nav-item.active{color:var(--blue)}
 
 .spacer{height:90px}
+
+/* remove highlight */
+*{ -webkit-tap-highlight-color: transparent; }
 </style>
 </head>
 
 <body>
 
 <script>
-/* LOGIN CHECK */
+/* ================= GLOBAL SESSION CHECK ================= */
 if(!localStorage.getItem("username")){
   location.href="login.html";
+}
+
+/* auto session refresh */
+localStorage.setItem("app_session", Date.now());
+
+/* default flags */
+if(!localStorage.getItem("wallet")){
+  localStorage.setItem("wallet","0");
+}
+if(!localStorage.getItem("isAdmin")){
+  localStorage.setItem("isAdmin","false");
 }
 </script>
 
@@ -188,9 +211,9 @@ if(!localStorage.getItem("username")){
 <!-- NAV -->
 <div class="nav">
   <div class="nav-item active"><span>🏠</span>Home</div>
-  <div class="nav-item"><span>🎮</span>My</div>
-  <div class="nav-item"><span>💰</span>Wallet</div>
-  <div class="nav-item"><span>👤</span>Profile</div>
+  <div class="nav-item" onclick="goMy()"><span>🎮</span>My</div>
+  <div class="nav-item" onclick="goWallet()"><span>💰</span>Wallet</div>
+  <div class="nav-item" onclick="goProfile()"><span>👤</span>Profile</div>
 </div>
 
 <!-- SOUND -->
@@ -198,26 +221,29 @@ if(!localStorage.getItem("username")){
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* MUSIC */
+/* ================= MUSIC ================= */
 const bgm=document.getElementById("bgm");
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
 
-/* TAP SOUND */
+/* ================= TAP SOUND ================= */
 document.addEventListener("touchstart",()=>{
   const s=document.getElementById("tap");
   s.currentTime=0;
   s.play().catch(()=>{});
 });
 
-/* BLOCK LONG PRESS */
+/* ================= BLOCK LONG PRESS ================= */
 document.addEventListener("contextmenu",e=>e.preventDefault());
 
-/* NAV */
+/* ================= NAV ================= */
 function goCreate(){ location.href="create.html"; }
-function goJoin(){}
+function goJoin(){ /* future filter */ }
+function goMy(){ location.href="my.html"; }
+function goWallet(){ location.href="wallet.html"; }
+function goProfile(){ location.href="profile.html"; }
 
-/* CARD ACTIONS */
+/* ================= CARD ACTIONS ================= */
 function joinTournament(e){
   e.stopPropagation();
   location.href="payment.html";
