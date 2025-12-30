@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ================= ROOT ================= */
 :root{
   --bg:#020617;
   --card:#0f172a;
@@ -25,30 +26,32 @@ body{
   color:var(--text);
 }
 
-/* ---------- TOP BAR ---------- */
+/* ================= TOP ACTION (OLD STYLE) ================= */
 .topbar{
   padding:14px;
   display:flex;
-  gap:10px;
+  gap:12px;
 }
 .action{
   flex:1;
-  padding:14px;
+  padding:16px;
   border-radius:18px;
   border:none;
-  font-size:16px;
+  font-size:17px;
   font-weight:900;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
   color:#fff;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  transition:transform .12s ease, box-shadow .12s ease;
 }
 .action.join{
   background:linear-gradient(135deg,#22c55e,#16a34a);
 }
 .action:active{
   transform:scale(.95);
+  box-shadow:0 0 30px rgba(168,85,247,.9);
 }
 
-/* ---------- SEARCH ---------- */
+/* ================= SEARCH ================= */
 .search{
   padding:0 14px 14px;
 }
@@ -62,7 +65,7 @@ body{
   font-size:15px;
 }
 
-/* ---------- CARD ---------- */
+/* ================= TOURNAMENT CARD ================= */
 .card{
   margin:14px;
   background:var(--card);
@@ -107,10 +110,14 @@ body{
   color:#fff;
   font-weight:900;
   font-size:16px;
+  transition:transform .12s ease, box-shadow .12s ease;
 }
-.join-btn:active{transform:scale(.95)}
+.join-btn:active{
+  transform:scale(.95);
+  box-shadow:0 0 30px rgba(168,85,247,.8);
+}
 
-/* ---------- BOTTOM NAV ---------- */
+/* ================= BOTTOM NAV ================= */
 .nav{
   position:fixed;
   bottom:0;
@@ -132,11 +139,14 @@ body{
 }
 .nav-item span{
   font-size:22px;
+  transition:transform .12s ease;
 }
 .nav-item:active span{
   transform:scale(1.2);
 }
-.nav-item.active{color:var(--blue)}
+.nav-item.active{
+  color:var(--blue);
+}
 
 .spacer{height:90px}
 </style>
@@ -145,24 +155,24 @@ body{
 <body>
 
 <script>
-/* LOGIN CHECK */
+/* ================= LOGIN CHECK ================= */
 if(!localStorage.getItem("nickname")){
   location.href="login.html";
 }
 </script>
 
-<!-- TOP ACTION -->
+<!-- ================= TOP JOIN / CREATE ================= -->
 <div class="topbar">
-  <button class="action join" onclick="goJoin()">JOIN</button>
-  <button class="action" onclick="goCreate()">CREATE</button>
+  <button class="action join" onclick="goJoin(event)">JOIN</button>
+  <button class="action" onclick="goCreate(event)">CREATE</button>
 </div>
 
-<!-- SEARCH -->
+<!-- ================= SEARCH ================= -->
 <div class="search">
   <input placeholder="Search tournament or prize">
 </div>
 
-<!-- TOURNAMENT CARD -->
+<!-- ================= TOURNAMENT CARD (SAMPLE) ================= -->
 <div class="card">
   <div class="banner">BGMI Battle Clash</div>
   <div class="body">
@@ -174,13 +184,13 @@ if(!localStorage.getItem("nickname")){
       <div>Players: 32 / 100</div>
     </div>
     <div class="line">Wednesday • 15 May • 7:00 PM</div>
-    <button class="join-btn" onclick="goJoin()">JOIN NOW</button>
+    <button class="join-btn" onclick="joinTournament(event)">JOIN NOW</button>
   </div>
 </div>
 
 <div class="spacer"></div>
 
-<!-- BOTTOM NAV -->
+<!-- ================= BOTTOM NAV ================= -->
 <div class="nav">
   <div class="nav-item active"><span>🏠</span>Home</div>
   <div class="nav-item"><span>🎮</span>Tournaments</div>
@@ -189,30 +199,37 @@ if(!localStorage.getItem("nickname")){
   <div class="nav-item"><span>👤</span>Profile</div>
 </div>
 
-<!-- SOUND -->
+<!-- ================= SOUND ================= -->
 <audio id="tap" src="assets/tap.mp3"></audio>
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* MUSIC */
+/* ================= MUSIC ================= */
 const bgm=document.getElementById("bgm");
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
 
-/* TOUCH SOUND */
+/* ================= TOUCH SOUND ================= */
 document.addEventListener("touchstart",()=>{
   const s=document.getElementById("tap");
   s.currentTime=0;
   s.play().catch(()=>{});
 });
 
-function goCreate(){
+/* ================= NAV FUNCTIONS ================= */
+function goCreate(e){
+  e.stopPropagation();
   location.href="create.html";
 }
-function goJoin(){
-  location.href="index.html";
+function goJoin(e){
+  e.stopPropagation();
+  // join page nahi, home par hi card se join
+}
+function joinTournament(e){
+  e.stopPropagation();
+  location.href="payment.html";
 }
 </script>
 
 </body>
-</html>
+  </html>
