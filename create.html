@@ -26,7 +26,7 @@ body{
   color:var(--text);
 }
 
-/* HEADER */
+/* ===== HEADER ===== */
 .header{
   position:sticky;
   top:0;
@@ -55,10 +55,9 @@ body{
 .h1{
   font-size:18px;
   font-weight:900;
-  cursor:pointer;
 }
 
-/* FORM */
+/* ===== FORM ===== */
 .container{
   padding:14px 14px 120px;
 }
@@ -66,7 +65,6 @@ body{
   background:var(--card);
   border-radius:22px;
   padding:14px;
-  margin-bottom:14px;
   box-shadow:0 0 26px rgba(168,85,247,.25);
 }
 .label{
@@ -104,7 +102,7 @@ textarea{
   font-size:13px;
 }
 
-/* CREATE BUTTON */
+/* ===== CREATE BUTTON ===== */
 .create-btn{
   position:fixed;
   bottom:16px;
@@ -117,11 +115,10 @@ textarea{
   color:#fff;
   font-size:18px;
   font-weight:900;
-  box-shadow:0 0 36px rgba(168,85,247,.75);
 }
 .create-btn:active{transform:scale(.95)}
 
-/* POPUP */
+/* ===== POPUP ===== */
 .popup{
   position:fixed;
   inset:0;
@@ -155,21 +152,23 @@ textarea{
 <body>
 
 <script>
-if(!localStorage.getItem("nickname")){
+/* LOGIN CHECK */
+if(!localStorage.getItem("username")){
   location.href="login.html";
 }
 </script>
 
+<!-- HEADER -->
 <div class="header">
-  <div class="back" id="backBtn">←</div>
-  <div class="h1" id="titleBack">Create Tournament</div>
+  <div class="back" onclick="location.href='index.html'">←</div>
+  <div class="h1">Create Tournament</div>
 </div>
 
 <div class="container">
 <div class="card">
 
-<div class="label">Tournament Name</div>
-<input id="tname" maxlength="35" placeholder="Only letters allowed">
+<div class="label">Tournament Name (letters only)</div>
+<input id="tname" maxlength="35" placeholder="e.g. BGMI Clash">
 
 <div class="label">Game</div>
 <select id="game">
@@ -190,19 +189,19 @@ if(!localStorage.getItem("nickname")){
 
 <div class="row">
 <div>
-  <div class="label">Prize Money (₹)</div>
-  <input id="prize" type="number" max="10000000" placeholder="Max 1 Crore">
+  <div class="label">Prize Money (₹ max 1 Crore)</div>
+  <input id="prize" type="number">
 </div>
 <div>
-  <div class="label">Entry Fee (₹)</div>
-  <input id="fee" type="number" max="1000000" placeholder="Max 10 Lakh">
+  <div class="label">Entry Fee (₹ max 10 Lakh)</div>
+  <input id="fee" type="number">
 </div>
 </div>
 
 <div class="row">
 <div>
-  <div class="label">Max Players</div>
-  <input id="players" type="number" max="500" placeholder="Up to 500">
+  <div class="label">Max Players (≤ 500)</div>
+  <input id="players" type="number">
 </div>
 <div>
   <div class="label">Date</div>
@@ -221,18 +220,20 @@ if(!localStorage.getItem("nickname")){
 </div>
 </div>
 
-<div class="label">Rules (Max 1000 words)</div>
+<div class="label">Rules (1000 words max)</div>
 <textarea id="rules"></textarea>
 <div class="label" id="ruleCount">0 / 1000 words</div>
 
 <div class="security">
-₹100 security amount will be held & returned after tournament completion.
+₹100 security amount will be deducted to create tournament.
 </div>
 
 </div>
 </div>
 
-<button class="create-btn" onclick="createTournament()">CREATE TOURNAMENT • ₹100 SECURITY</button>
+<button class="create-btn" onclick="createTournament()">
+CREATE TOURNAMENT • ₹100
+</button>
 
 <div class="popup" id="popup">
 <div class="popbox">
@@ -241,48 +242,57 @@ if(!localStorage.getItem("nickname")){
 </div>
 </div>
 
+<!-- SOUND -->
+<audio id="tap" src="assets/tap.mp3"></audio>
+<audio id="bgm" src="assets/bgm.mp3" loop></audio>
+
 <script>
-function goHome(){
-  window.location.href="index.html";
-}
+/* MUSIC */
+const bgm=document.getElementById("bgm");
+bgm.volume=0.35;
+bgm.play().catch(()=>{});
 
-document.getElementById("backBtn").addEventListener("click", goHome);
-document.getElementById("titleBack").addEventListener("click", goHome);
-
-/* TOURNAMENT NAME – only letters */
-tname.addEventListener("input",()=>{
-  tname.value = tname.value.replace(/[^a-zA-Z ]/g,"");
+/* TAP SOUND */
+document.addEventListener("touchstart",()=>{
+  const s=document.getElementById("tap");
+  s.currentTime=0;
+  s.play().catch(()=>{});
 });
 
-/* LIMITS */
+/* BLOCK LONG PRESS */
+document.addEventListener("contextmenu",e=>e.preventDefault());
+
+/* VALIDATIONS */
+tname.addEventListener("input",()=>{
+  tname.value=tname.value.replace(/[^a-zA-Z ]/g,"");
+});
 prize.addEventListener("input",()=>{ if(prize.value>10000000) prize.value=10000000; });
 fee.addEventListener("input",()=>{ if(fee.value>1000000) fee.value=1000000; });
 players.addEventListener("input",()=>{ if(players.value>500) players.value=500; });
 
-/* AUTO DAY */
 date.addEventListener("change",()=>{
   const d=new Date(date.value);
   if(!isNaN(d)) day.value=d.toLocaleDateString("en-US",{weekday:"long"});
 });
 
-/* RULES – 1000 WORD LIMIT */
-const ruleCount=document.getElementById("ruleCount");
+/* RULES COUNT */
 rules.addEventListener("input",()=>{
-  let words = rules.value.trim().split(/\s+/).filter(w=>w.length>0);
-  if(words.length>1000){
-    rules.value = words.slice(0,1000).join(" ");
-    words = rules.value.split(/\s+/);
+  let w=rules.value.trim().split(/\s+/).filter(Boolean);
+  if(w.length>1000){
+    rules.value=w.slice(0,1000).join(" ");
+    w=rules.value.split(/\s+/);
   }
-  ruleCount.innerText = words.length + " / 1000 words";
+  ruleCount.innerText=w.length+" / 1000 words";
 });
 
 /* CREATE */
 function createTournament(){
   if(!tname.value||!game.value||!mode.value||!prize.value){
-    pmsg.innerText="Please fill all required fields correctly";
+    pmsg.innerText="Fill all required fields correctly";
     popup.style.display="flex";
     return;
   }
+  /* wallet logic later */
   location.href="payment.html";
 }
 </script>
