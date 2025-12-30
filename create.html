@@ -26,20 +26,18 @@ body{
   color:var(--text);
 }
 
-/* ---------- HEADER ---------- */
+/* HEADER */
 .header{
   position:sticky;
   top:0;
-  z-index:20;
+  z-index:10;
   display:flex;
   align-items:center;
-  gap:10px;
-  padding:12px;
+  gap:12px;
+  padding:14px;
   background:rgba(2,6,23,.92);
   backdrop-filter:blur(12px);
-  box-shadow:0 4px 18px rgba(0,0,0,.4);
 }
-
 .back{
   width:42px;
   height:42px;
@@ -47,55 +45,33 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:18px;
-  background:rgba(168,85,247,.18);
-}
-.back:active{transform:scale(.92)}
-
-.h1{
-  font-size:17px;
+  font-size:20px;
+  background:linear-gradient(135deg,#60a5fa,#38bdf8);
+  color:#000;
   font-weight:900;
-  flex:1;
+}
+.back:active{transform:scale(.9)}
+.h1{
+  font-size:18px;
+  font-weight:900;
 }
 
-/* TOP ACTION */
-.actions{
-  display:flex;
-  gap:8px;
-}
-.action-btn{
-  padding:8px 14px;
-  border-radius:12px;
-  font-size:13px;
-  font-weight:800;
-  border:none;
-  background:rgba(56,189,248,.15);
-  color:#38bdf8;
-}
-.action-btn.active{
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  color:#fff;
-}
-
-/* ---------- FORM ---------- */
+/* FORM */
 .container{
-  padding:14px 14px 130px;
+  padding:14px 14px 120px;
 }
-
 .card{
   background:var(--card);
   border-radius:22px;
   padding:14px;
   margin-bottom:14px;
-  box-shadow:0 0 28px rgba(168,85,247,.28);
+  box-shadow:0 0 26px rgba(168,85,247,.25);
 }
-
 .label{
   font-size:12px;
   color:var(--muted);
   margin-top:12px;
 }
-
 input,select,textarea{
   width:100%;
   padding:14px;
@@ -106,31 +82,28 @@ input,select,textarea{
   font-size:15px;
   margin-top:6px;
 }
-
 textarea{
-  min-height:120px;
+  min-height:110px;
   resize:none;
 }
-
 .row{
   display:flex;
   gap:10px;
 }
-.row > div{flex:1}
+.row>div{flex:1}
 
-/* ---------- SECURITY ---------- */
 .security{
+  margin-top:12px;
+  padding:12px;
+  border-radius:16px;
   background:rgba(34,197,94,.12);
   border:1px solid rgba(34,197,94,.4);
   color:#22c55e;
-  padding:12px;
-  border-radius:16px;
   font-size:13px;
-  margin-top:12px;
 }
 
-/* ---------- CREATE BUTTON ---------- */
-.create{
+/* CREATE BUTTON */
+.create-btn{
   position:fixed;
   bottom:16px;
   left:16px;
@@ -144,9 +117,9 @@ textarea{
   font-weight:900;
   box-shadow:0 0 36px rgba(168,85,247,.75);
 }
-.create:active{transform:scale(.95)}
+.create-btn:active{transform:scale(.95)}
 
-/* ---------- POPUP ---------- */
+/* POPUP */
 .popup{
   position:fixed;
   inset:0;
@@ -162,8 +135,8 @@ textarea{
   padding:18px;
   width:85%;
   max-width:360px;
+  box-shadow:0 0 30px rgba(168,85,247,.6);
 }
-.popbox h3{margin:0 0 8px}
 .popbox button{
   width:100%;
   margin-top:12px;
@@ -180,128 +153,111 @@ textarea{
 <body>
 
 <script>
-/* LOGIN CHECK */
 if(!localStorage.getItem("nickname")){
   location.href="login.html";
 }
 </script>
 
-<!-- HEADER -->
 <div class="header">
-  <div class="back" onclick="goBack(event)">←</div>
+  <div class="back" onclick="location.href='index.html'">←</div>
   <div class="h1">Create Tournament</div>
-  <div class="actions">
-    <button class="action-btn" onclick="goJoin(event)">JOIN</button>
-    <button class="action-btn active">CREATE</button>
-  </div>
 </div>
 
 <div class="container">
+<div class="card">
 
-  <div class="card" onclick="event.stopPropagation()">
+<div class="label">Tournament Name</div>
+<input id="tname" maxlength="35" placeholder="Only letters allowed">
 
-    <div class="label">Tournament Name</div>
-    <input id="tname" maxlength="40">
+<div class="label">Game</div>
+<select id="game">
+  <option value="">Select game</option>
+  <option>BGMI</option>
+  <option>Free Fire</option>
+  <option>COD Mobile</option>
+  <option>Ludo</option>
+</select>
 
-    <div class="label">Game</div>
-    <select id="game">
-      <option value="">Select game</option>
-      <option>BGMI</option>
-      <option>Free Fire</option>
-      <option>COD Mobile</option>
-      <option>Ludo</option>
-    </select>
+<div class="label">Mode</div>
+<select id="mode">
+  <option value="">Select mode</option>
+  <option>Solo</option>
+  <option>Duo</option>
+  <option>Squad</option>
+</select>
 
-    <div class="label">Mode</div>
-    <select id="mode">
-      <option value="">Select mode</option>
-      <option>Solo</option>
-      <option>Duo</option>
-      <option>Squad</option>
-    </select>
-
-    <div class="row">
-      <div>
-        <div class="label">Prize Money (₹)</div>
-        <input id="prize" type="number" max="10000000">
-      </div>
-      <div>
-        <div class="label">Entry Fee (₹)</div>
-        <input id="fee" type="number" max="1000000">
-      </div>
-    </div>
-
-    <div class="row">
-      <div>
-        <div class="label">Max Players</div>
-        <input id="players" type="number" max="1000">
-      </div>
-      <div>
-        <div class="label">Date</div>
-        <input id="date" type="date">
-      </div>
-    </div>
-
-    <div class="row">
-      <div>
-        <div class="label">Time</div>
-        <input id="time" type="time">
-      </div>
-      <div>
-        <div class="label">Day</div>
-        <input id="day">
-      </div>
-    </div>
-
-    <div class="label">Rules</div>
-    <textarea id="rules"></textarea>
-
-    <div class="security">
-      ₹100 security amount will be held & returned after tournament completion.
-    </div>
-
-  </div>
-
+<div class="row">
+<div>
+  <div class="label">Prize Money (₹)</div>
+  <input id="prize" type="number" max="10000000" placeholder="Max 1 Crore">
+</div>
+<div>
+  <div class="label">Entry Fee (₹)</div>
+  <input id="fee" type="number" max="1000000" placeholder="Max 10 Lakh">
+</div>
 </div>
 
-<button class="create" onclick="createTournament(event)">CREATE TOURNAMENT</button>
+<div class="row">
+<div>
+  <div class="label">Max Players</div>
+  <input id="players" type="number" max="500" placeholder="Up to 500">
+</div>
+<div>
+  <div class="label">Date</div>
+  <input id="date" type="date">
+</div>
+</div>
+
+<div class="row">
+<div>
+  <div class="label">Time</div>
+  <input id="time" type="time">
+</div>
+<div>
+  <div class="label">Day</div>
+  <input id="day" disabled placeholder="Auto">
+</div>
+</div>
+
+<div class="label">Rules (Max 1000 words)</div>
+<textarea id="rules"></textarea>
+
+<div class="security">
+₹100 security amount will be held & returned after tournament completion.
+</div>
+
+</div>
+</div>
+
+<button class="create-btn" onclick="createTournament()">CREATE TOURNAMENT • ₹100</button>
 
 <div class="popup" id="popup">
-  <div class="popbox">
-    <h3>Error</h3>
-    <p id="pmsg"></p>
-    <button onclick="closePop()">OK</button>
-  </div>
+<div class="popbox">
+<p id="pmsg"></p>
+<button onclick="popup.style.display='none'">OK</button>
+</div>
 </div>
 
 <script>
-function goBack(e){
-  e.stopPropagation();
-  location.href="index.html";
-}
-function goJoin(e){
-  e.stopPropagation();
-  location.href="index.html";
-}
+/* VALIDATIONS */
+tname.addEventListener("input",()=>{
+  tname.value = tname.value.replace(/[^a-zA-Z ]/g,"");
+});
 
-function showPop(msg){
-  document.getElementById("pmsg").innerText=msg;
-  document.getElementById("popup").style.display="flex";
-}
-function closePop(){
-  document.getElementById("popup").style.display="none";
-}
+date.addEventListener("change",()=>{
+  const d=new Date(date.value);
+  if(!isNaN(d)) day.value=d.toLocaleDateString("en-US",{weekday:"long"});
+});
 
-function createTournament(e){
-  e.stopPropagation();
-  if(!tname.value || !game.value || !mode.value){
-    showPop("Please fill all required fields");
+function createTournament(){
+  if(!tname.value||!game.value||!mode.value||!prize.value){
+    pmsg.innerText="Please fill all required fields correctly";
+    popup.style.display="flex";
     return;
   }
-  // DB SUBMIT HOOK READY
   location.href="payment.html";
 }
 </script>
 
 </body>
-  </html>
+</html>
