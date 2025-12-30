@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard | Tournament Sa Kamao</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --bg:#020617;
+  --card:#0f172a;
+  --blue:#38bdf8;
+  --purple:#a855f7;
+  --green:#22c55e;
+  --red:#ef4444;
+  --yellow:#facc15;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Segoe UI,system-ui,sans-serif;
+  background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
+  color:var(--text);
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  background:rgba(2,6,23,.95);
+  backdrop-filter:blur(10px);
+}
+.back{
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#60a5fa,#38bdf8);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  cursor:pointer;
+}
+.title{
+  font-size:18px;
+  font-weight:900;
+}
+
+/* GRID */
+.grid{
+  padding:14px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+/* CARD */
+.card{
+  background:var(--card);
+  border-radius:20px;
+  padding:16px;
+  box-shadow:0 0 26px rgba(168,85,247,.25);
+}
+.card h3{
+  margin:0;
+  font-size:14px;
+  color:var(--muted);
+}
+.card p{
+  margin:6px 0 0;
+  font-size:26px;
+  font-weight:900;
+}
+
+/* COLORS */
+.blue{color:var(--blue)}
+.green{color:var(--green)}
+.red{color:var(--red)}
+.yellow{color:var(--yellow)}
+
+/* LOGS */
+.logs{
+  margin:14px;
+  background:var(--card);
+  border-radius:22px;
+  padding:14px;
+}
+.log{
+  font-size:13px;
+  padding:8px 0;
+  border-bottom:1px solid #1e293b;
+}
+.log:last-child{border:none}
+.log small{color:var(--muted)}
+</style>
+</head>
+
+<body>
+
+<script>
+/* ADMIN CHECK */
+if(localStorage.getItem("isAdmin")!=="true"){
+  location.href="index.html";
+}
+</script>
+
+<div class="header">
+  <div class="back" onclick="location.href='profile.html'">←</div>
+  <div class="title">Admin Dashboard</div>
+</div>
+
+<!-- STATS -->
+<div class="grid">
+  <div class="card"><h3>Total Downloads</h3><p class="blue">12,480</p></div>
+  <div class="card"><h3>Online Users</h3><p class="green">328</p></div>
+  <div class="card"><h3>Active Tournaments</h3><p class="yellow">19</p></div>
+  <div class="card"><h3>Today Joined</h3><p class="blue">142</p></div>
+  <div class="card"><h3>Today Created</h3><p class="green">21</p></div>
+  <div class="card"><h3>Pending Withdrawals</h3><p class="red">7</p></div>
+</div>
+
+<!-- ACTIVITY LOGS -->
+<div class="logs">
+  <div class="log">Rahul joined BGMI Battle Clash <small>2 min ago</small></div>
+  <div class="log">Aman created Free Fire Cup <small>10 min ago</small></div>
+  <div class="log">Withdrawal request ₹500 <small>18 min ago</small></div>
+  <div class="log">Admin approved payout <small>25 min ago</small></div>
+</div>
+
+<!-- SOUND -->
+<audio id="tap" src="assets/tap.mp3"></audio>
+<audio id="bgm" src="assets/bgm.mp3" loop></audio>
+
+<script>
+/* MUSIC */
+const bgm=document.getElementById("bgm");
+bgm.volume=0.35;
+bgm.play().catch(()=>{});
+
+/* TAP SOUND */
+document.addEventListener("touchstart",()=>{
+  const t=document.getElementById("tap");
+  t.currentTime=0;
+  t.play().catch(()=>{});
+});
+</script>
+
+</body>
+</html>
