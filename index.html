@@ -20,44 +20,58 @@
 
 body{
   margin:0;
-  font-family:Segoe UI, system-ui, sans-serif;
+  font-family:Segoe UI,system-ui,sans-serif;
   background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
   color:var(--text);
 }
 
-/* -------- LOGIN CHECK -------- */
-.hidden{display:none}
-
-/* -------- SEARCH -------- */
+/* ---------- TOP BAR ---------- */
 .topbar{
   padding:14px;
+  display:flex;
+  gap:10px;
+}
+.action{
+  flex:1;
+  padding:14px;
+  border-radius:18px;
+  border:none;
+  font-size:16px;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;
+}
+.action.join{
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+}
+.action:active{
+  transform:scale(.95);
+}
+
+/* ---------- SEARCH ---------- */
+.search{
+  padding:0 14px 14px;
 }
 .search input{
   width:100%;
-  padding:16px;
-  border-radius:18px;
+  padding:14px;
+  border-radius:16px;
   border:none;
   background:#020617;
   color:#fff;
   font-size:15px;
 }
 
-/* -------- CARD -------- */
+/* ---------- CARD ---------- */
 .card{
   margin:14px;
   background:var(--card);
   border-radius:22px;
   overflow:hidden;
-  box-shadow:0 0 28px rgba(168,85,247,.28);
-  transition:transform .12s ease, box-shadow .12s ease;
+  box-shadow:0 0 26px rgba(168,85,247,.25);
 }
-.card:active{
-  transform:scale(.97);
-  box-shadow:0 0 38px rgba(56,189,248,.55);
-}
-
 .banner{
-  height:160px;
+  height:150px;
   background:linear-gradient(135deg,#312e81,#020617);
   display:flex;
   align-items:end;
@@ -65,30 +79,25 @@ body{
   font-size:18px;
   font-weight:900;
 }
-
 .body{padding:14px}
-
 .line{
   font-size:13px;
-  opacity:.85;
+  opacity:.8;
   margin:4px 0;
 }
-
 .prize{
   font-size:22px;
   font-weight:900;
   color:var(--green);
   margin:6px 0;
 }
-
 .row{
   display:flex;
   justify-content:space-between;
   font-size:13px;
   margin:6px 0;
 }
-
-.join{
+.join-btn{
   margin-top:10px;
   width:100%;
   padding:14px;
@@ -98,14 +107,10 @@ body{
   color:#fff;
   font-weight:900;
   font-size:16px;
-  transition:transform .12s ease, box-shadow .12s ease;
 }
-.join:active{
-  transform:scale(.95);
-  box-shadow:0 0 40px rgba(168,85,247,.9);
-}
+.join-btn:active{transform:scale(.95)}
 
-/* -------- BOTTOM NAV -------- */
+/* ---------- BOTTOM NAV ---------- */
 .nav{
   position:fixed;
   bottom:0;
@@ -116,9 +121,8 @@ body{
   display:flex;
   justify-content:space-around;
   align-items:center;
-  box-shadow:0 -6px 28px rgba(168,85,247,.35);
+  box-shadow:0 -6px 25px rgba(168,85,247,.3);
 }
-
 .nav-item{
   display:flex;
   flex-direction:column;
@@ -128,17 +132,12 @@ body{
 }
 .nav-item span{
   font-size:22px;
-  transition:transform .12s ease, text-shadow .12s ease;
 }
 .nav-item:active span{
   transform:scale(1.2);
-  text-shadow:0 0 14px rgba(56,189,248,.9);
 }
-.nav-item.active{
-  color:var(--blue);
-}
+.nav-item.active{color:var(--blue)}
 
-/* -------- SPACER -------- */
 .spacer{height:90px}
 </style>
 </head>
@@ -152,46 +151,31 @@ if(!localStorage.getItem("nickname")){
 }
 </script>
 
-<!-- SEARCH -->
+<!-- TOP ACTION -->
 <div class="topbar">
-  <div class="search">
-    <input id="search" placeholder="Search tournament, prize, game">
-  </div>
+  <button class="action join" onclick="goJoin()">JOIN</button>
+  <button class="action" onclick="goCreate()">CREATE</button>
 </div>
 
-<!-- TOURNAMENT LIST -->
-<div id="list">
+<!-- SEARCH -->
+<div class="search">
+  <input placeholder="Search tournament or prize">
+</div>
 
-  <div class="card" data-search="bgmi squad 2000" onclick="openTournament('T001')">
-    <div class="banner">BGMI Battle Clash</div>
-    <div class="body">
-      <div class="line">Organiser: Rahul</div>
-      <div class="line">Game: BGMI • Mode: Squad</div>
-      <div class="prize">₹2,000</div>
-      <div class="row">
-        <div>Entry Fee: ₹50</div>
-        <div>Players: 32 / 100</div>
-      </div>
-      <div class="line">Wednesday • 15 May • 7:00 PM</div>
-      <button class="join">JOIN NOW</button>
+<!-- TOURNAMENT CARD -->
+<div class="card">
+  <div class="banner">BGMI Battle Clash</div>
+  <div class="body">
+    <div class="line">Organiser: Rahul</div>
+    <div class="line">Game: BGMI • Mode: Squad</div>
+    <div class="prize">₹2,000</div>
+    <div class="row">
+      <div>Entry Fee: ₹50</div>
+      <div>Players: 32 / 100</div>
     </div>
+    <div class="line">Wednesday • 15 May • 7:00 PM</div>
+    <button class="join-btn" onclick="goJoin()">JOIN NOW</button>
   </div>
-
-  <div class="card" data-search="free fire solo 1500" onclick="openTournament('T002')">
-    <div class="banner">Free Fire Daily Cup</div>
-    <div class="body">
-      <div class="line">Organiser: Aman</div>
-      <div class="line">Game: Free Fire • Mode: Solo</div>
-      <div class="prize">₹1,500</div>
-      <div class="row">
-        <div>Entry Fee: ₹30</div>
-        <div>Players: 48 / 100</div>
-      </div>
-      <div class="line">Thursday • 16 May • 8:00 PM</div>
-      <button class="join">JOIN NOW</button>
-    </div>
-  </div>
-
 </div>
 
 <div class="spacer"></div>
@@ -205,12 +189,12 @@ if(!localStorage.getItem("nickname")){
   <div class="nav-item"><span>👤</span>Profile</div>
 </div>
 
-<!-- GLOBAL SOUND & MUSIC -->
+<!-- SOUND -->
 <audio id="tap" src="assets/tap.mp3"></audio>
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* BACKGROUND MUSIC */
+/* MUSIC */
 const bgm=document.getElementById("bgm");
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
@@ -218,21 +202,15 @@ bgm.play().catch(()=>{});
 /* TOUCH SOUND */
 document.addEventListener("touchstart",()=>{
   const s=document.getElementById("tap");
-  s.currentTime=0; s.play().catch(()=>{});
+  s.currentTime=0;
+  s.play().catch(()=>{});
 });
 
-/* SEARCH */
-document.getElementById("search").addEventListener("input",e=>{
-  let v=e.target.value.toLowerCase();
-  document.querySelectorAll(".card").forEach(c=>{
-    c.style.display = c.dataset.search.includes(v) ? "" : "none";
-  });
-});
-
-/* OPEN TOURNAMENT */
-function openTournament(id){
-  localStorage.setItem("currentTournament",id);
-  location.href="join.html";
+function goCreate(){
+  location.href="create.html";
+}
+function goJoin(){
+  location.href="index.html";
 }
 </script>
 
