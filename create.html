@@ -2,204 +2,307 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Create Tournament</title>
+<title>Create Tournament | Tournament Sa Kamao</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ===== RESET ===== */
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
-}
-
-/* ===== THEME ===== */
 :root{
   --bg:#020617;
-  --glass:rgba(15,23,42,.65);
-  --border:rgba(255,255,255,.08);
+  --card:#0f172a;
   --blue:#38bdf8;
   --purple:#a855f7;
-  --danger:#ef4444;
+  --green:#22c55e;
+  --red:#ef4444;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
 }
+
+*{box-sizing:border-box}
 
 body{
-  min-height:100vh;
+  margin:0;
+  font-family:Segoe UI,system-ui,sans-serif;
   background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
-  color:#fff;
+  color:var(--text);
 }
 
-/* ===== LAYOUT ===== */
-.wrapper{
-  max-width:420px;
-  margin:auto;
-  padding:18px;
-}
-
-.banner{
-  height:190px;
-  border-radius:24px;
-  margin-bottom:20px;
-  background:
-    linear-gradient(180deg,rgba(2,6,23,.2),rgba(2,6,23,.9)),
-    linear-gradient(135deg,#312e81,#020617);
-  box-shadow:0 0 45px rgba(168,85,247,.45);
+/* ---------- HEADER ---------- */
+.header{
+  position:sticky;
+  top:0;
+  z-index:10;
   display:flex;
-  align-items:end;
-  padding:18px;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  background:rgba(2,6,23,.9);
+  backdrop-filter:blur(12px);
+  box-shadow:0 4px 18px rgba(0,0,0,.4);
 }
-
-.banner h1{
-  font-size:26px;
-  font-weight:900;
-  letter-spacing:.5px;
+.back{
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  background:rgba(168,85,247,.18);
 }
-
-/* ===== CARD ===== */
-.card{
-  background:var(--glass);
-  backdrop-filter:blur(16px);
-  border:1px solid var(--border);
-  border-radius:22px;
-  padding:20px;
-  box-shadow:
-    inset 0 0 20px rgba(56,189,248,.08),
-    0 0 25px rgba(168,85,247,.25);
+.back:active{
+  transform:scale(.92);
 }
-
-/* ===== FORM ===== */
-label{
-  display:block;
-  margin-top:14px;
-  font-size:13px;
-  opacity:.85;
-}
-
-input,select{
-  width:100%;
-  margin-top:6px;
-  padding:15px;
-  border-radius:16px;
-  border:none;
-  outline:none;
-  background:#020617;
-  color:#fff;
-  font-size:16px;
-}
-
-input::placeholder{opacity:.5}
-
-/* ===== BUTTON ===== */
-.btn{
-  width:100%;
-  margin-top:26px;
-  padding:18px;
-  border:none;
-  border-radius:22px;
+.h1{
   font-size:18px;
   font-weight:900;
-  letter-spacing:1px;
-  cursor:pointer;
-  color:#000;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  box-shadow:
-    0 0 25px rgba(56,189,248,.9),
-    0 0 45px rgba(168,85,247,.7);
 }
 
-.btn:active{transform:scale(.96)}
+/* ---------- FORM ---------- */
+.container{
+  padding:14px 14px 120px;
+}
+
+.card{
+  background:var(--card);
+  border-radius:22px;
+  padding:14px;
+  margin-bottom:14px;
+  box-shadow:0 0 28px rgba(168,85,247,.28);
+}
+
+.label{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:12px;
+}
+input,select,textarea{
+  width:100%;
+  padding:14px;
+  border-radius:16px;
+  border:none;
+  background:#020617;
+  color:#fff;
+  font-size:15px;
+  margin-top:6px;
+}
+textarea{
+  min-height:120px;
+  resize:none;
+}
+
+.row{
+  display:flex;
+  gap:10px;
+}
+.row > div{flex:1}
 
 .note{
-  margin-top:12px;
-  text-align:center;
   font-size:12px;
-  opacity:.7;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+/* ---------- SECURITY ---------- */
+.security{
+  background:rgba(34,197,94,.12);
+  border:1px solid rgba(34,197,94,.4);
+  color:#22c55e;
+  padding:12px;
+  border-radius:16px;
+  font-size:13px;
+  margin-top:12px;
+}
+
+/* ---------- CREATE BUTTON ---------- */
+.create{
+  position:fixed;
+  bottom:16px;
+  left:16px;
+  right:16px;
+  padding:16px;
+  border:none;
+  border-radius:20px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;
+  font-size:18px;
+  font-weight:900;
+  box-shadow:0 0 36px rgba(168,85,247,.75);
+}
+.create:active{
+  transform:scale(.95);
+}
+
+/* ---------- POPUP ---------- */
+.popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:99;
+}
+.popbox{
+  background:#020617;
+  border-radius:22px;
+  padding:18px;
+  width:85%;
+  max-width:360px;
+  box-shadow:0 0 30px rgba(168,85,247,.6);
+}
+.popbox h3{
+  margin:0 0 8px;
+}
+.popbox p{
+  font-size:14px;
+  opacity:.85;
+}
+.popbox button{
+  width:100%;
+  margin-top:12px;
+  padding:12px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,var(--red),#f97316);
+  color:#fff;
+  font-weight:900;
 }
 </style>
 </head>
 
 <body>
 
-<div class="wrapper">
+<script>
+/* LOGIN CHECK */
+if(!localStorage.getItem("nickname")){
+  location.href="login.html";
+}
+</script>
 
-  <!-- BANNER -->
-  <div class="banner">
-    <h1>Create Tournament</h1>
-  </div>
+<!-- HEADER -->
+<div class="header">
+  <div class="back" onclick="goBack()">←</div>
+  <div class="h1">Create Tournament</div>
+</div>
 
-  <!-- FORM -->
+<div class="container">
+
   <div class="card">
 
-    <label>Tournament Name</label>
-    <input id="tname" maxlength="30" placeholder="3–30 characters">
+    <div class="label">Tournament Name</div>
+    <input id="tname" maxlength="40" placeholder="Enter tournament name">
 
-    <label>Game</label>
+    <div class="label">Game</div>
     <select id="game">
       <option value="">Select game</option>
+      <option>BGMI</option>
+      <option>Free Fire</option>
+      <option>COD Mobile</option>
+      <option>Ludo</option>
     </select>
 
-    <label>Prize Money (₹)</label>
-    <input id="prize" type="number" placeholder="Max ₹1,00,00,000">
+    <div class="label">Mode</div>
+    <select id="mode">
+      <option value="">Select mode</option>
+      <option>Solo</option>
+      <option>Duo</option>
+      <option>Squad</option>
+    </select>
 
-    <label>Entry Fee (₹)</label>
-    <input id="fee" type="number" placeholder="Max ₹10,00,000">
+    <div class="row">
+      <div>
+        <div class="label">Prize Money (₹)</div>
+        <input id="prize" type="number" max="10000000" placeholder="Max 1 Crore">
+      </div>
+      <div>
+        <div class="label">Entry Fee (₹)</div>
+        <input id="fee" type="number" max="1000000" placeholder="Max 10 Lakh">
+      </div>
+    </div>
 
-    <label>Max Players</label>
-    <input id="players" type="number" placeholder="1 – 1000">
+    <div class="row">
+      <div>
+        <div class="label">Max Players</div>
+        <input id="players" type="number" max="1000" placeholder="Up to 1000">
+      </div>
+      <div>
+        <div class="label">Date</div>
+        <input id="date" type="date">
+      </div>
+    </div>
 
-    <label>Date</label>
-    <input id="date" type="date">
+    <div class="row">
+      <div>
+        <div class="label">Time</div>
+        <input id="time" type="time">
+      </div>
+      <div>
+        <div class="label">Day</div>
+        <input id="day" placeholder="Auto / Manual">
+      </div>
+    </div>
 
-    <label>Time</label>
-    <input id="time" type="time">
+    <div class="label">Rules</div>
+    <textarea id="rules" placeholder="Write tournament rules (max 1000 words)"></textarea>
 
-    <button class="btn" onclick="submitCreate()">
-      CREATE TOURNAMENT ₹100 SECURITY
-    </button>
-
-    <div class="note">
-      ₹100 security is refundable after tournament completion
+    <div class="security">
+      ₹100 security amount will be held & returned after tournament completion.
     </div>
 
   </div>
+
 </div>
 
-<script>
-/* ===== ADMIN CONTROLLED GAME LIST ===== */
-const games=[
-  "Free Fire","BGMI","PUBG","COD Mobile","Valorant","CS GO","Fortnite",
-  "Apex Legends","Ludo","Chess","FIFA","eFootball","Rocket League",
-  "Brawl Stars","Among Us","Dota 2","League of Legends","Minecraft",
-  "GTA Online","Warzone","Stumble Guys","Carrom","8 Ball Pool"
-];
+<button class="create" onclick="createTournament()">CREATE TOURNAMENT</button>
 
-const gameSelect=document.getElementById("game");
-games.forEach(g=>{
-  const o=document.createElement("option");
-  o.value=g;
-  o.textContent=g;
-  gameSelect.appendChild(o);
+<!-- POPUP -->
+<div class="popup" id="popup">
+  <div class="popbox">
+    <h3>Error</h3>
+    <p id="pmsg"></p>
+    <button onclick="closePop()">OK</button>
+  </div>
+</div>
+
+<!-- SOUND -->
+<audio id="tap" src="assets/tap.mp3"></audio>
+<audio id="bgm" src="assets/bgm.mp3" loop></audio>
+
+<script>
+/* MUSIC */
+const bgm=document.getElementById("bgm");
+bgm.volume=0.35;
+bgm.play().catch(()=>{});
+
+/* TOUCH SOUND */
+document.addEventListener("touchstart",()=>{
+  const s=document.getElementById("tap");
+  s.currentTime=0;
+  s.play().catch(()=>{});
 });
 
-/* ===== VALIDATION ===== */
-function submitCreate(){
-  const name=tname.value.trim();
-  const game=gameSelect.value;
-  const prizeVal=Number(prize.value);
-  const feeVal=Number(fee.value);
-  const playersVal=Number(players.value);
+/* BACK */
+function goBack(){
+  location.href="index.html";
+}
 
-  if(name.length<3) return alert("Tournament name must be at least 3 characters");
-  if(!game) return alert("Please select a game");
-  if(prizeVal<=0 || prizeVal>10000000) return alert("Prize limit is ₹1 crore");
-  if(feeVal<0 || feeVal>1000000) return alert("Entry fee limit is ₹10 lakh");
-  if(playersVal<1 || playersVal>1000) return alert("Players limit 1–1000");
-  if(!date.value) return alert("Select tournament date");
-  if(!time.value) return alert("Select tournament time");
+/* POPUP */
+function showPop(msg){
+  document.getElementById("pmsg").innerText=msg;
+  document.getElementById("popup").style.display="flex";
+}
+function closePop(){
+  document.getElementById("popup").style.display="none";
+}
 
-  // BACKEND CONNECT YAHAN HOGA (Google Form)
-  alert("Tournament created (demo). Backend will be connected here.");
+/* CREATE */
+function createTournament(){
+  if(!tname.value || !game.value || !mode.value){
+    showPop("Please fill all required fields");
+    return;
+  }
+  // Future DB hook here
+  location.href="payment.html";
 }
 </script>
 
