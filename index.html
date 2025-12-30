@@ -78,8 +78,6 @@ body{
   box-shadow:0 0 26px rgba(168,85,247,.25);
   -webkit-tap-highlight-color:transparent;
 }
-
-/* whole card tap */
 .card-tap{
   position:absolute;
   inset:0;
@@ -146,9 +144,13 @@ body{
   font-size:11px;
   color:#94a3b8;
   cursor:pointer;
+  transition:transform .12s ease,color .12s ease;
 }
 .nav-item span{font-size:22px}
 .nav-item.active{color:var(--blue)}
+.nav-item:active{
+  transform:scale(1.15);
+}
 
 .spacer{height:90px}
 
@@ -164,11 +166,8 @@ body{
 if(!localStorage.getItem("username")){
   location.href="login.html";
 }
-
-/* auto session refresh */
 localStorage.setItem("app_session", Date.now());
 
-/* default flags */
 if(!localStorage.getItem("wallet")){
   localStorage.setItem("wallet","0");
 }
@@ -226,11 +225,18 @@ const bgm=document.getElementById("bgm");
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
 
-/* ================= TAP SOUND ================= */
-document.addEventListener("touchstart",()=>{
+/* ================= TAP SOUND (GLOBAL + NAV) ================= */
+function playTap(){
   const s=document.getElementById("tap");
-  s.currentTime=0;
-  s.play().catch(()=>{});
+  if(s){
+    s.currentTime=0;
+    s.play().catch(()=>{});
+  }
+}
+
+document.addEventListener("touchstart",playTap);
+document.querySelectorAll(".nav-item").forEach(i=>{
+  i.addEventListener("click",playTap);
 });
 
 /* ================= BLOCK LONG PRESS ================= */
@@ -238,7 +244,7 @@ document.addEventListener("contextmenu",e=>e.preventDefault());
 
 /* ================= NAV ================= */
 function goCreate(){ location.href="create.html"; }
-function goJoin(){ /* future filter */ }
+function goJoin(){}
 function goMy(){ location.href="my.html"; }
 function goWallet(){ location.href="wallet.html"; }
 function goProfile(){ location.href="profile.html"; }
@@ -254,4 +260,4 @@ function openTournament(){
 </script>
 
 </body>
-</html>
+  </html>
