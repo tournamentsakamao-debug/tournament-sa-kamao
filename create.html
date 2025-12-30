@@ -49,6 +49,7 @@ body{
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
   color:#000;
   font-weight:900;
+  cursor:pointer;
 }
 .back:active{transform:scale(.9)}
 .h1{
@@ -159,7 +160,7 @@ if(!localStorage.getItem("nickname")){
 </script>
 
 <div class="header">
-  <div class="back" onclick="location.href='index.html'">←</div>
+  <div class="back" id="backBtn">←</div>
   <div class="h1">Create Tournament</div>
 </div>
 
@@ -221,6 +222,7 @@ if(!localStorage.getItem("nickname")){
 
 <div class="label">Rules (Max 1000 words)</div>
 <textarea id="rules"></textarea>
+<div class="label" id="ruleCount">0 / 1000 words</div>
 
 <div class="security">
 ₹100 security amount will be held & returned after tournament completion.
@@ -229,7 +231,7 @@ if(!localStorage.getItem("nickname")){
 </div>
 </div>
 
-<button class="create-btn" onclick="createTournament()">CREATE TOURNAMENT • ₹100</button>
+<button class="create-btn" onclick="createTournament()">CREATE TOURNAMENT • ₹100 SECURITY</button>
 
 <div class="popup" id="popup">
 <div class="popbox">
@@ -239,16 +241,39 @@ if(!localStorage.getItem("nickname")){
 </div>
 
 <script>
-/* VALIDATIONS */
+/* BACK BUTTON FIX */
+document.getElementById("backBtn").addEventListener("click",()=>{
+  window.location.href="index.html";
+});
+
+/* TOURNAMENT NAME – only letters */
 tname.addEventListener("input",()=>{
   tname.value = tname.value.replace(/[^a-zA-Z ]/g,"");
 });
 
+/* LIMITS */
+prize.addEventListener("input",()=>{ if(prize.value>10000000) prize.value=10000000; });
+fee.addEventListener("input",()=>{ if(fee.value>1000000) fee.value=1000000; });
+players.addEventListener("input",()=>{ if(players.value>500) players.value=500; });
+
+/* AUTO DAY */
 date.addEventListener("change",()=>{
   const d=new Date(date.value);
   if(!isNaN(d)) day.value=d.toLocaleDateString("en-US",{weekday:"long"});
 });
 
+/* RULES – 1000 WORD LIMIT */
+const ruleCount=document.getElementById("ruleCount");
+rules.addEventListener("input",()=>{
+  let words = rules.value.trim().split(/\s+/).filter(w=>w.length>0);
+  if(words.length>1000){
+    rules.value = words.slice(0,1000).join(" ");
+    words = rules.value.split(/\s+/);
+  }
+  ruleCount.innerText = words.length + " / 1000 words";
+});
+
+/* CREATE */
 function createTournament(){
   if(!tname.value||!game.value||!mode.value||!prize.value){
     pmsg.innerText="Please fill all required fields correctly";
