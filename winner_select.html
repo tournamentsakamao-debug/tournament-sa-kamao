@@ -18,7 +18,10 @@
   --muted:#94a3b8;
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
 body{
   margin:0;
@@ -50,7 +53,9 @@ body{
   color:#000;
   font-weight:900;
   cursor:pointer;
+  transition:transform .12s ease;
 }
+.back:active{transform:scale(.9)}
 .h1{font-size:18px;font-weight:900}
 
 /* CONTENT */
@@ -62,18 +67,12 @@ body{
   padding:14px;
   margin-bottom:14px;
   box-shadow:0 0 26px rgba(168,85,247,.25);
+  transition:transform .12s ease;
 }
+.card:active{transform:scale(.98)}
 
-.big{
-  font-size:18px;
-  font-weight:900;
-}
-
-.label{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:10px;
-}
+.big{font-size:18px;font-weight:900}
+.label{font-size:12px;color:var(--muted);margin-top:10px}
 
 /* PLAYER */
 .player{
@@ -85,7 +84,9 @@ body{
   margin-top:10px;
   background:#020617;
   font-size:14px;
+  transition:transform .12s ease;
 }
+.player:active{transform:scale(.97)}
 
 select{
   padding:8px;
@@ -128,8 +129,12 @@ input{
   font-weight:900;
   color:#fff;
   background:linear-gradient(135deg,var(--blue),var(--purple));
+  transition:transform .12s ease, box-shadow .12s ease;
 }
-.btn:active{transform:scale(.95)}
+.btn:active{
+  transform:scale(.95);
+  box-shadow:0 0 30px rgba(168,85,247,.8);
+}
 
 .footer{
   position:fixed;
@@ -143,9 +148,20 @@ input{
 <body>
 
 <script>
-if(!localStorage.getItem("nickname")){
+/* ===== GLOBAL LOGIN CHECK ===== */
+if(
+  !localStorage.getItem("username") &&
+  !localStorage.getItem("nickname")
+){
   location.href="login.html";
 }
+
+/* session refresh */
+localStorage.setItem("app_session", Date.now());
+
+/* defaults */
+if(!localStorage.getItem("wallet")) localStorage.setItem("wallet","0");
+if(!localStorage.getItem("isAdmin")) localStorage.setItem("isAdmin","false");
 </script>
 
 <!-- HEADER -->
@@ -168,7 +184,7 @@ if(!localStorage.getItem("nickname")){
 
   <div class="player">
     <span>#1 Rahul (UID: 54821478)</span>
-    <select>
+    <select class="rankSelect">
       <option value="">Rank</option>
       <option>1st</option>
       <option>2nd</option>
@@ -180,7 +196,7 @@ if(!localStorage.getItem("nickname")){
 
   <div class="player">
     <span>#2 Aman (UID: 87451236)</span>
-    <select>
+    <select class="rankSelect">
       <option value="">Rank</option>
       <option>1st</option>
       <option>2nd</option>
@@ -192,7 +208,7 @@ if(!localStorage.getItem("nickname")){
 
   <div class="player">
     <span>#3 Neeraj (UID: 95123647)</span>
-    <select>
+    <select class="rankSelect">
       <option value="">Rank</option>
       <option>1st</option>
       <option>2nd</option>
@@ -208,7 +224,7 @@ if(!localStorage.getItem("nickname")){
   <div class="big">Proof Upload</div>
 
   <div class="label">Screenshot / Screen Recording Link</div>
-  <input placeholder="Paste Google Drive link">
+  <input id="proofLink" placeholder="Paste Google Drive link">
 
   <div class="info">
     ℹ️ Submit proof within 24 hours.  
@@ -230,20 +246,51 @@ if(!localStorage.getItem("nickname")){
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* MUSIC */
+/* ===== MUSIC ===== */
 const bgm=document.getElementById("bgm");
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
 
-/* TOUCH SOUND */
+/* ===== TAP SOUND ===== */
 document.addEventListener("touchstart",()=>{
-  const s=document.getElementById("tap");
-  s.currentTime=0;
-  s.play().catch(()=>{});
+  tap.currentTime=0;
+  tap.play().catch(()=>{});
 });
 
-/* SUBMIT */
+/* ===== BLOCK LONG PRESS ===== */
+document.addEventListener("contextmenu",e=>e.preventDefault());
+
+/* ===== PREVENT DUPLICATE RANKS ===== */
+document.querySelectorAll(".rankSelect").forEach(sel=>{
+  sel.addEventListener("change",()=>{
+    const selected=[...document.querySelectorAll(".rankSelect")]
+      .map(s=>s.value)
+      .filter(v=>v);
+
+    document.querySelectorAll(".rankSelect").forEach(s=>{
+      [...s.options].forEach(o=>{
+        if(o.value && selected.includes(o.value) && s.value!==o.value){
+          o.disabled=true;
+        }else{
+          o.disabled=false;
+        }
+      });
+    });
+  });
+});
+
+/* ===== SUBMIT ===== */
 function submitWinners(){
+  const selected=[...document.querySelectorAll(".rankSelect")]
+    .map(s=>s.value)
+    .filter(v=>v);
+
+  if(selected.length===0){
+    alert("Please select at least one winner rank");
+    return;
+  }
+
+  // future: proof + admin verification + auto distribution
   alert("Submitted! In 24 hours money will be added to wallet after verification.");
   location.href="creator_manage.html";
 }
