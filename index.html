@@ -26,7 +26,7 @@ body{
   color:var(--text);
 }
 
-/* ================= TOP ACTION (OLD STYLE) ================= */
+/* ================= TOP ACTION ================= */
 .topbar{
   padding:14px;
   display:flex;
@@ -40,7 +40,11 @@ body{
   font-size:17px;
   font-weight:900;
   color:#fff;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  background:linear-gradient(135deg,#60a5fa,#38bdf8);
   transition:transform .12s ease, box-shadow .12s ease;
 }
 .action.join{
@@ -110,7 +114,6 @@ body{
   color:#fff;
   font-weight:900;
   font-size:16px;
-  transition:transform .12s ease, box-shadow .12s ease;
 }
 .join-btn:active{
   transform:scale(.95);
@@ -163,8 +166,8 @@ if(!localStorage.getItem("nickname")){
 
 <!-- ================= TOP JOIN / CREATE ================= -->
 <div class="topbar">
-  <button class="action join" onclick="goJoin(event)">JOIN</button>
-  <button class="action" onclick="goCreate(event)">CREATE</button>
+  <button class="action join" onclick="goJoin(event)">🎮 JOIN</button>
+  <button class="action" onclick="goCreate(event)">➕ CREATE</button>
 </div>
 
 <!-- ================= SEARCH ================= -->
@@ -172,8 +175,8 @@ if(!localStorage.getItem("nickname")){
   <input placeholder="Search tournament or prize">
 </div>
 
-<!-- ================= TOURNAMENT CARD (SAMPLE) ================= -->
-<div class="card">
+<!-- ================= TOURNAMENT CARD ================= -->
+<div class="card" onclick="openTournament(event)">
   <div class="banner">BGMI Battle Clash</div>
   <div class="body">
     <div class="line">Organiser: Rahul</div>
@@ -216,20 +219,23 @@ document.addEventListener("touchstart",()=>{
   s.play().catch(()=>{});
 });
 
-/* ================= NAV FUNCTIONS ================= */
+/* ================= NAV / CARD FUNCTIONS ================= */
 function goCreate(e){
   e.stopPropagation();
   location.href="create.html";
 }
 function goJoin(e){
   e.stopPropagation();
-  // join page nahi, home par hi card se join
 }
 function joinTournament(e){
   e.stopPropagation();
   location.href="payment.html";
 }
+function openTournament(e){
+  e.stopPropagation();
+  location.href="tournament.html";
+}
 </script>
 
 </body>
-  </html>
+</html>
