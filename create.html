@@ -55,6 +55,7 @@ body{
 .h1{
   font-size:18px;
   font-weight:900;
+  cursor:pointer;
 }
 
 /* FORM */
@@ -161,7 +162,7 @@ if(!localStorage.getItem("nickname")){
 
 <div class="header">
   <div class="back" id="backBtn">←</div>
-  <div class="h1">Create Tournament</div>
+  <div class="h1" id="titleBack">Create Tournament</div>
 </div>
 
 <div class="container">
@@ -241,10 +242,12 @@ if(!localStorage.getItem("nickname")){
 </div>
 
 <script>
-/* BACK BUTTON FIX */
-document.getElementById("backBtn").addEventListener("click",()=>{
+function goHome(){
   window.location.href="index.html";
-});
+}
+
+document.getElementById("backBtn").addEventListener("click", goHome);
+document.getElementById("titleBack").addEventListener("click", goHome);
 
 /* TOURNAMENT NAME – only letters */
 tname.addEventListener("input",()=>{
@@ -285,4 +288,4 @@ function createTournament(){
 </script>
 
 </body>
-</html>
+  </html>
