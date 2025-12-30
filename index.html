@@ -77,6 +77,8 @@ body{
   border-radius:22px;
   overflow:hidden;
   box-shadow:0 0 26px rgba(168,85,247,.25);
+  cursor:pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* invisible tap layer */
@@ -136,6 +138,8 @@ body{
   font-size:16px;
   position:relative;
   z-index:3;
+  cursor:pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 .join-btn:active{
   transform:scale(.95);
@@ -199,7 +203,7 @@ if(!localStorage.getItem("nickname")){
 
 <!-- ================= TOURNAMENT CARD ================= -->
 <div class="card">
-  <div class="card-tap" onclick="openTournament()"></div>
+  <div class="card-tap"></div>
 
   <div class="banner">BGMI Battle Clash</div>
 
@@ -212,7 +216,7 @@ if(!localStorage.getItem("nickname")){
       <div>Players: 32 / 100</div>
     </div>
     <div class="line">Wednesday • 15 May • 7:00 PM</div>
-    <button class="join-btn" onclick="joinTournament()">JOIN NOW</button>
+    <button class="join-btn">JOIN NOW</button>
   </div>
 </div>
 
@@ -244,6 +248,9 @@ document.addEventListener("touchstart",()=>{
   s.play().catch(()=>{});
 });
 
+/* ================= BLOCK LONG PRESS / GITHUB TAB ================= */
+document.addEventListener("contextmenu",e=>e.preventDefault());
+
 /* ================= NAV FUNCTIONS ================= */
 function goCreate(){
   location.href="create.html";
@@ -251,13 +258,18 @@ function goCreate(){
 function goJoin(){
   // future join list
 }
-function joinTournament(){
+
+/* ================= CLICK ISOLATION ================= */
+document.querySelector(".join-btn").addEventListener("click",function(e){
+  e.stopPropagation();
   location.href="payment.html";
-}
-function openTournament(){
+});
+
+document.querySelector(".card-tap").addEventListener("click",function(e){
+  e.preventDefault();
   location.href="tournament.html";
-}
+});
 </script>
 
 </body>
-  </html>
+</html>
