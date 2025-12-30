@@ -151,29 +151,43 @@ input{
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* BACKGROUND MUSIC */
+/* ================= GLOBAL APP SYSTEM (DO NOT REMOVE) ================= */
+
+// Auto redirect if already logged in (first install only)
+if(localStorage.getItem("username")){
+  location.href = "index.html";
+}
+
+// Base flags (future admin / logout system)
+if(!localStorage.getItem("app_session")){
+  localStorage.setItem("app_session", Date.now());
+}
+if(!localStorage.getItem("isAdmin")){
+  localStorage.setItem("isAdmin","false");
+}
+
+/* ================= BACKGROUND MUSIC ================= */
 const bgm = document.getElementById("bgm");
 bgm.volume = 0.35;
 bgm.play().catch(()=>{});
 
-/* TOUCH SOUND */
+/* ================= TOUCH SOUND ================= */
 document.addEventListener("touchstart",()=>{
   const s=document.getElementById("tap");
   s.currentTime=0;
   s.play().catch(()=>{});
 });
 
-/* BLOCK RIGHT CLICK */
+/* ================= BLOCK RIGHT CLICK ================= */
 document.addEventListener("contextmenu",e=>e.preventDefault());
 
-/* USERNAME VALIDATION */
+/* ================= USERNAME VALIDATION ================= */
 const username = document.getElementById("username");
-
 username.addEventListener("input",()=>{
   username.value = username.value.replace(/[^a-zA-Z0-9_]/g,"");
 });
 
-/* LOGIN */
+/* ================= LOGIN ================= */
 function login(){
   const name = username.value.trim();
 
@@ -182,11 +196,15 @@ function login(){
     return;
   }
 
-  // FUTURE: database uniqueness check here
-
+  // SAVE USER (visible only to admin later)
   localStorage.setItem("username", name);
 
-  // go to HOME (UI-2)
+  // INIT WALLET + FLAGS (future DB sync)
+  if(!localStorage.getItem("wallet")){
+    localStorage.setItem("wallet","0");
+  }
+
+  // GO TO HOME (UI-2)
   location.href = "index.html";
 }
 
