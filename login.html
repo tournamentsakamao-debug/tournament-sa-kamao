@@ -2,67 +2,199 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Welcome | Tournament Sa Kamao</title>
+<title>Login | Tournament Sa Kamao</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 :root{
-  --bg:#020617; --card:#0f172a; --blue:#38bdf8; --purple:#a855f7; --text:#e5e7eb;
+  --bg:#020617;
+  --card:#0f172a;
+  --blue:#38bdf8;
+  --purple:#a855f7;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
 }
+
 *{box-sizing:border-box}
+
 body{
-  margin:0; height:100vh; display:flex; align-items:center; justify-content:center;
-  font-family:Segoe UI, sans-serif;
-  background:radial-gradient(circle at top,#1e1b4b,#020617 70%); color:var(--text);
+  margin:0;
+  font-family:Segoe UI,system-ui,sans-serif;
+  background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
 }
+
+/* CARD */
 .card{
-  width:90%; max-width:380px; background:var(--card);
-  border-radius:24px; padding:28px 22px; text-align:center;
-  box-shadow:0 0 40px rgba(168,85,247,.35);
+  width:92%;
+  max-width:380px;
+  background:var(--card);
+  border-radius:24px;
+  padding:22px;
+  box-shadow:0 0 35px rgba(168,85,247,.35);
 }
-.h1{font-size:26px; font-weight:900; margin-bottom:6px}
-.sub{font-size:13px; opacity:.7; margin-bottom:22px}
+
+/* TITLE */
+.title{
+  text-align:center;
+  font-size:22px;
+  font-weight:900;
+}
+.sub{
+  text-align:center;
+  font-size:13px;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+/* INPUT */
+.label{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:18px;
+}
 input{
-  width:100%; padding:16px; border-radius:16px; border:none;
-  background:#020617; color:#fff; font-size:16px; text-align:center;
+  width:100%;
+  padding:15px;
+  border-radius:18px;
+  border:none;
+  background:#020617;
+  color:#fff;
+  font-size:16px;
+  margin-top:6px;
 }
+
+/* BUTTON */
 .btn{
-  margin-top:16px; width:100%; padding:16px; border:none; border-radius:18px;
+  margin-top:22px;
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:20px;
   background:linear-gradient(135deg,var(--blue),var(--purple));
-  color:#fff; font-size:18px; font-weight:900;
+  color:#fff;
+  font-size:18px;
+  font-weight:900;
+  transition:transform .12s ease, box-shadow .12s ease;
 }
-.note{margin-top:14px; font-size:12px; opacity:.6}
+.btn:active{
+  transform:scale(.95);
+  box-shadow:0 0 30px rgba(168,85,247,.9);
+}
+
+/* POPUP */
+.popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:99;
+}
+.popbox{
+  background:#020617;
+  padding:20px;
+  border-radius:22px;
+  width:85%;
+  max-width:340px;
+  box-shadow:0 0 30px rgba(168,85,247,.6);
+}
+.popbox p{
+  font-size:14px;
+  text-align:center;
+}
+.popbox button{
+  margin-top:14px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,#ef4444,#f97316);
+  color:#fff;
+  font-weight:900;
+}
+
+/* REMOVE LONG PRESS / HIGHLIGHT */
+*{
+  -webkit-tap-highlight-color: transparent;
+}
 </style>
 </head>
 
 <body>
 
 <div class="card">
-  <div class="h1">Tournament Sa Kamao</div>
-  <div class="sub">Enter the arena. Play. Win.</div>
+  <div class="title">Welcome 👋</div>
+  <div class="sub">Enter your unique username</div>
 
-  <input id="nick" placeholder="Enter your nickname" maxlength="20">
+  <div class="label">Username</div>
+  <input id="username" maxlength="20" placeholder="example: gamer_king">
 
-  <button class="btn" onclick="enterApp()">ENTER APP</button>
-
-  <div class="note">Nickname visible to organisers & admin</div>
+  <button class="btn" onclick="login()">CONTINUE</button>
 </div>
 
-<!-- Global UX -->
-<script src="assets/music.js"></script>
-<script src="assets/touch.js"></script>
+<!-- POPUP -->
+<div class="popup" id="popup">
+  <div class="popbox">
+    <p id="pmsg"></p>
+    <button onclick="popup.style.display='none'">OK</button>
+  </div>
+</div>
+
+<!-- SOUND -->
+<audio id="tap" src="assets/tap.mp3"></audio>
+<audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-function enterApp(){
-  const n = document.getElementById('nick').value.trim();
-  if(!n){
-    // custom popup already global; fallback alert avoided
-    if(typeof showPopup==='function'){ showPopup('Please enter a nickname'); }
+/* BACKGROUND MUSIC */
+const bgm = document.getElementById("bgm");
+bgm.volume = 0.35;
+bgm.play().catch(()=>{});
+
+/* TOUCH SOUND */
+document.addEventListener("touchstart",()=>{
+  const s=document.getElementById("tap");
+  s.currentTime=0;
+  s.play().catch(()=>{});
+});
+
+/* BLOCK RIGHT CLICK */
+document.addEventListener("contextmenu",e=>e.preventDefault());
+
+/* USERNAME VALIDATION */
+const username = document.getElementById("username");
+
+username.addEventListener("input",()=>{
+  username.value = username.value.replace(/[^a-zA-Z0-9_]/g,"");
+});
+
+/* LOGIN */
+function login(){
+  const name = username.value.trim();
+
+  if(name.length < 4){
+    showPop("Username must be at least 4 characters");
     return;
   }
-  localStorage.setItem('nickname', n);
-  location.href = 'index.html';
+
+  // FUTURE: database uniqueness check here
+
+  localStorage.setItem("username", name);
+
+  // go to HOME (UI-2)
+  location.href = "index.html";
+}
+
+function showPop(msg){
+  pmsg.innerText = msg;
+  popup.style.display = "flex";
 }
 </script>
+
 </body>
 </html>
