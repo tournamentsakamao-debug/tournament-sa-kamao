@@ -30,15 +30,16 @@ body{
 .header{
   position:sticky;
   top:0;
-  z-index:10;
+  z-index:20;
   display:flex;
   align-items:center;
-  gap:12px;
-  padding:14px;
-  background:rgba(2,6,23,.9);
+  gap:10px;
+  padding:12px;
+  background:rgba(2,6,23,.92);
   backdrop-filter:blur(12px);
   box-shadow:0 4px 18px rgba(0,0,0,.4);
 }
+
 .back{
   width:42px;
   height:42px;
@@ -49,17 +50,36 @@ body{
   font-size:18px;
   background:rgba(168,85,247,.18);
 }
-.back:active{
-  transform:scale(.92);
-}
+.back:active{transform:scale(.92)}
+
 .h1{
-  font-size:18px;
+  font-size:17px;
   font-weight:900;
+  flex:1;
+}
+
+/* TOP ACTION */
+.actions{
+  display:flex;
+  gap:8px;
+}
+.action-btn{
+  padding:8px 14px;
+  border-radius:12px;
+  font-size:13px;
+  font-weight:800;
+  border:none;
+  background:rgba(56,189,248,.15);
+  color:#38bdf8;
+}
+.action-btn.active{
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;
 }
 
 /* ---------- FORM ---------- */
 .container{
-  padding:14px 14px 120px;
+  padding:14px 14px 130px;
 }
 
 .card{
@@ -75,6 +95,7 @@ body{
   color:var(--muted);
   margin-top:12px;
 }
+
 input,select,textarea{
   width:100%;
   padding:14px;
@@ -85,6 +106,7 @@ input,select,textarea{
   font-size:15px;
   margin-top:6px;
 }
+
 textarea{
   min-height:120px;
   resize:none;
@@ -95,12 +117,6 @@ textarea{
   gap:10px;
 }
 .row > div{flex:1}
-
-.note{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:6px;
-}
 
 /* ---------- SECURITY ---------- */
 .security{
@@ -128,9 +144,7 @@ textarea{
   font-weight:900;
   box-shadow:0 0 36px rgba(168,85,247,.75);
 }
-.create:active{
-  transform:scale(.95);
-}
+.create:active{transform:scale(.95)}
 
 /* ---------- POPUP ---------- */
 .popup{
@@ -148,15 +162,8 @@ textarea{
   padding:18px;
   width:85%;
   max-width:360px;
-  box-shadow:0 0 30px rgba(168,85,247,.6);
 }
-.popbox h3{
-  margin:0 0 8px;
-}
-.popbox p{
-  font-size:14px;
-  opacity:.85;
-}
+.popbox h3{margin:0 0 8px}
 .popbox button{
   width:100%;
   margin-top:12px;
@@ -181,16 +188,20 @@ if(!localStorage.getItem("nickname")){
 
 <!-- HEADER -->
 <div class="header">
-  <div class="back" onclick="goBack()">←</div>
+  <div class="back" onclick="goBack(event)">←</div>
   <div class="h1">Create Tournament</div>
+  <div class="actions">
+    <button class="action-btn" onclick="goJoin(event)">JOIN</button>
+    <button class="action-btn active">CREATE</button>
+  </div>
 </div>
 
 <div class="container">
 
-  <div class="card">
+  <div class="card" onclick="event.stopPropagation()">
 
     <div class="label">Tournament Name</div>
-    <input id="tname" maxlength="40" placeholder="Enter tournament name">
+    <input id="tname" maxlength="40">
 
     <div class="label">Game</div>
     <select id="game">
@@ -212,18 +223,18 @@ if(!localStorage.getItem("nickname")){
     <div class="row">
       <div>
         <div class="label">Prize Money (₹)</div>
-        <input id="prize" type="number" max="10000000" placeholder="Max 1 Crore">
+        <input id="prize" type="number" max="10000000">
       </div>
       <div>
         <div class="label">Entry Fee (₹)</div>
-        <input id="fee" type="number" max="1000000" placeholder="Max 10 Lakh">
+        <input id="fee" type="number" max="1000000">
       </div>
     </div>
 
     <div class="row">
       <div>
         <div class="label">Max Players</div>
-        <input id="players" type="number" max="1000" placeholder="Up to 1000">
+        <input id="players" type="number" max="1000">
       </div>
       <div>
         <div class="label">Date</div>
@@ -238,12 +249,12 @@ if(!localStorage.getItem("nickname")){
       </div>
       <div>
         <div class="label">Day</div>
-        <input id="day" placeholder="Auto / Manual">
+        <input id="day">
       </div>
     </div>
 
     <div class="label">Rules</div>
-    <textarea id="rules" placeholder="Write tournament rules (max 1000 words)"></textarea>
+    <textarea id="rules"></textarea>
 
     <div class="security">
       ₹100 security amount will be held & returned after tournament completion.
@@ -253,9 +264,8 @@ if(!localStorage.getItem("nickname")){
 
 </div>
 
-<button class="create" onclick="createTournament()">CREATE TOURNAMENT</button>
+<button class="create" onclick="createTournament(event)">CREATE TOURNAMENT</button>
 
-<!-- POPUP -->
 <div class="popup" id="popup">
   <div class="popbox">
     <h3>Error</h3>
@@ -264,29 +274,16 @@ if(!localStorage.getItem("nickname")){
   </div>
 </div>
 
-<!-- SOUND -->
-<audio id="tap" src="assets/tap.mp3"></audio>
-<audio id="bgm" src="assets/bgm.mp3" loop></audio>
-
 <script>
-/* MUSIC */
-const bgm=document.getElementById("bgm");
-bgm.volume=0.35;
-bgm.play().catch(()=>{});
-
-/* TOUCH SOUND */
-document.addEventListener("touchstart",()=>{
-  const s=document.getElementById("tap");
-  s.currentTime=0;
-  s.play().catch(()=>{});
-});
-
-/* BACK */
-function goBack(){
+function goBack(e){
+  e.stopPropagation();
+  location.href="index.html";
+}
+function goJoin(e){
+  e.stopPropagation();
   location.href="index.html";
 }
 
-/* POPUP */
 function showPop(msg){
   document.getElementById("pmsg").innerText=msg;
   document.getElementById("popup").style.display="flex";
@@ -295,16 +292,16 @@ function closePop(){
   document.getElementById("popup").style.display="none";
 }
 
-/* CREATE */
-function createTournament(){
+function createTournament(e){
+  e.stopPropagation();
   if(!tname.value || !game.value || !mode.value){
     showPop("Please fill all required fields");
     return;
   }
-  // Future DB hook here
+  // DB SUBMIT HOOK READY
   location.href="payment.html";
 }
 </script>
 
 </body>
-</html>
+  </html>
