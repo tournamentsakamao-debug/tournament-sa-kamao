@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Wallet | Tournament Sa Kamao</title>
+<title>Withdraw | Tournament Sa Kamao</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -13,6 +13,7 @@
   --purple:#a855f7;
   --green:#22c55e;
   --red:#ef4444;
+  --yellow:#facc15;
   --text:#e5e7eb;
   --muted:#94a3b8;
 }
@@ -58,7 +59,7 @@ body{
 .h1{font-size:18px;font-weight:900}
 
 /* CONTENT */
-.container{padding:14px 14px 140px}
+.container{padding:14px 14px 150px}
 
 .card{
   background:var(--card);
@@ -70,61 +71,56 @@ body{
 }
 .card:active{transform:scale(.98)}
 
-/* BALANCE */
-.balance{
-  text-align:center;
-}
-.balance h2{
-  margin:6px 0;
-  font-size:28px;
-  color:var(--green);
-}
-.balance p{
-  font-size:13px;
-  color:var(--muted);
-}
-
-/* ACTION BUTTONS */
-.row{
-  display:flex;
-  gap:12px;
-  margin-top:12px;
-}
-.btn{
-  flex:1;
-  padding:14px;
-  border:none;
-  border-radius:18px;
-  font-size:15px;
-  font-weight:900;
-  color:#fff;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  transition:transform .12s ease, box-shadow .12s ease;
-}
-.btn.withdraw{
-  background:linear-gradient(135deg,#22c55e,#16a34a);
-}
-.btn:active{
-  transform:scale(.95);
-  box-shadow:0 0 26px rgba(168,85,247,.7);
-}
-
-/* HISTORY */
-.history{
-  font-size:14px;
-}
-.item{
-  padding:12px;
-  border-radius:14px;
-  background:#020617;
-  margin-top:10px;
-}
-.item.green{color:#22c55e}
-.item.red{color:#ef4444}
-
 .label{
   font-size:12px;
   color:var(--muted);
+  margin-top:12px;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  border-radius:16px;
+  border:none;
+  background:#020617;
+  color:#fff;
+  font-size:15px;
+  margin-top:6px;
+}
+
+/* STATUS */
+.status{
+  padding:12px;
+  border-radius:16px;
+  margin-top:10px;
+  font-size:14px;
+}
+.pending{background:rgba(250,204,21,.15);color:#facc15}
+.success{background:rgba(34,197,94,.15);color:#22c55e}
+.reject{background:rgba(239,68,68,.15);color:#ef4444}
+
+/* BUTTON */
+.footer{
+  position:fixed;
+  bottom:16px;
+  left:16px;
+  right:16px;
+}
+.btn{
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:20px;
+  font-size:18px;
+  font-weight:900;
+  color:#fff;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  box-shadow:0 0 36px rgba(168,85,247,.75);
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.btn:active{
+  transform:scale(.95);
+  box-shadow:0 0 30px rgba(168,85,247,.9);
 }
 </style>
 </head>
@@ -132,7 +128,7 @@ body{
 <body>
 
 <script>
-/* ===== GLOBAL LOGIN CHECK ===== */
+/* LOGIN CHECK */
 if(
   !localStorage.getItem("username") &&
   !localStorage.getItem("nickname")
@@ -140,60 +136,55 @@ if(
   location.href="login.html";
 }
 
-/* session refresh */
-localStorage.setItem("app_session", Date.now());
-
-/* defaults */
+/* DEFAULT WALLET */
 if(!localStorage.getItem("wallet")){
   localStorage.setItem("wallet","0");
-}
-if(!localStorage.getItem("isAdmin")){
-  localStorage.setItem("isAdmin","false");
 }
 </script>
 
 <!-- HEADER -->
 <div class="header">
   <div class="back" onclick="history.back()">←</div>
-  <div class="h1">My Wallet</div>
+  <div class="h1">Withdraw Money</div>
 </div>
 
 <div class="container">
 
 <!-- BALANCE -->
-<div class="card balance">
-  <p>Available Balance</p>
-  <h2 id="walletBalance">₹0</h2>
-</div>
-
-<!-- ACTIONS -->
 <div class="card">
-  <div class="row">
-    <button class="btn" onclick="addMoney()">➕ ADD MONEY</button>
-    <button class="btn withdraw" onclick="withdrawMoney()">💸 WITHDRAW</button>
+  <div class="label">Available Balance</div>
+  <div style="font-size:26px;font-weight:900;color:var(--green)" id="balance">
+    ₹0
   </div>
 </div>
 
-<!-- HISTORY -->
-<div class="card history">
-  <div class="label">Transaction History</div>
+<!-- FORM -->
+<div class="card">
+  <div class="label">Withdraw Amount</div>
+  <input id="amount" type="number" placeholder="Minimum ₹100">
 
-  <div class="item green">
-    + ₹500 <br>
-    <small>Tournament Win • 15 May</small>
-  </div>
+  <div class="label">UPI ID</div>
+  <input id="upi" placeholder="example@upi">
 
-  <div class="item red">
-    - ₹100 <br>
-    <small>Joined Tournament • BGMI</small>
-  </div>
+  <div class="label">QR Screenshot (optional)</div>
+  <input type="file" accept="image/*">
+</div>
 
-  <div class="item green">
-    + ₹300 <br>
-    <small>Referral Bonus</small>
+<!-- STATUS -->
+<div class="card">
+  <div class="label">Request Status</div>
+  <div class="status pending" id="statusBox">
+    No withdrawal request submitted
   </div>
 </div>
 
+</div>
+
+<!-- SUBMIT -->
+<div class="footer">
+  <button class="btn" onclick="submitWithdraw()">
+    REQUEST WITHDRAWAL
+  </button>
 </div>
 
 <!-- SOUND -->
@@ -201,33 +192,64 @@ if(!localStorage.getItem("isAdmin")){
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* ===== MUSIC ===== */
+/* MUSIC */
 const bgm=document.getElementById("bgm");
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
 
-/* ===== TAP SOUND ===== */
+/* TAP SOUND */
 document.addEventListener("touchstart",()=>{
   tap.currentTime=0;
   tap.play().catch(()=>{});
 });
 
-/* ===== BLOCK LONG PRESS ===== */
-document.addEventListener("contextmenu",e=>e.preventDefault());
-
-/* ===== WALLET SYNC ===== */
+/* WALLET SYNC */
+const balanceEl=document.getElementById("balance");
 function syncWallet(){
-  const w = Number(localStorage.getItem("wallet")||0);
-  document.getElementById("walletBalance").innerText = "₹"+w;
+  balanceEl.innerText="₹"+(localStorage.getItem("wallet")||0);
 }
 syncWallet();
 
-/* ===== ACTIONS ===== */
-function addMoney(){
-  location.href="payment.html";
-}
-function withdrawMoney(){
-  location.href="withdraw.html";
+/* SUBMIT WITHDRAW */
+let locked=false;
+function submitWithdraw(){
+  if(locked) return;
+
+  const amt = Number(amount.value);
+  const wallet = Number(localStorage.getItem("wallet")||0);
+
+  if(!amt || amt<100){
+    statusBox.className="status reject";
+    statusBox.innerText="Minimum withdrawal is ₹100";
+    return;
+  }
+  if(amt>wallet){
+    statusBox.className="status reject";
+    statusBox.innerText="Amount exceeds wallet balance";
+    return;
+  }
+  if(!upi.value){
+    statusBox.className="status reject";
+    statusBox.innerText="Enter valid UPI ID";
+    return;
+  }
+
+  locked=true;
+
+  /* FRONTEND HOLD */
+  localStorage.setItem("wallet", wallet-amt);
+  syncWallet();
+
+  /* SAVE REQUEST (DB READY) */
+  localStorage.setItem("last_withdraw",JSON.stringify({
+    amount:amt,
+    upi:upi.value,
+    time:Date.now(),
+    status:"pending"
+  }));
+
+  statusBox.className="status pending";
+  statusBox.innerText="⏳ Withdrawal requested. Admin will process within 24 hours.";
 }
 </script>
 
