@@ -2,101 +2,139 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Join Tournament</title>
+<title>Join Tournament | Tournament Sa Kamao</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif;}
-
 :root{
   --bg:#020617;
-  --glass:rgba(15,23,42,.65);
-  --border:rgba(255,255,255,.08);
+  --card:#0f172a;
   --blue:#38bdf8;
   --purple:#a855f7;
+  --green:#22c55e;
+  --red:#ef4444;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
 }
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 
 body{
+  margin:0;
+  font-family:Segoe UI,system-ui,sans-serif;
   background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
-  color:#fff;
+  color:var(--text);
 }
-
-.wrapper{max-width:420px;margin:auto;padding:16px}
 
 /* HEADER */
 .header{
-  text-align:center;
-  font-size:26px;
-  font-weight:900;
-  margin:12px 0 16px;
-}
-
-/* SEARCH */
-.search input{
-  width:100%;
+  position:sticky;
+  top:0;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  gap:12px;
   padding:14px;
-  border-radius:18px;
-  border:none;
-  background:#020617;
-  color:#fff;
-  margin-bottom:18px;
+  background:rgba(2,6,23,.92);
+  backdrop-filter:blur(12px);
 }
+.back{
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  background:linear-gradient(135deg,#60a5fa,#38bdf8);
+  color:#000;
+  font-weight:900;
+}
+.back:active{transform:scale(.9)}
+.h1{font-size:18px;font-weight:900}
+
+/* CONTAINER */
+.container{padding:14px 14px 120px}
 
 /* CARD */
 .card{
-  margin-bottom:18px;
-  border-radius:24px;
+  background:var(--card);
+  border-radius:22px;
   overflow:hidden;
-  background:var(--glass);
-  border:1px solid var(--border);
-  backdrop-filter:blur(16px);
-  box-shadow:0 0 30px rgba(168,85,247,.25);
+  box-shadow:0 0 26px rgba(168,85,247,.25);
+  margin-bottom:14px;
 }
-
 .banner{
-  height:120px;
+  height:160px;
   background:linear-gradient(135deg,#312e81,#020617);
   display:flex;
   align-items:end;
   padding:12px;
-}
-
-.banner h2{font-size:18px;font-weight:900}
-
-.content{padding:14px}
-.prize{font-size:18px;font-weight:900}
-.meta{display:flex;justify-content:space-between;font-size:13px;opacity:.8;margin:6px 0}
-
-.btn{
-  width:100%;
-  margin-top:12px;
-  padding:14px;
-  border:none;
-  border-radius:18px;
-  font-size:16px;
+  font-size:18px;
   font-weight:900;
-  cursor:pointer;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  color:#000;
 }
+.body{padding:14px}
+.line{font-size:13px;opacity:.8;margin:4px 0}
+.prize{font-size:22px;font-weight:900;color:var(--green)}
+.row{display:flex;justify-content:space-between;font-size:13px;margin:6px 0}
 
-/* JOIN FORM */
-#joinBox{display:none;margin-top:24px}
-label{display:block;margin-top:14px;font-size:13px;opacity:.85}
+/* FORM */
+.label{font-size:12px;color:var(--muted);margin-top:12px}
 input{
   width:100%;
-  margin-top:6px;
   padding:14px;
   border-radius:16px;
   border:none;
   background:#020617;
   color:#fff;
+  font-size:15px;
+  margin-top:6px;
 }
 
-.bigBtn{
-  margin-top:20px;
-  padding:18px;
+/* JOIN BUTTON */
+.join-btn{
+  position:fixed;
+  bottom:16px;
+  left:16px;
+  right:16px;
+  padding:16px;
+  border:none;
+  border-radius:20px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;
   font-size:18px;
+  font-weight:900;
+  box-shadow:0 0 36px rgba(168,85,247,.75);
+}
+.join-btn:active{transform:scale(.95)}
+
+/* POPUP */
+.popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:99;
+}
+.popbox{
+  background:#020617;
+  border-radius:22px;
+  padding:18px;
+  width:85%;
+  max-width:360px;
+  box-shadow:0 0 30px rgba(168,85,247,.6);
+}
+.popbox p{font-size:14px}
+.popbox button{
+  width:100%;
+  margin-top:12px;
+  padding:12px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;
   font-weight:900;
 }
 </style>
@@ -104,94 +142,116 @@ input{
 
 <body>
 
-<div class="wrapper">
+<script>
+/* LOGIN CHECK */
+if(!localStorage.getItem("nickname")){
+  location.href="login.html";
+}
+</script>
 
-  <div class="header">Join Tournament</div>
+<!-- HEADER -->
+<div class="header">
+  <div class="back" onclick="history.back()">←</div>
+  <div class="h1">Join Tournament</div>
+</div>
 
-  <!-- SEARCH -->
-  <div class="search">
-    <input id="search" placeholder="Search tournament, game or prize">
-  </div>
+<div class="container">
 
-  <!-- LIST -->
-  <div id="list"></div>
-
-  <!-- JOIN FORM -->
-  <div id="joinBox" class="card">
-    <div class="banner">
-      <h2 id="jName"></h2>
+<!-- TOURNAMENT INFO -->
+<div class="card">
+  <div class="banner">BGMI Battle Clash</div>
+  <div class="body">
+    <div class="line">Game: BGMI • Mode: Squad</div>
+    <div class="prize">₹2,000</div>
+    <div class="row">
+      <div>Entry Fee: ₹50</div>
+      <div>Slots: <span id="slots">32</span> / 100</div>
     </div>
-    <div class="content">
-      <div class="prize" id="jPrize"></div>
-      <div class="meta">
-        <div id="jEntry"></div>
-        <div id="jGame"></div>
-      </div>
-
-      <label>Player Name</label>
-      <input id="playerName">
-
-      <label>Game UID</label>
-      <input id="playerUid">
-
-      <button class="btn bigBtn" onclick="submitJoin()">JOIN NOW</button>
-    </div>
+    <div class="line">Wednesday • 15 May • 7:00 PM</div>
   </div>
+</div>
+
+<!-- JOIN FORM -->
+<div class="card">
+  <div class="body">
+
+    <div class="label">Game Name</div>
+    <input id="gname" placeholder="Enter game name">
+
+    <div class="label">Game UID</div>
+    <input id="guid" placeholder="Enter game UID">
+
+    <div class="line" id="slotInfo">Slot will be assigned automatically</div>
+
+  </div>
+</div>
 
 </div>
 
+<button class="join-btn" onclick="joinTournament()">JOIN • ₹50</button>
+
+<!-- POPUP -->
+<div class="popup" id="popup">
+  <div class="popbox">
+    <p id="pmsg"></p>
+    <button onclick="popup.style.display='none'">OK</button>
+  </div>
+</div>
+
+<!-- SOUND -->
+<audio id="tap" src="assets/tap.mp3"></audio>
+<audio id="bgm" src="assets/bgm.mp3" loop></audio>
+
 <script>
-const tournaments=[
- {id:1,name:"Free Fire Squad Battle",game:"Free Fire",prize:50000,entry:50},
- {id:2,name:"BGMI Classic Match",game:"BGMI",prize:100000,entry:100},
- {id:3,name:"Ludo Daily Cup",game:"Ludo",prize:10000,entry:20}
-];
+/* MUSIC */
+const bgm=document.getElementById("bgm");
+bgm.volume=0.35;
+bgm.play().catch(()=>{});
 
-const list=document.getElementById("list");
-const search=document.getElementById("search");
+/* TOUCH SOUND */
+document.addEventListener("touchstart",()=>{
+  tap.currentTime=0;
+  tap.play().catch(()=>{});
+});
 
-function render(data){
- list.innerHTML="";
- data.forEach(t=>{
-  list.innerHTML+=`
-   <div class="card">
-    <div class="banner"><h2>${t.name}</h2></div>
-    <div class="content">
-      <div class="prize">₹${t.prize.toLocaleString()}</div>
-      <div class="meta"><div>Entry ₹${t.entry}</div><div>${t.game}</div></div>
-      <button class="btn" onclick="openJoin(${t.id})">JOIN NOW</button>
-    </div>
-   </div>`;
- });
+/* INPUT VALIDATION */
+gname.addEventListener("input",()=>{
+  gname.value=gname.value.replace(/[^a-zA-Z0-9 ]/g,"");
+});
+guid.addEventListener("input",()=>{
+  guid.value=guid.value.replace(/[^a-zA-Z0-9]/g,"");
+});
+
+/* JOIN LOGIC */
+function joinTournament(){
+  if(!gname.value || !guid.value){
+    showPop("Please enter game name and UID");
+    return;
+  }
+
+  let wallet = Number(localStorage.getItem("wallet")||0);
+  let fee = 50;
+
+  if(wallet < fee){
+    location.href="payment.html";
+    return;
+  }
+
+  // frontend deduction (backend later)
+  localStorage.setItem("wallet", wallet-fee);
+
+  let slot = Number(slots.innerText)+1;
+  slots.innerText = slot;
+  slotInfo.innerText = "Your Slot Number: "+slot;
+
+  showPop("Successfully joined! Slot No: "+slot);
 }
 
-search.oninput=()=>{
- const q=search.value.toLowerCase();
- render(tournaments.filter(t=>
-  t.name.toLowerCase().includes(q) ||
-  t.game.toLowerCase().includes(q) ||
-  String(t.prize).includes(q)
- ));
-};
-
-let selected=null;
-function openJoin(id){
- selected=tournaments.find(t=>t.id===id);
- jName.textContent=selected.name;
- jPrize.textContent="Prize ₹"+selected.prize.toLocaleString();
- jEntry.textContent="Entry ₹"+selected.entry;
- jGame.textContent=selected.game;
- joinBox.style.display="block";
- window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+/* POPUP */
+function showPop(msg){
+  pmsg.innerText=msg;
+  popup.style.display="flex";
 }
-
-function submitJoin(){
- if(playerName.value.length<3) return alert("Enter valid name");
- if(playerUid.value.length<4) return alert("Enter valid UID");
- alert("Joined successfully (demo)");
-}
-
-render(tournaments);
 </script>
 
 </body>
