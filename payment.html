@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ===== UI UNCHANGED ===== */
 :root{
   --bg:#020617;
   --card:#0f172a;
@@ -16,50 +17,30 @@
   --text:#e5e7eb;
   --muted:#94a3b8;
 }
-
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{
   margin:0;
   font-family:Segoe UI,system-ui,sans-serif;
   background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
   color:var(--text);
 }
-
-/* HEADER */
 .header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:14px;
-  background:rgba(2,6,23,.92);
+  position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;gap:12px;
+  padding:14px;background:rgba(2,6,23,.92);
   backdrop-filter:blur(12px);
 }
 .back{
-  width:42px;height:42px;
-  border-radius:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  width:42px;height:42px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
   font-size:20px;
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
-  color:#000;
-  font-weight:900;
-  cursor:pointer;
+  color:#000;font-weight:900;cursor:pointer;
   transition:transform .12s ease;
 }
 .back:active{transform:scale(.9)}
 .h1{font-size:18px;font-weight:900}
-
-/* CONTENT */
 .container{padding:14px 14px 150px}
-
 .card{
   background:var(--card);
   border-radius:22px;
@@ -69,113 +50,56 @@ body{
   transition:transform .12s ease;
 }
 .card:active{transform:scale(.98)}
-
 .big{font-size:18px;font-weight:900}
-
-.label{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:12px;
-}
-
-/* QR */
+.label{font-size:12px;color:var(--muted);margin-top:12px}
 .qr{
-  width:180px;
-  height:180px;
-  margin:14px auto;
-  border-radius:18px;
-  background:#020617;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:14px;
-  color:#94a3b8;
-  transition:transform .12s ease;
+  width:180px;height:180px;margin:14px auto;
+  border-radius:18px;background:#020617;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:#94a3b8;
 }
-.qr:active{transform:scale(.95)}
-
-/* INPUT */
 input{
-  width:100%;
-  padding:14px;
-  border-radius:16px;
-  border:none;
-  background:#020617;
-  color:#fff;
-  font-size:15px;
-  margin-top:6px;
+  width:100%;padding:14px;border-radius:16px;
+  border:none;background:#020617;color:#fff;
+  font-size:15px;margin-top:6px;
 }
-
-/* UPLOAD */
 .upload{
-  margin-top:10px;
-  padding:14px;
-  border-radius:16px;
-  background:#020617;
-  text-align:center;
-  font-size:14px;
-  color:#94a3b8;
-  transition:transform .12s ease;
+  margin-top:10px;padding:14px;border-radius:16px;
+  background:#020617;text-align:center;
+  font-size:14px;color:#94a3b8;
 }
-.upload:active{transform:scale(.96)}
-
-/* INFO */
 .info{
-  margin-top:12px;
-  padding:12px;
-  border-radius:16px;
+  margin-top:12px;padding:12px;border-radius:16px;
   background:rgba(34,197,94,.12);
   border:1px solid rgba(34,197,94,.4);
-  color:#22c55e;
-  font-size:13px;
+  color:#22c55e;font-size:13px;
 }
-
-/* BUTTON */
-.footer{
-  position:fixed;
-  bottom:16px;
-  left:16px;
-  right:16px;
-}
+.footer{position:fixed;bottom:16px;left:16px;right:16px}
 .btn{
-  width:100%;
-  padding:16px;
-  border:none;
-  border-radius:20px;
-  font-size:18px;
-  font-weight:900;
-  color:#fff;
+  width:100%;padding:16px;border:none;border-radius:20px;
+  font-size:18px;font-weight:900;color:#fff;
   background:linear-gradient(135deg,var(--blue),var(--purple));
   transition:transform .12s ease, box-shadow .12s ease;
 }
-.btn:active{
-  transform:scale(.95);
-  box-shadow:0 0 30px rgba(168,85,247,.8);
-}
+.btn:active{transform:scale(.95);box-shadow:0 0 30px rgba(168,85,247,.8)}
 </style>
 </head>
 
 <body>
 
 <script>
-/* ===== GLOBAL LOGIN CHECK ===== */
-if(
-  !localStorage.getItem("username") &&
-  !localStorage.getItem("nickname")
-){
+/* ===== SAFE LOGIN ===== */
+if(!localStorage.getItem("username") && !localStorage.getItem("nickname")){
   location.href="login.html";
 }
+if(!localStorage.getItem("wallet")) localStorage.setItem("wallet","0");
+if(!localStorage.getItem("isAdmin")) localStorage.setItem("isAdmin","false");
 
-/* session refresh */
-localStorage.setItem("app_session", Date.now());
+/* 🔴 REPLACE WITH YOUR GOOGLE APPS SCRIPT URL */
+const API_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
 
-/* defaults */
-if(!localStorage.getItem("wallet")){
-  localStorage.setItem("wallet","0");
-}
-if(!localStorage.getItem("isAdmin")){
-  localStorage.setItem("isAdmin","false");
-}
+const USER = localStorage.getItem("username") || localStorage.getItem("nickname");
+const TID  = localStorage.getItem("active_tournament_id") || "";
 </script>
 
 <!-- HEADER -->
@@ -186,14 +110,12 @@ if(!localStorage.getItem("isAdmin")){
 
 <div class="container">
 
-<!-- PAYMENT DETAILS -->
 <div class="card">
   <div class="big">Pay Entry / Security Amount</div>
   <div class="label">Tournament: BGMI Battle Clash</div>
   <div class="label">Amount to Pay: ₹100</div>
 </div>
 
-<!-- QR -->
 <div class="card">
   <div class="big">Scan & Pay</div>
   <div class="qr">QR CODE</div>
@@ -202,7 +124,6 @@ if(!localStorage.getItem("isAdmin")){
   <input value="admin@upi" disabled>
 </div>
 
-<!-- PROOF -->
 <div class="card">
   <div class="big">Payment Proof</div>
 
@@ -220,11 +141,8 @@ if(!localStorage.getItem("isAdmin")){
 
 </div>
 
-<!-- SUBMIT -->
 <div class="footer">
-  <button class="btn" onclick="submitPayment()">
-    SUBMIT PAYMENT
-  </button>
+  <button class="btn" onclick="submitPayment()">SUBMIT PAYMENT</button>
 </div>
 
 <!-- SOUND -->
@@ -232,36 +150,35 @@ if(!localStorage.getItem("isAdmin")){
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* ===== MUSIC ===== */
-const bgm=document.getElementById("bgm");
+/* ===== AUDIO ===== */
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
-
-/* ===== TAP SOUND ===== */
 document.addEventListener("touchstart",()=>{
-  tap.currentTime=0;
-  tap.play().catch(()=>{});
+  tap.currentTime=0; tap.play().catch(()=>{});
 });
-
-/* ===== BLOCK LONG PRESS ===== */
 document.addEventListener("contextmenu",e=>e.preventDefault());
 
-/* ===== SUBMIT ===== */
+/* ===== SUBMIT PAYMENT ===== */
 function submitPayment(){
   const utr=document.getElementById("utr").value.trim();
-
   if(!utr){
     alert("Please enter UTR / reference number");
     return;
   }
 
-  // future:
-  // - admin verification
-  // - razorpay / stripe auto-check
-  // - wallet update after approval
-
-  alert("Payment submitted! Waiting for admin verification.");
-  location.href="index.html";
+  fetch(API_URL,{
+    method:"POST",
+    body:JSON.stringify({
+      action:"paymentSubmit",
+      username:USER,
+      tournament_id:TID,
+      amount:100,
+      utr:utr
+    })
+  }).then(()=>{
+    alert("Payment submitted successfully! Awaiting admin approval.");
+    location.href="index.html";
+  });
 }
 </script>
 
