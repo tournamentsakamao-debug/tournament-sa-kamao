@@ -37,7 +37,6 @@ body{
   font-size:20px;
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
   color:#000;font-weight:900;cursor:pointer;
-  transition:transform .12s ease;
 }
 .back:active{transform:scale(.9)}
 .h1{font-size:18px;font-weight:900}
@@ -71,29 +70,14 @@ textarea{min-height:90px;resize:none}
   border:none;border-radius:18px;
   font-size:16px;font-weight:900;color:#fff;
   background:linear-gradient(135deg,var(--blue),var(--purple));
-  transition:transform .12s ease, box-shadow .12s ease;
 }
-.btn:active{transform:scale(.95);box-shadow:0 0 30px rgba(168,85,247,.8)}
+.btn:active{transform:scale(.95)}
 .btn.red{background:linear-gradient(135deg,#ef4444,#f97316)}
 .footer{position:fixed;bottom:16px;left:16px;right:16px}
 </style>
 </head>
 
 <body>
-
-<script>
-/* ===== SAFE LOGIN ===== */
-if(!localStorage.getItem("username") && !localStorage.getItem("nickname")){
-  location.href="login.html";
-}
-if(!localStorage.getItem("wallet")) localStorage.setItem("wallet","0");
-
-/* 🔴 REPLACE WITH YOUR GOOGLE APPS SCRIPT URL */
-const API_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
-
-const USER = localStorage.getItem("username") || localStorage.getItem("nickname");
-const TID  = localStorage.getItem("created_tournament_id");
-</script>
 
 <!-- HEADER -->
 <div class="header">
@@ -131,6 +115,7 @@ const TID  = localStorage.getItem("created_tournament_id");
   <div class="label" id="descCount">0 / 500 words</div>
 
   <button class="btn" onclick="unlockRoom()">UNLOCK & ADD DETAILS</button>
+  <button class="btn" onclick="saveRoom()">SAVE DETAILS</button>
 </div>
 
 <!-- PLAYER LIST -->
@@ -154,11 +139,15 @@ const TID  = localStorage.getItem("created_tournament_id");
 <script>
 /* AUDIO */
 bgm.volume=0.35;
-bgm.play().catch(()=>{});
+document.addEventListener("touchstart",()=>bgm.play(),{once:true});
 document.addEventListener("touchstart",()=>{
   tap.currentTime=0; tap.play().catch(()=>{});
 });
-document.addEventListener("contextmenu",e=>e.preventDefault());
+
+/* DATA */
+const user = getUser();
+const tid  = localStorage.getItem("tournament_id");
+if(!tid) location.href="index.html";
 
 /* WORD LIMIT */
 desc.addEventListener("input",()=>{
@@ -176,13 +165,28 @@ function unlockRoom(){
   roomPass.disabled=false;
   desc.disabled=false;
   lockStatus.className="status unlocked";
-  lockStatus.innerText="🔓 Room details unlocked (visible 10 min before match)";
+  lockStatus.innerText="🔓 Room details unlocked";
+}
+
+/* SAVE ROOM */
+function saveRoom(){
+  api("saveRoomDetails",{
+    tournament_id:tid,
+    room_id:roomId.value,
+    room_pass:roomPass.value,
+    description:desc.value
+  });
 }
 
 /* LOAD DATA */
-fetch(API_URL+"?action=creatorManage&tournament_id="+TID+"&username="+USER)
-.then(r=>r.json())
-.then(d=>{
+(async ()=>{
+  const d = await api("creatorManage",{
+    tournament_id:tid,
+    username:user.username
+  });
+
+  if(!d) return;
+
   tname.innerText=d.name;
   players.innerText=d.joined+" / "+d.max;
   fee.innerText="₹"+d.fee;
@@ -195,8 +199,11 @@ fetch(API_URL+"?action=creatorManage&tournament_id="+TID+"&username="+USER)
         <span>UID: ${p.uid}</span>
       </div>`;
   });
-});
+})();
 </script>
+
+<!-- CORE -->
+<script src="app.js"></script>
 
 </body>
 </html>
