@@ -15,10 +15,7 @@
   --muted:#94a3b8;
 }
 
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
+*{box-sizing:border-box}
 
 body{
   margin:0;
@@ -31,7 +28,6 @@ body{
   min-height:100vh;
 }
 
-/* CARD */
 .card{
   width:92%;
   max-width:380px;
@@ -41,7 +37,6 @@ body{
   box-shadow:0 0 35px rgba(168,85,247,.35);
 }
 
-/* TITLE */
 .title{
   text-align:center;
   font-size:22px;
@@ -54,7 +49,6 @@ body{
   margin-top:6px;
 }
 
-/* INPUT */
 .label{
   font-size:12px;
   color:var(--muted);
@@ -71,7 +65,6 @@ input{
   margin-top:6px;
 }
 
-/* BUTTON */
 .btn{
   margin-top:22px;
   width:100%;
@@ -89,7 +82,6 @@ input{
   box-shadow:0 0 30px rgba(168,85,247,.9);
 }
 
-/* POPUP */
 .popup{
   position:fixed;
   inset:0;
@@ -121,6 +113,8 @@ input{
   color:#fff;
   font-weight:900;
 }
+
+*{-webkit-tap-highlight-color: transparent;}
 </style>
 </head>
 
@@ -136,7 +130,6 @@ input{
   <button class="btn" onclick="login()">CONTINUE</button>
 </div>
 
-<!-- POPUP -->
 <div class="popup" id="popup">
   <div class="popbox">
     <p id="pmsg"></p>
@@ -144,69 +137,66 @@ input{
   </div>
 </div>
 
-<!-- SOUND -->
 <audio id="tap" src="assets/tap.mp3"></audio>
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/******************** CONFIG ********************/
+/* ================= CONFIG ================= */
 const API_URL = "https://script.google.com/macros/s/AKfycbyV0tflAz3KL_bczgQF6JaHi-Ptc_-DmBIN7ptPZQtwTAhpKehThsvppOQ9zKQRLxwM/exec";
 
-/******************** AUTO LOGIN CHECK ********************/
+/* AUTO LOGIN CHECK */
 if(localStorage.getItem("username")){
   location.href="index.html";
 }
 
-/******************** DEFAULT FLAGS ********************/
-if(!localStorage.getItem("music")) localStorage.setItem("music","on");
-if(!localStorage.getItem("tapSound")) localStorage.setItem("tapSound","on");
-
-/******************** MUSIC ********************/
-const bgm=document.getElementById("bgm");
-bgm.volume=0.35;
-if(localStorage.getItem("music")==="on"){
-  bgm.play().catch(()=>{});
+if(!localStorage.getItem("app_session")){
+  localStorage.setItem("app_session",Date.now());
+}
+if(!localStorage.getItem("isAdmin")){
+  localStorage.setItem("isAdmin","false");
 }
 
-/******************** TAP SOUND ********************/
+/* MUSIC */
+const bgm=document.getElementById("bgm");
+bgm.volume=0.35;
+bgm.play().catch(()=>{});
+
+/* TOUCH SOUND */
 document.addEventListener("touchstart",()=>{
-  if(localStorage.getItem("tapSound")==="off") return;
-  const t=document.getElementById("tap");
-  t.currentTime=0;
-  t.play().catch(()=>{});
+  const s=document.getElementById("tap");
+  s.currentTime=0;
+  s.play().catch(()=>{});
 });
 
-/******************** BLOCK RIGHT CLICK ********************/
+/* BLOCK LONG PRESS */
 document.addEventListener("contextmenu",e=>e.preventDefault());
 
-/******************** USERNAME FILTER ********************/
-const usernameInput=document.getElementById("username");
-usernameInput.addEventListener("input",()=>{
-  usernameInput.value=usernameInput.value.replace(/[^a-zA-Z0-9_]/g,"");
+/* USERNAME FILTER */
+const username=document.getElementById("username");
+username.addEventListener("input",()=>{
+  username.value=username.value.replace(/[^a-zA-Z0-9_]/g,"");
 });
 
-/******************** LOGIN ********************/
+/* LOGIN (UI SAME, BACKEND ADDED) */
 function login(){
-  const username=usernameInput.value.trim();
-
-  if(username.length<4){
+  const name=username.value.trim();
+  if(name.length<4){
     showPop("Username must be at least 4 characters");
     return;
   }
 
-  fetch(API_URL+"?action=login&username="+encodeURIComponent(username))
+  fetch(`${API_URL}?action=login&username=${encodeURIComponent(name)}`)
     .then(r=>r.json())
     .then(res=>{
-      if(res.error){
-        showPop(res.error);
-        return;
+      if(res.success){
+        localStorage.setItem("username",name);
+        location.href="index.html";
+      }else{
+        showPop("Login failed");
       }
-
-      localStorage.setItem("username",username);
-      location.href="index.html";
     })
     .catch(()=>{
-      showPop("Network error. Try again.");
+      showPop("Server error");
     });
 }
 
