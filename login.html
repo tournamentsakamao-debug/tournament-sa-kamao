@@ -117,74 +117,75 @@ input{
 
 <script>
 /* ===== CONFIG ===== */
-const API_URL = "https://script.google.com/macros/s/AKfycbyV0tflAz3KL_bczgQF6JaHi-Ptc_-DmBIN7ptPZQtwTAhpKehThsvppOQ9zKQRLxwM/exec";
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbyV0tflAz3KL_bczgQF6JaHi-Ptc_-DmBIN7ptPZQtwTAhpKehThsvppOQ9zKQRLxwM/exec";
 
 const ADMIN_USERNAME = "TSK_ADMIN";
 const ADMIN_PASSWORD = "TSK@2026";
 
-/* ===== AUTO LOGIN ===== */
-if(localStorage.getItem("APP_USER")){
-  location.href="index.html";
-}
-
 /* ===== AUDIO FIX ===== */
-const bgm=document.getElementById("bgm");
-const tap=document.getElementById("tap");
-bgm.volume=0.35;
-document.addEventListener("touchstart",()=>bgm.play(),{once:true});
-document.addEventListener("touchstart",()=>{
-  tap.currentTime=0;
-  tap.play().catch(()=>{});
-});
+const bgm = document.getElementById("bgm");
+const tap = document.getElementById("tap");
+bgm.volume = 0.35;
+
+document.addEventListener("touchstart", () => {
+  bgm.play().catch(() => {});
+  tap.currentTime = 0;
+  tap.play().catch(() => {});
+}, { once: true });
 
 /* ===== ADMIN CHECK ===== */
 function checkAdmin(){
-  if(username.value.trim()===ADMIN_USERNAME){
+  if(username.value.trim() === ADMIN_USERNAME){
     passBox.classList.remove("hidden");
   }else{
     passBox.classList.add("hidden");
-    password.value="";
+    password.value = "";
   }
 }
 
 /* ===== LOGIN ===== */
 function login(){
-  const u=username.value.trim();
-  if(u.length<4){
+  const u = username.value.trim();
+
+  if(u.length < 4){
     showPop("Username must be at least 4 characters");
     return;
   }
 
-  if(u===ADMIN_USERNAME && password.value!==ADMIN_PASSWORD){
+  if(u === ADMIN_USERNAME && password.value !== ADMIN_PASSWORD){
     showPop("Wrong admin password");
     return;
   }
 
   fetch(`${API_URL}?action=login&username=${encodeURIComponent(u)}`)
-  .then(r=>r.json())
-  .then(d=>{
-    if(!d.success){
-      showPop("Login failed");
-      return;
-    }
+    .then(r => r.json())
+    .then(d => {
+      if(!d.success){
+        showPop("Login failed");
+        return;
+      }
 
-    const userObj={
-      username:u,
-      role: u===ADMIN_USERNAME ? "admin":"user",
-      adminVerified: u===ADMIN_USERNAME
-    };
+      const userObj = {
+        username: u,
+        role: u === ADMIN_USERNAME ? "admin" : "user",
+        adminVerified: u === ADMIN_USERNAME
+      };
 
-    localStorage.setItem("APP_USER",JSON.stringify(userObj));
-    localStorage.setItem("username",u);
+      localStorage.setItem("APP_USER", JSON.stringify(userObj));
+      localStorage.setItem("username", u);
 
-    location.href="index.html";
-  })
-  .catch(()=>showPop("Server error"));
+      /* admin mode default OFF */
+      localStorage.setItem("ADMIN_MODE", "off");
+
+      location.replace("index.html");
+    })
+    .catch(() => showPop("Server error"));
 }
 
 function showPop(msg){
-  pmsg.innerText=msg;
-  popup.style.display="flex";
+  pmsg.innerText = msg;
+  popup.style.display = "flex";
 }
 </script>
 
