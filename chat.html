@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ===== UI UNCHANGED ===== */
 :root{
   --bg:#020617;
   --card:#0f172a;
@@ -15,17 +16,13 @@
   --muted:#94a3b8;
   --green:#22c55e;
 }
-
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:Segoe UI,system-ui,sans-serif;
   background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
   color:var(--text);
 }
-
-/* HEADER */
 .header{
   display:flex;
   align-items:center;
@@ -49,14 +46,11 @@ body{
   font-size:17px;
   font-weight:900;
 }
-
-/* CHAT AREA */
 .chat-area{
   padding:14px;
   height:calc(100vh - 150px);
   overflow-y:auto;
 }
-
 .msg{
   max-width:75%;
   padding:12px;
@@ -72,8 +66,6 @@ body{
   background:#020617;
   border:1px solid #334155;
 }
-
-/* INPUT BAR */
 .input-bar{
   position:fixed;
   bottom:0;
@@ -85,12 +77,7 @@ body{
   gap:8px;
   align-items:center;
 }
-
-.attach{
-  font-size:20px;
-  cursor:pointer;
-}
-
+.attach{font-size:20px;cursor:pointer}
 input[type="text"]{
   flex:1;
   padding:12px;
@@ -99,7 +86,6 @@ input[type="text"]{
   background:#0f172a;
   color:#fff;
 }
-
 .send{
   padding:12px 16px;
   border-radius:14px;
@@ -108,8 +94,6 @@ input[type="text"]{
   color:#000;
   font-weight:900;
 }
-
-/* LOCK */
 .locked{
   text-align:center;
   color:#f87171;
@@ -122,8 +106,20 @@ input[type="text"]{
 <body>
 
 <script>
-if(!localStorage.getItem("nickname")){
+/* ===== LOGIN CHECK ===== */
+const USER = localStorage.getItem("nickname");
+if(!USER){
   location.href="login.html";
+}
+
+/* ===== API CONFIG ===== */
+const API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+
+function api(data){
+  return fetch(API_URL,{
+    method:"POST",
+    body:JSON.stringify(data)
+  }).then(r=>r.json());
 }
 </script>
 
@@ -133,8 +129,7 @@ if(!localStorage.getItem("nickname")){
 </div>
 
 <div class="chat-area" id="chat">
-  <div class="msg admin">Hello 👋  
-  How can I help you?</div>
+  <div class="msg admin">Hello 👋<br>How can I help you?</div>
 </div>
 
 <!-- INPUT -->
@@ -149,39 +144,69 @@ if(!localStorage.getItem("nickname")){
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* MUSIC */
+/* ===== MUSIC ===== */
 const bgm=document.getElementById("bgm");
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
 
-/* TAP SOUND */
+/* ===== TAP SOUND ===== */
 document.addEventListener("touchstart",()=>{
-  const t=document.getElementById("tap");
-  t.currentTime=0;
-  t.play().catch(()=>{});
+  if(localStorage.getItem("tapSound")==="off") return;
+  tap.currentTime=0;
+  tap.play().catch(()=>{});
 });
 
-/* SEND MESSAGE */
-function sendMsg(){
+/* ===== LOAD CHAT ===== */
+async function loadChat(){
+  try{
+    const d = await api({action:"GET_CHAT",user:USER});
+    d.messages.forEach(m=>{
+      const div=document.createElement("div");
+      div.className="msg "+(m.by==="admin"?"admin":"user");
+      div.innerText=m.text;
+      chat.appendChild(div);
+    });
+    chat.scrollTop=chat.scrollHeight;
+  }catch(e){}
+}
+loadChat();
+
+/* ===== CHAT STATUS ===== */
+async function checkChat(){
+  try{
+    const d = await api({action:"CHAT_STATUS",user:USER});
+    if(d.blocked){
+      inputBar.innerHTML="<div class='locked'>🔒 Chat disabled by admin</div>";
+    }
+  }catch(e){}
+}
+checkChat();
+
+/* ===== SEND MESSAGE ===== */
+async function sendMsg(){
   const input=document.getElementById("msgInput");
   if(!input.value.trim()) return;
 
+  const text=input.value;
+
   const div=document.createElement("div");
   div.className="msg user";
-  div.innerText=input.value;
-
-  document.getElementById("chat").appendChild(div);
+  div.innerText=text;
+  chat.appendChild(div);
   input.value="";
-  document.getElementById("chat").scrollTop=999999;
+  chat.scrollTop=chat.scrollHeight;
+
+  try{
+    await api({
+      action:"SEND_CHAT",
+      user:USER,
+      message:text
+    });
+  }catch(e){}
 }
 
-/* ADMIN BLOCK (demo toggle) */
-// set true later from database
-const chatBlocked=false;
-if(chatBlocked){
-  document.getElementById("inputBar").innerHTML=
-  "<div class='locked'>🔒 Chat disabled by admin</div>";
-}
+/* ===== AUTO REFRESH ===== */
+setInterval(loadChat,5000);
 </script>
 
 </body>
