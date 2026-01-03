@@ -1,7 +1,7 @@
 /*************************************************
- * Tournament Sa Kamao – app.js (FINAL)
- * Common JS for ALL 24 pages
- * UI untouched | GitHub only | Safe
+ * Tournament Sa Kamao – app.js (FINAL & STABLE)
+ * One JS for ALL 24 pages
+ * UI untouched | No blink bug | Secure
  *************************************************/
 
 /* ================= CONFIG ================= */
@@ -11,9 +11,9 @@ const API_URL =
 const ADMIN_USERNAME = "TSK_ADMIN";
 
 /* ================= STORAGE KEYS ================= */
-const USER_KEY = "APP_USER";          // full user object
-const USERNAME_KEY = "username";      // quick access
-const ADMIN_TOGGLE_KEY = "ADMIN_MODE"; // on / off
+const USER_KEY = "APP_USER";            // full user object
+const USERNAME_KEY = "username";        // quick access
+const ADMIN_TOGGLE_KEY = "ADMIN_MODE";  // on / off
 
 /* ================= USER HELPERS ================= */
 function getUser() {
@@ -37,26 +37,31 @@ function isAdminModeOn() {
   return localStorage.getItem(ADMIN_TOGGLE_KEY) === "on";
 }
 
-/* ================= LOGIN GUARD ================= */
-/* Call automatically on every page */
-(function guard() {
+/* ================= GLOBAL GUARD (NO BLINK) ================= */
+document.addEventListener("DOMContentLoaded", () => {
   const page = location.pathname.split("/").pop();
 
-  // pages allowed without login
   const publicPages = ["login.html"];
 
+  /* ---- LOGIN REQUIRED ---- */
   if (!isLoggedIn() && !publicPages.includes(page)) {
     location.replace("login.html");
     return;
   }
 
-  // stop admin pages if not admin
+  /* ---- ADMIN PAGE PROTECTION ---- */
   if (page.startsWith("admin") || page === "admin-home.html") {
     if (!isAdmin() || !isAdminModeOn()) {
       location.replace("index.html");
+      return;
     }
   }
-})();
+
+  /* ---- ADMIN MODE DEFAULT ---- */
+  if (isAdmin() && localStorage.getItem(ADMIN_TOGGLE_KEY) === null) {
+    localStorage.setItem(ADMIN_TOGGLE_KEY, "off");
+  }
+});
 
 /* ================= LOGOUT ================= */
 function logout() {
@@ -70,11 +75,13 @@ function logout() {
 function enableAdminMode() {
   if (!isAdmin()) return false;
   localStorage.setItem(ADMIN_TOGGLE_KEY, "on");
+  location.href = "admin-home.html";
   return true;
 }
 
 function disableAdminMode() {
   localStorage.setItem(ADMIN_TOGGLE_KEY, "off");
+  location.href = "index.html";
 }
 
 /* ================= API HELPER ================= */
@@ -137,7 +144,7 @@ function getAdminSettings() {
   return api("adminSettings");
 }
 
-/* ================= AUDIO SAFE GUARD ================= */
+/* ================= AUDIO (SAFE) ================= */
 document.addEventListener("touchstart", () => {
   const tap = document.getElementById("tap");
   if (tap && localStorage.getItem("tapSound") !== "off") {
@@ -145,6 +152,3 @@ document.addEventListener("touchstart", () => {
     tap.play().catch(() => {});
   }
 });
-
-/* ================= DEBUG (OPTIONAL) ================= */
-// console.log("app.js loaded", getUser());
