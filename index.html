@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ================= ROOT ================= */
+/* ===== ROOT ===== */
 :root{
   --bg:#020617;
   --card:#0f172a;
@@ -16,9 +16,7 @@
   --text:#e5e7eb;
   --muted:#94a3b8;
 }
-
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:Segoe UI,system-ui,sans-serif;
@@ -26,153 +24,61 @@ body{
   color:var(--text);
 }
 
-/* ================= TOP ACTION ================= */
-.topbar{
-  padding:14px;
-  display:flex;
-  gap:12px;
-}
+/* ===== TOP ===== */
+.topbar{padding:14px;display:flex;gap:12px}
 .action{
-  flex:1;
-  padding:16px;
-  border-radius:18px;
-  border:none;
-  font-size:17px;
-  font-weight:900;
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
+  flex:1;padding:16px;border-radius:18px;border:none;
+  font-size:17px;font-weight:900;color:#fff;
+  display:flex;align-items:center;justify-content:center;gap:8px;
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
-  transition:transform .12s ease, box-shadow .12s ease;
+  transition:.12s;
 }
-.action.join{
-  background:linear-gradient(135deg,#22c55e,#16a34a);
-}
-.action:active{
-  transform:scale(.95);
-  box-shadow:0 0 30px rgba(168,85,247,.9);
-}
+.action.join{background:linear-gradient(135deg,#22c55e,#16a34a)}
+.action:active{transform:scale(.95)}
 
-/* ================= SEARCH ================= */
-.search{
-  padding:0 14px 14px;
-}
+/* ===== SEARCH ===== */
+.search{padding:0 14px 14px}
 .search input{
-  width:100%;
-  padding:14px;
-  border-radius:16px;
-  border:none;
-  background:#020617;
-  color:#fff;
-  font-size:15px;
+  width:100%;padding:14px;border-radius:16px;border:none;
+  background:#020617;color:#fff;font-size:15px;
 }
 
-/* ================= TOURNAMENT CARD ================= */
+/* ===== CARD ===== */
 .card{
-  position:relative;
-  margin:14px;
-  background:var(--card);
-  border-radius:22px;
-  overflow:hidden;
+  position:relative;margin:14px;background:var(--card);
+  border-radius:22px;overflow:hidden;
   box-shadow:0 0 26px rgba(168,85,247,.25);
-  cursor:pointer;
-  -webkit-tap-highlight-color: transparent;
 }
-
-.card-tap{
-  position:absolute;
-  inset:0;
-  z-index:1;
-}
-
+.card-tap{position:absolute;inset:0;z-index:1}
 .banner{
   height:150px;
   background:linear-gradient(135deg,#312e81,#020617);
-  display:flex;
-  align-items:end;
-  padding:12px;
-  font-size:18px;
-  font-weight:900;
-  position:relative;
-  z-index:2;
+  display:flex;align-items:end;padding:12px;
+  font-size:18px;font-weight:900;z-index:2;
 }
-
-.body{
-  padding:14px;
-  position:relative;
-  z-index:2;
-}
-
-.line{
-  font-size:13px;
-  opacity:.8;
-  margin:4px 0;
-}
-
-.prize{
-  font-size:22px;
-  font-weight:900;
-  color:var(--green);
-  margin:6px 0;
-}
-
-.row{
-  display:flex;
-  justify-content:space-between;
-  font-size:13px;
-  margin:6px 0;
-}
-
+.body{padding:14px;z-index:2;position:relative}
+.line{font-size:13px;opacity:.8;margin:4px 0}
+.prize{font-size:22px;font-weight:900;color:var(--green)}
 .join-btn{
-  margin-top:10px;
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:16px;
+  margin-top:10px;width:100%;padding:14px;
+  border:none;border-radius:16px;
   background:linear-gradient(135deg,var(--blue),var(--purple));
-  color:#fff;
-  font-weight:900;
-  font-size:16px;
-  position:relative;
-  z-index:3;
+  color:#fff;font-weight:900;font-size:16px;
 }
-.join-btn:active{
-  transform:scale(.95);
-  box-shadow:0 0 30px rgba(168,85,247,.8);
-}
+.join-btn:active{transform:scale(.95)}
 
-/* ================= BOTTOM NAV ================= */
+/* ===== NAV ===== */
 .nav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  height:72px;
-  background:#020617;
-  display:flex;
-  justify-content:space-around;
+  position:fixed;bottom:0;left:0;right:0;height:72px;
+  background:#020617;display:flex;justify-content:space-around;
   align-items:center;
-  box-shadow:0 -6px 25px rgba(168,85,247,.3);
 }
 .nav-item{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  font-size:11px;
-  color:#94a3b8;
+  display:flex;flex-direction:column;align-items:center;
+  font-size:11px;color:#94a3b8;
 }
-.nav-item span{
-  font-size:22px;
-  transition:transform .12s ease;
-}
-.nav-item:active span{
-  transform:scale(1.2);
-}
-.nav-item.active{
-  color:var(--blue);
-}
+.nav-item span{font-size:22px}
+.nav-item.active{color:var(--blue)}
 
 .spacer{height:90px}
 </style>
@@ -181,7 +87,7 @@ body{
 <body>
 
 <script>
-/* ================= LOGIN CHECK ================= */
+/* LOGIN */
 if(!localStorage.getItem("username")){
   location.href="login.html";
 }
@@ -193,76 +99,86 @@ if(!localStorage.getItem("username")){
 </div>
 
 <div class="search">
-  <input placeholder="Search tournament or prize">
+  <input id="searchBox" placeholder="Search tournament or prize" oninput="filterList()">
 </div>
 
 <div id="list"></div>
-
 <div class="spacer"></div>
 
+<!-- NAV -->
 <div class="nav">
-  <div class="nav-item active"><span>🏠</span>Home</div>
-  <div class="nav-item"><span>🎮</span>Tournaments</div>
-  <div class="nav-item"><span>💰</span>Wallet</div>
-  <div class="nav-item"><span>🏆</span>My</div>
-  <div class="nav-item"><span>👤</span>Profile</div>
+  <div class="nav-item active" onclick="goHome()"><span>🏠</span>Home</div>
+  <div class="nav-item" onclick="goJoin()"><span>🎮</span>Tournaments</div>
+  <div class="nav-item" onclick="goWallet()"><span>💰</span>Wallet</div>
+  <div class="nav-item" onclick="goHistory()"><span>🏆</span>My</div>
+  <div class="nav-item" onclick="goProfile()"><span>👤</span>Profile</div>
 </div>
 
 <!-- SOUND -->
-<audio id="tap" src="assets/tap.mp3" preload="auto"></audio>
-<audio id="bgm" src="assets/bgm.mp3" loop preload="auto"></audio>
+<audio id="tap" src="assets/tap.mp3"></audio>
+<audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* ================= CONFIG ================= */
-const API_URL = "https://script.google.com/macros/s/AKfycbyV0tflAz3KL_bczgQF6JaHi-Ptc_-DmBIN7ptPZQtwTAhpKehThsvppOQ9zKQRLxwM/exec";
+/* ===== CONFIG ===== */
+const API_URL="https://script.google.com/macros/s/AKfycbyV0tflAz3KL_bczgQF6JaHi-Ptc_-DmBIN7ptPZQtwTAhpKehThsvppOQ9zKQRLxwM/exec";
+const bgm=document.getElementById("bgm");
+bgm.volume=0.35;
+document.addEventListener("click",()=>bgm.play(),{once:true});
 
-/* ================= MUSIC FIX ================= */
-const bgm = document.getElementById("bgm");
-bgm.volume = 0.35;
-document.addEventListener("click",()=> bgm.play(),{once:true});
-
-/* ================= TAP SOUND ================= */
+/* TAP */
 document.addEventListener("touchstart",()=>{
-  const t=document.getElementById("tap");
-  t.currentTime=0;
-  t.play().catch(()=>{});
+  tap.currentTime=0;tap.play().catch(()=>{});
 });
 
-/* ================= LOAD TOURNAMENTS ================= */
+/* LOAD */
+let tournaments=[];
 fetch(API_URL+"?action=getGames")
 .then(r=>r.json())
 .then(d=>{
-  if(!d.games) return;
+  tournaments=d.games||[];
+  render(tournaments);
+});
+
+function render(arr){
   const box=document.getElementById("list");
-  d.games.forEach(g=>{
+  box.innerHTML="";
+  arr.forEach(g=>{
     box.innerHTML+=`
     <div class="card">
       <div class="card-tap" onclick="openTournament('${g[0]}')"></div>
-      <div class="banner" style="background:url('${g[4]}') center/cover">
-        ${g[1]}
-      </div>
+      <div class="banner" style="background:url('${g[4]}') center/cover">${g[1]}</div>
       <div class="body">
-        <div class="line">Game: ${g[1]}</div>
-        <div class="prize">Prize Pool</div>
+        <div class="line">Mode: ${g[2]}</div>
+        <div class="prize">₹${g[3]}</div>
         <button class="join-btn" onclick="join('${g[0]}')">JOIN NOW</button>
       </div>
     </div>`;
   });
-});
+}
 
-/* ================= NAV ================= */
-function goCreate(){ location.href="create.html"; }
-function goJoin(){}
+/* SEARCH */
+function filterList(){
+  const q=searchBox.value.toLowerCase();
+  render(tournaments.filter(g=>g.join(" ").toLowerCase().includes(q)));
+}
 
-/* ================= ACTION ================= */
+/* ACTIONS */
 function openTournament(id){
   localStorage.setItem("tournament_id",id);
-  location.href="tournament.html";
+  location.href="details.html";
 }
 function join(id){
   localStorage.setItem("tournament_id",id);
-  location.href="payment.html";
+  location.href="join.html";
 }
+
+/* NAV */
+function goHome(){location.href="index.html";}
+function goJoin(){location.href="index.html";}
+function goCreate(){location.href="create.html";}
+function goWallet(){location.href="wallet.html";}
+function goHistory(){location.href="history.html";}
+function goProfile(){location.href="profile.html";}
 </script>
 
 </body>
