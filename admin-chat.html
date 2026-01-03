@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ===== UI UNCHANGED ===== */
 :root{
   --bg:#020617;
   --card:#0f172a;
@@ -16,17 +17,13 @@
   --text:#e5e7eb;
   --muted:#94a3b8;
 }
-
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:Segoe UI,system-ui,sans-serif;
   background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
   color:var(--text);
 }
-
-/* HEADER */
 .header{
   display:flex;
   align-items:center;
@@ -36,21 +33,12 @@ body{
   backdrop-filter:blur(10px);
 }
 .back{
-  width:40px;
-  height:40px;
-  border-radius:12px;
+  width:40px;height:40px;border-radius:12px;
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:900;
-  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;cursor:pointer;
 }
-.title{
-  font-size:17px;
-  font-weight:900;
-  flex:1;
-}
+.title{font-size:17px;font-weight:900;flex:1}
 .toggle{
   font-size:12px;
   padding:6px 10px;
@@ -58,14 +46,7 @@ body{
   background:#020617;
   border:1px solid #334155;
 }
-
-/* LAYOUT */
-.main{
-  display:flex;
-  height:calc(100vh - 70px);
-}
-
-/* USER LIST */
+.main{display:flex;height:calc(100vh - 70px)}
 .users{
   width:40%;
   background:#020617;
@@ -79,18 +60,8 @@ body{
 }
 .user:hover{background:#0f172a}
 .user small{color:var(--muted)}
-
-/* CHAT */
-.chat{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-}
-.chat-area{
-  flex:1;
-  padding:14px;
-  overflow-y:auto;
-}
+.chat{flex:1;display:flex;flex-direction:column}
+.chat-area{flex:1;padding:14px;overflow-y:auto}
 .msg{
   max-width:75%;
   padding:12px;
@@ -106,8 +77,6 @@ body{
   background:#020617;
   border:1px solid #334155;
 }
-
-/* INPUT */
 .input-bar{
   padding:10px;
   display:flex;
@@ -130,42 +99,40 @@ button{
   cursor:pointer;
 }
 .send{background:var(--green)}
-.block{background:var(--red); color:#fff}
+.block{background:var(--red);color:#fff}
 </style>
 </head>
 
 <body>
 
 <script>
-/* ADMIN CHECK */
+/* ===== ADMIN CHECK ===== */
 if(localStorage.getItem("isAdmin")!=="true"){
   location.href="index.html";
+}
+
+/* ===== API CONFIG ===== */
+const API_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+function api(d){
+  return fetch(API_URL,{method:"POST",body:JSON.stringify(d)})
+         .then(r=>r.json());
 }
 </script>
 
 <div class="header">
   <div class="back" onclick="location.href='profile.html'">←</div>
   <div class="title">Admin Chat Panel</div>
-  <div class="toggle">Chat: ON</div>
+  <div class="toggle" id="globalToggle">Chat: ON</div>
 </div>
 
 <div class="main">
 
   <!-- USER LIST -->
-  <div class="users" id="userList">
-    <div class="user" onclick="openChat('Rahul')">
-      Rahul<br><small>Active</small>
-    </div>
-    <div class="user" onclick="openChat('Aman')">
-      Aman<br><small>Blocked</small>
-    </div>
-  </div>
+  <div class="users" id="userList"></div>
 
   <!-- CHAT -->
   <div class="chat">
-    <div class="chat-area" id="chatArea">
-      <div class="msg user-msg">User message appears here</div>
-    </div>
+    <div class="chat-area" id="chatArea"></div>
 
     <div class="input-bar">
       <input id="adminMsg" placeholder="Type reply">
@@ -181,44 +148,85 @@ if(localStorage.getItem("isAdmin")!=="true"){
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* MUSIC */
+/* ===== MUSIC ===== */
 const bgm=document.getElementById("bgm");
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
 
-/* TAP */
+/* ===== TAP SOUND ===== */
 document.addEventListener("touchstart",()=>{
-  const t=document.getElementById("tap");
-  t.currentTime=0;
-  t.play().catch(()=>{});
+  tap.currentTime=0;
+  tap.play().catch(()=>{});
 });
 
 let currentUser=null;
-let blocked=false;
+let isBlocked=false;
 
-function openChat(name){
+/* ===== LOAD USERS ===== */
+async function loadUsers(){
+  const d=await api({action:"ADMIN_USERS"});
+  userList.innerHTML="";
+  d.users.forEach(u=>{
+    const div=document.createElement("div");
+    div.className="user";
+    div.innerHTML=`${u.name}<br><small>${u.blocked?"Blocked":"Active"}</small>`;
+    div.onclick=()=>openChat(u.name,u.blocked);
+    userList.appendChild(div);
+  });
+}
+loadUsers();
+
+/* ===== OPEN CHAT ===== */
+async function openChat(name,blocked){
   currentUser=name;
-  document.getElementById("chatArea").innerHTML=
-    "<div class='msg user-msg'>Chat with "+name+"</div>";
+  isBlocked=blocked;
+  chatArea.innerHTML="";
+  const d=await api({action:"ADMIN_GET_CHAT",user:name});
+  d.messages.forEach(m=>{
+    const div=document.createElement("div");
+    div.className="msg "+(m.by==="admin"?"admin":"user-msg");
+    div.innerText=m.text;
+    chatArea.appendChild(div);
+  });
+  chatArea.scrollTop=chatArea.scrollHeight;
 }
 
-function sendAdmin(){
+/* ===== SEND ===== */
+async function sendAdmin(){
   if(!currentUser) return;
-  const txt=document.getElementById("adminMsg");
-  if(!txt.value.trim()) return;
+  const txt=adminMsg.value.trim();
+  if(!txt) return;
 
-  const d=document.createElement("div");
-  d.className="msg admin";
-  d.innerText=txt.value;
-  document.getElementById("chatArea").appendChild(d);
-  txt.value="";
+  const div=document.createElement("div");
+  div.className="msg admin";
+  div.innerText=txt;
+  chatArea.appendChild(div);
+  chatArea.scrollTop=chatArea.scrollHeight;
+  adminMsg.value="";
+
+  await api({action:"ADMIN_SEND",user:currentUser,message:txt});
 }
 
-function toggleBlock(){
-  blocked=!blocked;
-  alert(blocked ? "User chat blocked" : "User chat unblocked");
-  // TODO: save block state to database
+/* ===== BLOCK / UNBLOCK ===== */
+async function toggleBlock(){
+  if(!currentUser) return;
+  isBlocked=!isBlocked;
+  await api({
+    action:"ADMIN_BLOCK",
+    user:currentUser,
+    blocked:isBlocked
+  });
+  alert(isBlocked?"User chat blocked":"User chat unblocked");
+  loadUsers();
 }
+
+/* ===== GLOBAL CHAT ON/OFF ===== */
+let chatOn=true;
+globalToggle.onclick=async()=>{
+  chatOn=!chatOn;
+  globalToggle.innerText="Chat: "+(chatOn?"ON":"OFF");
+  await api({action:"CHAT_GLOBAL_STATUS",enabled:chatOn});
+};
 </script>
 
 </body>
