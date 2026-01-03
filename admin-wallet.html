@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ===== UI UNCHANGED ===== */
 :root{
   --bg:#020617;
   --card:#0f172a;
@@ -17,46 +18,28 @@
   --text:#e5e7eb;
   --muted:#94a3b8;
 }
-
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:Segoe UI,system-ui,sans-serif;
   background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
   color:var(--text);
 }
-
-/* HEADER */
 .header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:14px;
-  background:rgba(2,6,23,.92);
+  position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;gap:12px;
+  padding:14px;background:rgba(2,6,23,.92);
   backdrop-filter:blur(12px);
 }
 .back{
-  width:42px;height:42px;
-  border-radius:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  width:42px;height:42px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
   font-size:20px;
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
-  color:#000;
-  font-weight:900;
-  cursor:pointer;
+  color:#000;font-weight:900;cursor:pointer;
 }
 .h1{font-size:18px;font-weight:900}
-
-/* CONTENT */
 .container{padding:14px 14px 120px}
-
-/* CARD */
 .card{
   background:var(--card);
   border-radius:22px;
@@ -64,24 +47,18 @@ body{
   margin-bottom:14px;
   box-shadow:0 0 26px rgba(168,85,247,.25);
 }
-
-/* USER ROW */
 .user{
   display:flex;
   justify-content:space-between;
   align-items:center;
   gap:10px;
 }
-.info{
-  font-size:14px;
-}
+.info{font-size:14px}
 .amount{
   font-size:18px;
   font-weight:900;
   color:var(--green);
 }
-
-/* BUTTONS */
 .actions{
   display:flex;
   gap:10px;
@@ -96,24 +73,13 @@ body{
   font-size:14px;
   color:#fff;
 }
-.approve{
-  background:linear-gradient(135deg,#22c55e,#16a34a);
-}
-.reject{
-  background:linear-gradient(135deg,#ef4444,#dc2626);
-}
+.approve{background:linear-gradient(135deg,#22c55e,#16a34a)}
+.reject{background:linear-gradient(135deg,#ef4444,#dc2626)}
 .btn:active{transform:scale(.95)}
-
-/* STATUS */
-.status{
-  font-size:13px;
-  margin-top:6px;
-}
+.status{font-size:13px;margin-top:6px}
 .pending{color:var(--yellow)}
 .success{color:var(--green)}
 .rejected{color:var(--red)}
-
-/* ADMIN TOOLS */
 .admin-tools{
   background:#020617;
   padding:14px;
@@ -150,10 +116,13 @@ input{
 <body>
 
 <script>
-/* ADMIN CHECK */
+/* ===== ADMIN CHECK ===== */
 if(localStorage.getItem("role")!=="admin"){
   location.href="index.html";
 }
+
+/* 🔴 REPLACE WITH YOUR APPS SCRIPT URL */
+const API_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
 </script>
 
 <!-- HEADER -->
@@ -162,58 +131,24 @@ if(localStorage.getItem("role")!=="admin"){
   <div class="h1">Admin Wallet Panel</div>
 </div>
 
-<div class="container">
-
-<!-- WITHDRAW REQUEST -->
-<div class="card">
-  <div class="user">
-    <div class="info">
-      <b>User:</b> player_raj<br>
-      <span class="pending">Withdraw Request</span>
-    </div>
-    <div class="amount">₹500</div>
-  </div>
-
-  <div class="actions">
-    <button class="btn approve" onclick="approve()">APPROVE</button>
-    <button class="btn reject" onclick="reject()">REJECT</button>
-  </div>
-
-  <div class="status pending">⏳ Waiting for admin action</div>
-</div>
-
-<!-- ADD MONEY REQUEST -->
-<div class="card">
-  <div class="user">
-    <div class="info">
-      <b>User:</b> gamer_aman<br>
-      <span class="pending">Add Money Request</span>
-    </div>
-    <div class="amount">₹1,000</div>
-  </div>
-
-  <div class="actions">
-    <button class="btn approve">VERIFY & ADD</button>
-    <button class="btn reject">REJECT</button>
-  </div>
-</div>
+<div class="container" id="list"></div>
 
 <!-- ADMIN PAYMENT SETTINGS -->
+<div class="container">
 <div class="card admin-tools">
   <h3>Admin Payment Settings</h3>
 
   <label class="status">UPI ID</label>
-  <input placeholder="admin@upi">
+  <input id="upi">
 
   <label class="status">QR Image URL</label>
-  <input placeholder="https://...">
+  <input id="qr">
 
   <label class="status">Razorpay / Stripe Key</label>
-  <input placeholder="Optional">
+  <input id="paykey">
 
-  <button class="save">SAVE SETTINGS</button>
+  <button class="save" onclick="saveSettings()">SAVE SETTINGS</button>
 </div>
-
 </div>
 
 <!-- SOUND -->
@@ -221,24 +156,67 @@ if(localStorage.getItem("role")!=="admin"){
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* MUSIC */
-const bgm=document.getElementById("bgm");
+/* ===== AUDIO ===== */
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
-
-/* TOUCH SOUND */
 document.addEventListener("touchstart",()=>{
-  const s=document.getElementById("tap");
-  s.currentTime=0;
-  s.play().catch(()=>{});
+  tap.currentTime=0; tap.play().catch(()=>{});
 });
 
-/* ACTIONS */
-function approve(){
-  alert("Approved & wallet updated");
+/* ===== LOAD REQUESTS ===== */
+function loadRequests(){
+  fetch(API_URL+"?action=adminWallet")
+  .then(r=>r.json())
+  .then(data=>{
+    list.innerHTML="";
+    data.forEach(req=>{
+      list.innerHTML+=`
+      <div class="card">
+        <div class="user">
+          <div class="info">
+            <b>User:</b> ${req.username}<br>
+            <span class="pending">${req.type}</span>
+          </div>
+          <div class="amount">₹${req.amount}</div>
+        </div>
+
+        <div class="actions">
+          <button class="btn approve" onclick="approve('${req.id}')">APPROVE</button>
+          <button class="btn reject" onclick="rejectReq('${req.id}')">REJECT</button>
+        </div>
+
+        <div class="status pending">⏳ Waiting for admin action</div>
+      </div>`;
+    });
+  });
 }
-function reject(){
-  alert("Request rejected");
+loadRequests();
+
+/* ===== ACTIONS ===== */
+function approve(id){
+  fetch(API_URL,{
+    method:"POST",
+    body:JSON.stringify({action:"approveWallet",id})
+  }).then(()=>loadRequests());
+}
+function rejectReq(id){
+  fetch(API_URL,{
+    method:"POST",
+    body:JSON.stringify({action:"rejectWallet",id})
+  }).then(()=>loadRequests());
+}
+
+/* ===== SAVE SETTINGS ===== */
+function saveSettings(){
+  fetch(API_URL,{
+    method:"POST",
+    body:JSON.stringify({
+      action:"savePaymentSettings",
+      upi:upi.value,
+      qr:qr.value,
+      key:paykey.value
+    })
+  }).then(()=>alert("Settings saved"));
 }
 </script>
 
