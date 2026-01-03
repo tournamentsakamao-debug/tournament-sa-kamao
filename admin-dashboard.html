@@ -17,17 +17,13 @@
   --text:#e5e7eb;
   --muted:#94a3b8;
 }
-
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:Segoe UI,system-ui,sans-serif;
   background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
   color:var(--text);
 }
-
-/* HEADER */
 .header{
   display:flex;
   align-items:center;
@@ -37,30 +33,18 @@ body{
   backdrop-filter:blur(10px);
 }
 .back{
-  width:40px;
-  height:40px;
-  border-radius:12px;
+  width:40px;height:40px;border-radius:12px;
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:900;
-  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;cursor:pointer;
 }
-.title{
-  font-size:18px;
-  font-weight:900;
-}
-
-/* GRID */
+.title{font-size:18px;font-weight:900}
 .grid{
   padding:14px;
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:12px;
 }
-
-/* CARD */
 .card{
   background:var(--card);
   border-radius:20px;
@@ -77,14 +61,10 @@ body{
   font-size:26px;
   font-weight:900;
 }
-
-/* COLORS */
 .blue{color:var(--blue)}
 .green{color:var(--green)}
 .red{color:var(--red)}
 .yellow{color:var(--yellow)}
-
-/* LOGS */
 .logs{
   margin:14px;
   background:var(--card);
@@ -104,9 +84,18 @@ body{
 <body>
 
 <script>
-/* ADMIN CHECK */
+/* ===== ADMIN CHECK ===== */
 if(localStorage.getItem("isAdmin")!=="true"){
   location.href="index.html";
+}
+
+/* ===== API CONFIG ===== */
+const API_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+function api(d){
+  return fetch(API_URL,{
+    method:"POST",
+    body:JSON.stringify(d)
+  }).then(r=>r.json()).catch(()=>null);
 }
 </script>
 
@@ -117,38 +106,60 @@ if(localStorage.getItem("isAdmin")!=="true"){
 
 <!-- STATS -->
 <div class="grid">
-  <div class="card"><h3>Total Downloads</h3><p class="blue">12,480</p></div>
-  <div class="card"><h3>Online Users</h3><p class="green">328</p></div>
-  <div class="card"><h3>Active Tournaments</h3><p class="yellow">19</p></div>
-  <div class="card"><h3>Today Joined</h3><p class="blue">142</p></div>
-  <div class="card"><h3>Today Created</h3><p class="green">21</p></div>
-  <div class="card"><h3>Pending Withdrawals</h3><p class="red">7</p></div>
+  <div class="card"><h3>Total Downloads</h3><p class="blue" id="d1">0</p></div>
+  <div class="card"><h3>Online Users</h3><p class="green" id="d2">0</p></div>
+  <div class="card"><h3>Active Tournaments</h3><p class="yellow" id="d3">0</p></div>
+  <div class="card"><h3>Today Joined</h3><p class="blue" id="d4">0</p></div>
+  <div class="card"><h3>Today Created</h3><p class="green" id="d5">0</p></div>
+  <div class="card"><h3>Pending Withdrawals</h3><p class="red" id="d6">0</p></div>
 </div>
 
-<!-- ACTIVITY LOGS -->
-<div class="logs">
-  <div class="log">Rahul joined BGMI Battle Clash <small>2 min ago</small></div>
-  <div class="log">Aman created Free Fire Cup <small>10 min ago</small></div>
-  <div class="log">Withdrawal request ₹500 <small>18 min ago</small></div>
-  <div class="log">Admin approved payout <small>25 min ago</small></div>
-</div>
+<!-- LOGS -->
+<div class="logs" id="logs"></div>
 
 <!-- SOUND -->
 <audio id="tap" src="assets/tap.mp3"></audio>
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* MUSIC */
+/* ===== MUSIC ===== */
 const bgm=document.getElementById("bgm");
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
 
-/* TAP SOUND */
+/* ===== TAP SOUND ===== */
 document.addEventListener("touchstart",()=>{
-  const t=document.getElementById("tap");
-  t.currentTime=0;
-  t.play().catch(()=>{});
+  tap.currentTime=0;
+  tap.play().catch(()=>{});
 });
+
+/* ===== LOAD DASHBOARD ===== */
+async function loadDashboard(){
+  const stats=await api({action:"ADMIN_DASHBOARD_STATS"});
+  if(stats){
+    d1.innerText=stats.downloads;
+    d2.innerText=stats.online;
+    d3.innerText=stats.activeTournaments;
+    d4.innerText=stats.todayJoined;
+    d5.innerText=stats.todayCreated;
+    d6.innerText=stats.pendingWithdraw;
+  }
+
+  const logRes=await api({action:"ADMIN_ACTIVITY_LOGS"});
+  logs.innerHTML="";
+  if(logRes && logRes.logs){
+    logRes.logs.forEach(l=>{
+      const div=document.createElement("div");
+      div.className="log";
+      div.innerHTML=`${l.text} <small>${l.time}</small>`;
+      logs.appendChild(div);
+    });
+  }
+}
+loadDashboard();
+
+/* ===== AUTO REFRESH ===== */
+setInterval(loadDashboard,30000);
 </script>
 
 </body>
