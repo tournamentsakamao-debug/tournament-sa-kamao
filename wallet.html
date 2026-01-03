@@ -36,7 +36,6 @@ body{
   font-size:20px;
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
   color:#000;font-weight:900;cursor:pointer;
-  transition:transform .12s ease;
 }
 .back:active{transform:scale(.9)}
 .h1{font-size:18px;font-weight:900}
@@ -47,9 +46,7 @@ body{
   padding:16px;
   margin-bottom:14px;
   box-shadow:0 0 26px rgba(168,85,247,.25);
-  transition:transform .12s ease;
 }
-.card:active{transform:scale(.98)}
 .balance{text-align:center}
 .balance h2{margin:6px 0;font-size:28px;color:var(--green)}
 .balance p{font-size:13px;color:var(--muted)}
@@ -58,10 +55,9 @@ body{
   flex:1;padding:14px;border:none;border-radius:18px;
   font-size:15px;font-weight:900;color:#fff;
   background:linear-gradient(135deg,var(--blue),var(--purple));
-  transition:transform .12s ease, box-shadow .12s ease;
 }
 .btn.withdraw{background:linear-gradient(135deg,#22c55e,#16a34a)}
-.btn:active{transform:scale(.95);box-shadow:0 0 26px rgba(168,85,247,.7)}
+.btn:active{transform:scale(.95)}
 .history{font-size:14px}
 .item{
   padding:12px;border-radius:14px;
@@ -74,21 +70,6 @@ body{
 </head>
 
 <body>
-
-<script>
-/* ===== LOGIN SAFE ===== */
-if(!localStorage.getItem("username") && !localStorage.getItem("nickname")){
-  location.href="login.html";
-}
-localStorage.setItem("app_session",Date.now());
-if(!localStorage.getItem("wallet")) localStorage.setItem("wallet","0");
-if(!localStorage.getItem("isAdmin")) localStorage.setItem("isAdmin","false");
-
-/* 🔴 REPLACE WITH YOUR APPS SCRIPT URL */
-const API_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
-
-const USER = localStorage.getItem("username") || localStorage.getItem("nickname");
-</script>
 
 <!-- HEADER -->
 <div class="header">
@@ -107,8 +88,8 @@ const USER = localStorage.getItem("username") || localStorage.getItem("nickname"
 <!-- ACTIONS -->
 <div class="card">
   <div class="row">
-    <button class="btn" onclick="addMoney()">➕ ADD MONEY</button>
-    <button class="btn withdraw" onclick="withdrawMoney()">💸 WITHDRAW</button>
+    <button class="btn" onclick="goAdd()">➕ ADD MONEY</button>
+    <button class="btn withdraw" onclick="goWithdraw()">💸 WITHDRAW</button>
   </div>
 </div>
 
@@ -127,43 +108,45 @@ const USER = localStorage.getItem("username") || localStorage.getItem("nickname"
 <script>
 /* ===== AUDIO ===== */
 bgm.volume=0.35;
-bgm.play().catch(()=>{});
+document.addEventListener("touchstart",()=>bgm.play(),{once:true});
 document.addEventListener("touchstart",()=>{
   tap.currentTime=0; tap.play().catch(()=>{});
 });
-document.addEventListener("contextmenu",e=>e.preventDefault());
 
-/* ===== LOAD WALLET FROM SHEET ===== */
-function loadWallet(){
-  fetch(API_URL+"?action=getWallet&username="+encodeURIComponent(USER))
-  .then(r=>r.json())
-  .then(d=>{
-    const bal = Number(d.balance||0);
-    localStorage.setItem("wallet",bal);
-    document.getElementById("walletBalance").innerText="₹"+bal;
+/* ===== WALLET LOAD (app.js API) ===== */
+const user = getUser();
 
-    const box=document.getElementById("historyList");
-    box.innerHTML="";
-    (d.history||[]).forEach(t=>{
-      const div=document.createElement("div");
-      div.className="item "+(t.amount>0?"green":"red");
-      div.innerHTML=
-        (t.amount>0?"+ ":"- ")+"₹"+Math.abs(t.amount)+
-        "<br><small>"+t.note+"</small>";
-      box.appendChild(div);
-    });
+async function loadWallet(){
+  const d = await getWallet(user.username);
+
+  const bal = Number(d.balance || 0);
+  localStorage.setItem("wallet", bal);
+  walletBalance.innerText = "₹" + bal;
+
+  historyList.innerHTML = "";
+  (d.history || []).forEach(t=>{
+    const div=document.createElement("div");
+    div.className="item " + (t.amount>0 ? "green":"red");
+    div.innerHTML =
+      (t.amount>0?"+ ":"- ")+"₹"+Math.abs(t.amount)+
+      "<br><small>"+t.note+"</small>";
+    historyList.appendChild(div);
   });
 }
+
 loadWallet();
 
-/* ===== ACTIONS ===== */
-function addMoney(){
+/* ===== NAV ===== */
+function goAdd(){
   location.href="payment.html";
 }
-function withdrawMoney(){
+function goWithdraw(){
   location.href="withdraw.html";
 }
 </script>
+
+<!-- CORE -->
+<script src="app.js"></script>
 
 </body>
 </html>
