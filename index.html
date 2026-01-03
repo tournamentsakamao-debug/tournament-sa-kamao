@@ -80,6 +80,7 @@ body{
   cursor:pointer;
   -webkit-tap-highlight-color: transparent;
 }
+
 .card-tap{
   position:absolute;
   inset:0;
@@ -88,8 +89,7 @@ body{
 
 .banner{
   height:150px;
-  background-size:cover;
-  background-position:center;
+  background:linear-gradient(135deg,#312e81,#020617);
   display:flex;
   align-items:end;
   padding:12px;
@@ -137,7 +137,6 @@ body{
   font-size:16px;
   position:relative;
   z-index:3;
-  cursor:pointer;
 }
 .join-btn:active{
   transform:scale(.95);
@@ -182,6 +181,7 @@ body{
 <body>
 
 <script>
+/* ================= LOGIN CHECK ================= */
 if(!localStorage.getItem("username")){
   location.href="login.html";
 }
@@ -196,7 +196,6 @@ if(!localStorage.getItem("username")){
   <input placeholder="Search tournament or prize">
 </div>
 
-<!-- LIST -->
 <div id="list"></div>
 
 <div class="spacer"></div>
@@ -209,52 +208,61 @@ if(!localStorage.getItem("username")){
   <div class="nav-item"><span>👤</span>Profile</div>
 </div>
 
-<audio id="tap" src="assets/tap.mp3"></audio>
-<audio id="bgm" src="assets/bgm.mp3" loop></audio>
+<!-- SOUND -->
+<audio id="tap" src="assets/tap.mp3" preload="auto"></audio>
+<audio id="bgm" src="assets/bgm.mp3" loop preload="auto"></audio>
 
 <script>
-/* MUSIC */
-const bgm=document.getElementById("bgm");
-bgm.volume=0.35;
-bgm.play().catch(()=>{});
+/* ================= CONFIG ================= */
+const API_URL = "https://script.google.com/macros/s/AKfycbyV0tflAz3KL_bczgQF6JaHi-Ptc_-DmBIN7ptPZQtwTAhpKehThsvppOQ9zKQRLxwM/exec";
 
-/* TAP SOUND */
+/* ================= MUSIC FIX ================= */
+const bgm = document.getElementById("bgm");
+bgm.volume = 0.35;
+document.addEventListener("click",()=> bgm.play(),{once:true});
+
+/* ================= TAP SOUND ================= */
 document.addEventListener("touchstart",()=>{
-  const s=document.getElementById("tap");
-  s.currentTime=0;
-  s.play().catch(()=>{});
+  const t=document.getElementById("tap");
+  t.currentTime=0;
+  t.play().catch(()=>{});
 });
 
-/* API */
-const API="https://script.google.com/macros/s/AKfycbyV0tflAz3KL_bczgQF6JaHi-Ptc_-DmBIN7ptPZQtwTAhpKehThsvppOQ9zKQRLxwM/exec";
-
-/* LOAD TOURNAMENTS */
-fetch(API+"?action=getGames")
+/* ================= LOAD TOURNAMENTS ================= */
+fetch(API_URL+"?action=getGames")
 .then(r=>r.json())
 .then(d=>{
-  // demo card (real tournaments next page se)
-  document.getElementById("list").innerHTML=`
-  <div class="card">
-    <div class="card-tap"></div>
-    <div class="banner" style="background-image:url('assets/demo.jpg')">BGMI Battle Clash</div>
-    <div class="body">
-      <div class="line">Organiser: Admin</div>
-      <div class="line">Game: BGMI • Mode: Squad</div>
-      <div class="prize">₹2,000</div>
-      <div class="row">
-        <div>Entry Fee: ₹50</div>
-        <div>Players: 32 / 100</div>
+  if(!d.games) return;
+  const box=document.getElementById("list");
+  d.games.forEach(g=>{
+    box.innerHTML+=`
+    <div class="card">
+      <div class="card-tap" onclick="openTournament('${g[0]}')"></div>
+      <div class="banner" style="background:url('${g[4]}') center/cover">
+        ${g[1]}
       </div>
-      <div class="line">Wednesday • 7:00 PM</div>
-      <button class="join-btn" onclick="goPay()">JOIN NOW</button>
-    </div>
-  </div>`;
+      <div class="body">
+        <div class="line">Game: ${g[1]}</div>
+        <div class="prize">Prize Pool</div>
+        <button class="join-btn" onclick="join('${g[0]}')">JOIN NOW</button>
+      </div>
+    </div>`;
+  });
 });
 
-/* NAV */
-function goCreate(){location.href="create.html";}
-function goJoin(){location.href="tournaments.html";}
-function goPay(){location.href="payment.html";}
+/* ================= NAV ================= */
+function goCreate(){ location.href="create.html"; }
+function goJoin(){}
+
+/* ================= ACTION ================= */
+function openTournament(id){
+  localStorage.setItem("tournament_id",id);
+  location.href="tournament.html";
+}
+function join(id){
+  localStorage.setItem("tournament_id",id);
+  location.href="payment.html";
+}
 </script>
 
 </body>
