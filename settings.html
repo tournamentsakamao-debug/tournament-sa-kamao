@@ -76,23 +76,10 @@ body{
 <body>
 
 <script>
-/* ===== LOGIN CHECK ===== */
-if(!localStorage.getItem("nickname")){
-  location.href="login.html";
-}
-
-/* ===== API CONFIG ===== */
-const API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
-
-function api(action,data={}){
-  return fetch(API_URL,{
-    method:"POST",
-    body:JSON.stringify({
-      action,
-      user: localStorage.getItem("nickname"),
-      ...data
-    })
-  }).then(r=>r.json());
+/* ===== LOGIN CHECK (BLINK FIX) ===== */
+const appUser = localStorage.getItem("APP_USER");
+if(!appUser){
+  location.replace("login.html");
 }
 </script>
 
@@ -117,31 +104,49 @@ function api(action,data={}){
   </div>
 </div>
 
+<!-- 🔐 ADMIN MODE (HIDDEN FOR NORMAL USER) -->
+<div class="card" id="adminModeCard" style="display:none">
+  <div class="title">Admin Mode</div>
+
+  <div class="row">
+    <div class="text">Enable Admin Panel</div>
+    <div class="toggle" id="adminToggle"><span></span></div>
+  </div>
+</div>
+
 <!-- RULES -->
 <div class="card">
   <div class="title">Rules</div>
-  <div class="text" id="rulesBox"></div>
+  <div class="text">
+    • No cheating or hacking<br>
+    • ID & UID must be correct<br>
+    • Tournament rules must be followed<br>
+    • Admin decision is final
+  </div>
 </div>
 
 <!-- REFUND -->
 <div class="card">
   <div class="title">Refund Policy</div>
-  <div class="text" id="refundBox"></div>
+  <div class="text">
+    Entry fees are non-refundable once tournament starts.  
+    If tournament is cancelled, full refund will be credited to wallet.
+  </div>
 </div>
 
 <!-- SUPPORT -->
 <div class="card">
   <div class="title">Support</div>
   <div class="link" onclick="location.href='chat.html'">💬 Chat with Admin</div>
-  <div class="link" id="supportEmail">📧 support@tournamentsakamao.com</div>
+  <div class="link">📧 support@tournamentsakamao.com</div>
 </div>
 
 <!-- SOCIAL -->
 <div class="card">
   <div class="title">Follow Us</div>
-  <div class="link" id="insta">📸 Instagram</div>
-  <div class="link" id="yt">▶️ YouTube</div>
-  <div class="link" id="tg">📢 Telegram Channel</div>
+  <div class="link">📸 Instagram</div>
+  <div class="link">▶️ YouTube</div>
+  <div class="link">📢 Telegram Channel</div>
 </div>
 
 <div class="spacer"></div>
@@ -151,11 +156,22 @@ function api(action,data={}){
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* ===== RESTORE SETTINGS ===== */
+/* ===== SOUND ===== */
+const bgm=document.getElementById("bgm");
+const tap=document.getElementById("tap");
+bgm.volume=0.35;
+
+document.addEventListener("touchstart",()=>{
+  if(localStorage.getItem("tapSound")==="off") return;
+  tap.currentTime=0;
+  tap.play().catch(()=>{});
+});
+
+/* ===== SOUND TOGGLES ===== */
 const musicToggle=document.getElementById("musicToggle");
 const tapToggle=document.getElementById("tapToggle");
 
-function applyLocal(){
+function applySound(){
   if(localStorage.getItem("music")==="off"){
     musicToggle.classList.remove("active");
     bgm.pause();
@@ -170,51 +186,47 @@ function applyLocal(){
     tapToggle.classList.add("active");
   }
 }
+applySound();
 
-/* ===== LOAD FROM API ===== */
-async function loadSettings(){
-  try{
-    const d = await api("GET_SETTINGS");
-
-    localStorage.setItem("music", d.music);
-    localStorage.setItem("tapSound", d.tap);
-
-    rulesBox.innerHTML = d.rules.map(r=>"• "+r).join("<br>");
-    refundBox.innerText = d.refund;
-
-    insta.onclick=()=>location.href=d.social.instagram;
-    yt.onclick=()=>location.href=d.social.youtube;
-    tg.onclick=()=>location.href=d.social.telegram;
-
-  }catch(e){
-    /* fallback safe */
-  }
-  applyLocal();
-}
-loadSettings();
-
-/* ===== TOGGLES ===== */
 musicToggle.onclick=()=>{
   musicToggle.classList.toggle("active");
-  const v = musicToggle.classList.contains("active")?"on":"off";
+  const v=musicToggle.classList.contains("active")?"on":"off";
   localStorage.setItem("music",v);
-  if(v==="on") bgm.play().catch(()=>{}); else bgm.pause();
-  api("SAVE_SETTINGS",{music:v});
+  v==="on"?bgm.play().catch(()=>{}):bgm.pause();
 };
 
 tapToggle.onclick=()=>{
   tapToggle.classList.toggle("active");
-  const v = tapToggle.classList.contains("active")?"on":"off";
-  localStorage.setItem("tapSound",v);
-  api("SAVE_SETTINGS",{tap:v});
+  localStorage.setItem(
+    "tapSound",
+    tapToggle.classList.contains("active")?"on":"off"
+  );
 };
 
-/* ===== TOUCH SOUND ===== */
-document.addEventListener("touchstart",()=>{
-  if(localStorage.getItem("tapSound")==="off") return;
-  tap.currentTime=0;
-  tap.play().catch(()=>{});
-});
+/* ===== ADMIN MODE LOGIC ===== */
+let userObj=null;
+try{ userObj=JSON.parse(localStorage.getItem("APP_USER")); }catch(e){}
+
+const adminCard=document.getElementById("adminModeCard");
+const adminToggle=document.getElementById("adminToggle");
+
+if(userObj && userObj.role==="admin" && userObj.adminVerified===true){
+  adminCard.style.display="block";
+}
+
+if(localStorage.getItem("ADMIN_MODE")==="on"){
+  adminToggle.classList.add("active");
+}
+
+adminToggle.onclick=()=>{
+  adminToggle.classList.toggle("active");
+  if(adminToggle.classList.contains("active")){
+    localStorage.setItem("ADMIN_MODE","on");
+    location.href="admin-home.html";
+  }else{
+    localStorage.setItem("ADMIN_MODE","off");
+  }
+};
 </script>
 
 </body>
