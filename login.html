@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ===== UI SAME AS YOU GAVE – NO CHANGE ===== */
+/* ===== UI SAME – NO CHANGE ===== */
 :root{
   --bg:#020617;
   --card:#0f172a;
@@ -57,12 +57,8 @@ input{
   color:#fff;
   font-size:18px;
   font-weight:900;
-  transition:transform .12s ease, box-shadow .12s ease;
 }
-.btn:active{
-  transform:scale(.95);
-  box-shadow:0 0 30px rgba(168,85,247,.9);
-}
+.hidden{display:none}
 .popup{
   position:fixed;
   inset:0;
@@ -70,7 +66,6 @@ input{
   display:none;
   align-items:center;
   justify-content:center;
-  z-index:99;
 }
 .popbox{
   background:#020617;
@@ -78,9 +73,7 @@ input{
   border-radius:22px;
   width:85%;
   max-width:340px;
-  box-shadow:0 0 30px rgba(168,85,247,.6);
 }
-.popbox p{font-size:14px;text-align:center}
 .popbox button{
   margin-top:14px;
   width:100%;
@@ -91,7 +84,6 @@ input{
   color:#fff;
   font-weight:900;
 }
-*{-webkit-tap-highlight-color:transparent}
 </style>
 </head>
 
@@ -102,7 +94,12 @@ input{
   <div class="sub">Enter your unique username</div>
 
   <div class="label">Username</div>
-  <input id="username" maxlength="20" placeholder="example: gamer_king">
+  <input id="username" maxlength="20" placeholder="example: gamer_king" oninput="checkAdmin()">
+
+  <div id="passBox" class="hidden">
+    <div class="label">Admin Password</div>
+    <input id="password" type="password" placeholder="Enter admin password">
+  </div>
 
   <button class="btn" onclick="login()">CONTINUE</button>
 </div>
@@ -114,62 +111,73 @@ input{
   </div>
 </div>
 
-<!-- ===== AUDIO (PATH FIXED) ===== -->
+<!-- AUDIO -->
 <audio id="tap" src="assets/tap.mp3" preload="auto"></audio>
 <audio id="bgm" src="assets/bgm.mp3" preload="auto" loop></audio>
 
 <script>
-/* ===== API URL ===== */
+/* ===== CONFIG ===== */
 const API_URL = "https://script.google.com/macros/s/AKfycbyV0tflAz3KL_bczgQF6JaHi-Ptc_-DmBIN7ptPZQtwTAhpKehThsvppOQ9zKQRLxwM/exec";
 
-/* ===== AUTO LOGIN CHECK ===== */
-if(localStorage.getItem("username")){
+const ADMIN_USERNAME = "TSK_ADMIN";
+const ADMIN_PASSWORD = "TSK@2026";
+
+/* ===== AUTO LOGIN ===== */
+if(localStorage.getItem("APP_USER")){
   location.href="index.html";
 }
 
-/* ===== AUDIO FIX (MOBILE AUTOPLAY ISSUE) ===== */
-const bgm = document.getElementById("bgm");
-const tap = document.getElementById("tap");
-bgm.volume = 0.35;
-
-function unlockAudio(){
-  bgm.play().catch(()=>{});
-  document.removeEventListener("touchstart", unlockAudio);
-}
-document.addEventListener("touchstart", unlockAudio);
-
-/* ===== TAP SOUND ===== */
+/* ===== AUDIO FIX ===== */
+const bgm=document.getElementById("bgm");
+const tap=document.getElementById("tap");
+bgm.volume=0.35;
+document.addEventListener("touchstart",()=>bgm.play(),{once:true});
 document.addEventListener("touchstart",()=>{
   tap.currentTime=0;
   tap.play().catch(()=>{});
 });
 
-/* ===== BLOCK RIGHT CLICK ===== */
-document.addEventListener("contextmenu",e=>e.preventDefault());
+/* ===== ADMIN CHECK ===== */
+function checkAdmin(){
+  if(username.value.trim()===ADMIN_USERNAME){
+    passBox.classList.remove("hidden");
+  }else{
+    passBox.classList.add("hidden");
+    password.value="";
+  }
+}
 
-/* ===== USERNAME FILTER ===== */
-const username=document.getElementById("username");
-username.addEventListener("input",()=>{
-  username.value=username.value.replace(/[^a-zA-Z0-9_]/g,"");
-});
-
-/* ===== LOGIN (CONNECTED TO BACKEND) ===== */
+/* ===== LOGIN ===== */
 function login(){
-  const name=username.value.trim();
-  if(name.length<4){
+  const u=username.value.trim();
+  if(u.length<4){
     showPop("Username must be at least 4 characters");
     return;
   }
 
-  fetch(`${API_URL}?action=login&username=${encodeURIComponent(name)}`)
+  if(u===ADMIN_USERNAME && password.value!==ADMIN_PASSWORD){
+    showPop("Wrong admin password");
+    return;
+  }
+
+  fetch(`${API_URL}?action=login&username=${encodeURIComponent(u)}`)
   .then(r=>r.json())
   .then(d=>{
-    if(d.success){
-      localStorage.setItem("username",name);
-      location.href="index.html";
-    }else{
+    if(!d.success){
       showPop("Login failed");
+      return;
     }
+
+    const userObj={
+      username:u,
+      role: u===ADMIN_USERNAME ? "admin":"user",
+      adminVerified: u===ADMIN_USERNAME
+    };
+
+    localStorage.setItem("APP_USER",JSON.stringify(userObj));
+    localStorage.setItem("username",u);
+
+    location.href="index.html";
   })
   .catch(()=>showPop("Server error"));
 }
