@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Profile | Tournament Sa Kamao</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --bg:#020617;
+  --card:#0f172a;
+  --blue:#38bdf8;
+  --purple:#a855f7;
+  --green:#22c55e;
+  --red:#ef4444;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Segoe UI,system-ui,sans-serif;
+  background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
+  color:var(--text);
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  background:rgba(2,6,23,.95);
+}
+.back{
+  width:40px;height:40px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#60a5fa,#38bdf8);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;cursor:pointer;
+}
+.title{font-size:18px;font-weight:900}
+
+/* CARD */
+.card{
+  margin:14px;
+  background:var(--card);
+  border-radius:22px;
+  padding:16px;
+  box-shadow:0 0 26px rgba(168,85,247,.25);
+}
+.big{
+  font-size:20px;
+  font-weight:900;
+}
+.small{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+/* MENU */
+.menu{
+  margin-top:12px;
+}
+.item{
+  padding:14px;
+  border-radius:16px;
+  background:#020617;
+  margin-top:10px;
+  font-weight:800;
+  cursor:pointer;
+}
+.item:active{transform:scale(.97)}
+.red{color:#ef4444}
+.green{color:#22c55e}
+</style>
+</head>
+
+<body>
+
+<script>
+/* ===== LOGIN CHECK ===== */
+if(
+  !localStorage.getItem("username") &&
+  !localStorage.getItem("nickname")
+){
+  location.href="login.html";
+}
+
+/* DEFAULTS */
+if(!localStorage.getItem("wallet")) localStorage.setItem("wallet","0");
+if(!localStorage.getItem("role")) localStorage.setItem("role","user");
+</script>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="back" onclick="location.href='index.html'">←</div>
+  <div class="title">My Profile</div>
+</div>
+
+<!-- PROFILE -->
+<div class="card">
+  <div class="big" id="name">Player</div>
+  <div class="small">Wallet Balance: ₹<span id="wallet">0</span></div>
+  <div class="small">Role: <span id="roleText">User</span></div>
+</div>
+
+<!-- MENU -->
+<div class="card menu">
+
+  <div class="item" onclick="goWallet()">💰 My Wallet</div>
+  <div class="item" onclick="goHistory()">🏆 Tournament History</div>
+  <div class="item" onclick="goSettings()">⚙ Settings</div>
+  <div class="item" onclick="goChat()">💬 Chat with Admin</div>
+
+  <div class="item green" id="adminBtn" style="display:none" onclick="goAdmin()">
+    🛡 Admin Dashboard
+  </div>
+
+  <div class="item red" onclick="logout()">🚪 Logout</div>
+
+</div>
+
+<!-- SOUND -->
+<audio id="tap" src="assets/tap.mp3"></audio>
+<audio id="bgm" src="assets/bgm.mp3" loop></audio>
+
+<script>
+/* ===== MUSIC ===== */
+const bgm=document.getElementById("bgm");
+bgm.volume=0.35;
+document.addEventListener("click",()=>bgm.play(),{once:true});
+
+/* TAP SOUND */
+document.addEventListener("touchstart",()=>{
+  tap.currentTime=0;
+  tap.play().catch(()=>{});
+});
+
+/* LOAD USER */
+const username =
+  localStorage.getItem("username") ||
+  localStorage.getItem("nickname") ||
+  "Player";
+
+name.innerText = username;
+wallet.innerText = localStorage.getItem("wallet") || 0;
+
+const role = localStorage.getItem("role");
+roleText.innerText = role;
+
+/* ADMIN SHOW */
+if(role==="admin"){
+  document.getElementById("adminBtn").style.display="block";
+}
+
+/* NAV */
+function goWallet(){location.href="wallet.html";}
+function goHistory(){location.href="history.html";}
+function goSettings(){location.href="settings.html";}
+function goChat(){location.href="chat.html";}
+function goAdmin(){location.href="admin-dashboard.html";}
+
+/* LOGOUT */
+function logout(){
+  localStorage.clear();
+  location.href="login.html";
+}
+</script>
+
+</body>
+  </html>
