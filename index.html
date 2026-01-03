@@ -83,13 +83,7 @@ body{
 
 <body>
 
-<script>
-/* LOGIN CHECK */
-if(!localStorage.getItem("username")){
-  location.href="login.html";
-}
-</script>
-
+<!-- TOP -->
 <div class="topbar">
   <button class="action join" onclick="go('index.html')">🎮 JOIN</button>
   <button class="action" onclick="go('create.html')">➕ CREATE</button>
@@ -102,6 +96,7 @@ if(!localStorage.getItem("username")){
 <div id="list"></div>
 <div class="spacer"></div>
 
+<!-- NAV -->
 <div class="nav">
   <div class="nav-item active" onclick="go('index.html')"><span>🏠</span>Home</div>
   <div class="nav-item" onclick="go('index.html')"><span>🎮</span>Tournaments</div>
@@ -116,10 +111,12 @@ if(!localStorage.getItem("username")){
 
 <script>
 /* CONFIG */
-const API_URL="https://script.google.com/macros/s/AKfycbyV0tflAz3KL_bczgQF6JaHi-Ptc_-DmBIN7ptPZQtwTAhpKehThsvppOQ9zKQRLxwM/exec";
-const tap=document.getElementById("tap");
-const bgm=document.getElementById("bgm");
-bgm.volume=0.35;
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbyV0tflAz3KL_bczgQF6JaHi-Ptc_-DmBIN7ptPZQtwTAhpKehThsvppOQ9zKQRLxwM/exec";
+
+const tap = document.getElementById("tap");
+const bgm = document.getElementById("bgm");
+bgm.volume = 0.35;
 
 /* MUSIC UNLOCK */
 document.addEventListener("touchstart",()=>{
@@ -133,7 +130,7 @@ document.addEventListener("touchstart",()=>{
 });
 
 /* GLOBAL NAV */
-function go(p){ location.href=p; }
+function go(p){ location.href = p; }
 
 /* LOAD DATA */
 let tournaments=[];
@@ -181,6 +178,9 @@ function join(id){
   location.href="join.html";
 }
 </script>
+
+<!-- ✅ COMMON GUARD -->
+<script src="app.js"></script>
 
 </body>
 </html>
