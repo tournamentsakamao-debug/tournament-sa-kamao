@@ -48,82 +48,38 @@ body{
   box-shadow:0 0 26px rgba(168,85,247,.25);
 }
 .user{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
 }
 .info{font-size:14px}
-.amount{
-  font-size:18px;
-  font-weight:900;
-  color:var(--green);
-}
-.actions{
-  display:flex;
-  gap:10px;
-  margin-top:10px;
-}
+.amount{font-size:18px;font-weight:900;color:var(--green)}
+.actions{display:flex;gap:10px;margin-top:10px}
 .btn{
-  flex:1;
-  padding:12px;
-  border:none;
-  border-radius:14px;
-  font-weight:900;
-  font-size:14px;
-  color:#fff;
+  flex:1;padding:12px;border:none;border-radius:14px;
+  font-weight:900;font-size:14px;color:#fff;
 }
 .approve{background:linear-gradient(135deg,#22c55e,#16a34a)}
 .reject{background:linear-gradient(135deg,#ef4444,#dc2626)}
 .btn:active{transform:scale(.95)}
 .status{font-size:13px;margin-top:6px}
 .pending{color:var(--yellow)}
-.success{color:var(--green)}
-.rejected{color:var(--red)}
 .admin-tools{
-  background:#020617;
-  padding:14px;
-  border-radius:18px;
-  margin-top:12px;
+  background:#020617;padding:14px;border-radius:18px;margin-top:12px;
 }
-.admin-tools h3{
-  margin:0 0 10px;
-  font-size:15px;
-}
+.admin-tools h3{margin:0 0 10px;font-size:15px}
 input{
-  width:100%;
-  padding:12px;
-  border-radius:14px;
-  border:none;
-  background:#0f172a;
-  color:#fff;
-  margin-top:6px;
+  width:100%;padding:12px;border-radius:14px;border:none;
+  background:#0f172a;color:#fff;margin-top:6px;
 }
 .save{
-  margin-top:10px;
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:18px;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  color:#fff;
-  font-weight:900;
+  margin-top:10px;width:100%;padding:14px;border:none;
+  border-radius:18px;background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;font-weight:900;
 }
 .save:active{transform:scale(.95)}
 </style>
 </head>
 
 <body>
-
-<script>
-/* ===== ADMIN CHECK ===== */
-if(localStorage.getItem("role")!=="admin"){
-  location.href="index.html";
-}
-
-/* 🔴 REPLACE WITH YOUR APPS SCRIPT URL */
-const API_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
-</script>
 
 <!-- HEADER -->
 <div class="header">
@@ -135,20 +91,20 @@ const API_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
 
 <!-- ADMIN PAYMENT SETTINGS -->
 <div class="container">
-<div class="card admin-tools">
-  <h3>Admin Payment Settings</h3>
+  <div class="card admin-tools">
+    <h3>Admin Payment Settings</h3>
 
-  <label class="status">UPI ID</label>
-  <input id="upi">
+    <label class="status">UPI ID</label>
+    <input id="upi">
 
-  <label class="status">QR Image URL</label>
-  <input id="qr">
+    <label class="status">QR Image URL</label>
+    <input id="qr">
 
-  <label class="status">Razorpay / Stripe Key</label>
-  <input id="paykey">
+    <label class="status">Razorpay / Stripe Key</label>
+    <input id="paykey">
 
-  <button class="save" onclick="saveSettings()">SAVE SETTINGS</button>
-</div>
+    <button class="save" onclick="saveSettings()">SAVE SETTINGS</button>
+  </div>
 </div>
 
 <!-- SOUND -->
@@ -156,69 +112,68 @@ const API_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
+/* ===== ADMIN GUARD (app.js) ===== */
+if(!isAdmin() || !isAdminModeOn()){
+  location.replace("index.html");
+}
+
 /* ===== AUDIO ===== */
 bgm.volume=0.35;
-bgm.play().catch(()=>{});
+document.addEventListener("touchstart",()=>bgm.play(),{once:true});
 document.addEventListener("touchstart",()=>{
   tap.currentTime=0; tap.play().catch(()=>{});
 });
 
-/* ===== LOAD REQUESTS ===== */
-function loadRequests(){
-  fetch(API_URL+"?action=adminWallet")
-  .then(r=>r.json())
-  .then(data=>{
-    list.innerHTML="";
-    data.forEach(req=>{
-      list.innerHTML+=`
-      <div class="card">
-        <div class="user">
-          <div class="info">
-            <b>User:</b> ${req.username}<br>
-            <span class="pending">${req.type}</span>
-          </div>
-          <div class="amount">₹${req.amount}</div>
-        </div>
+/* ===== LOAD WALLET REQUESTS ===== */
+async function loadRequests(){
+  const data = await api("adminWallet");
+  list.innerHTML="";
 
-        <div class="actions">
-          <button class="btn approve" onclick="approve('${req.id}')">APPROVE</button>
-          <button class="btn reject" onclick="rejectReq('${req.id}')">REJECT</button>
+  (data || []).forEach(req=>{
+    list.innerHTML+=`
+    <div class="card">
+      <div class="user">
+        <div class="info">
+          <b>User:</b> ${req.username}<br>
+          <span class="pending">${req.type}</span>
         </div>
+        <div class="amount">₹${req.amount}</div>
+      </div>
 
-        <div class="status pending">⏳ Waiting for admin action</div>
-      </div>`;
-    });
+      <div class="actions">
+        <button class="btn approve" onclick="approveReq('${req.id}')">APPROVE</button>
+        <button class="btn reject" onclick="rejectReq('${req.id}')">REJECT</button>
+      </div>
+
+      <div class="status pending">⏳ Waiting for admin action</div>
+    </div>`;
   });
 }
 loadRequests();
 
 /* ===== ACTIONS ===== */
-function approve(id){
-  fetch(API_URL,{
-    method:"POST",
-    body:JSON.stringify({action:"approveWallet",id})
-  }).then(()=>loadRequests());
+async function approveReq(id){
+  await api("approveWallet",{id});
+  loadRequests();
 }
-function rejectReq(id){
-  fetch(API_URL,{
-    method:"POST",
-    body:JSON.stringify({action:"rejectWallet",id})
-  }).then(()=>loadRequests());
+async function rejectReq(id){
+  await api("rejectWallet",{id});
+  loadRequests();
 }
 
-/* ===== SAVE SETTINGS ===== */
-function saveSettings(){
-  fetch(API_URL,{
-    method:"POST",
-    body:JSON.stringify({
-      action:"savePaymentSettings",
-      upi:upi.value,
-      qr:qr.value,
-      key:paykey.value
-    })
-  }).then(()=>alert("Settings saved"));
+/* ===== SAVE PAYMENT SETTINGS ===== */
+async function saveSettings(){
+  await api("savePaymentSettings",{
+    upi:upi.value,
+    qr:qr.value,
+    key:paykey.value
+  });
+  alert("Settings saved");
 }
 </script>
+
+<!-- CORE -->
+<script src="app.js"></script>
 
 </body>
 </html>
