@@ -37,7 +37,6 @@ body{
   font-size:20px;
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
   color:#000;font-weight:900;cursor:pointer;
-  transition:transform .12s ease;
 }
 .back:active{transform:scale(.9)}
 .h1{font-size:18px;font-weight:900}
@@ -48,9 +47,7 @@ body{
   padding:16px;
   margin-bottom:14px;
   box-shadow:0 0 26px rgba(168,85,247,.25);
-  transition:transform .12s ease;
 }
-.card:active{transform:scale(.98)}
 .label{font-size:12px;color:var(--muted);margin-top:12px}
 input{
   width:100%;padding:14px;border-radius:16px;
@@ -72,29 +69,12 @@ input{
   border-radius:20px;font-size:18px;
   font-weight:900;color:#fff;
   background:linear-gradient(135deg,var(--blue),var(--purple));
-  box-shadow:0 0 36px rgba(168,85,247,.75);
-  transition:transform .12s ease, box-shadow .12s ease;
 }
-.btn:active{
-  transform:scale(.95);
-  box-shadow:0 0 30px rgba(168,85,247,.9);
-}
+.btn:active{transform:scale(.95)}
 </style>
 </head>
 
 <body>
-
-<script>
-/* ===== LOGIN SAFE ===== */
-if(!localStorage.getItem("username") && !localStorage.getItem("nickname")){
-  location.href="login.html";
-}
-if(!localStorage.getItem("wallet")) localStorage.setItem("wallet","0");
-
-/* 🔴 REPLACE WITH YOUR APPS SCRIPT URL */
-const API_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
-const USER = localStorage.getItem("username") || localStorage.getItem("nickname");
-</script>
 
 <!-- HEADER -->
 <div class="header">
@@ -144,44 +124,43 @@ const USER = localStorage.getItem("username") || localStorage.getItem("nickname"
 <script>
 /* ===== AUDIO ===== */
 bgm.volume=0.35;
-bgm.play().catch(()=>{});
+document.addEventListener("touchstart",()=>bgm.play(),{once:true});
 document.addEventListener("touchstart",()=>{
   tap.currentTime=0; tap.play().catch(()=>{});
 });
-document.addEventListener("contextmenu",e=>e.preventDefault());
 
-/* ===== WALLET LOAD FROM SHEET ===== */
-const balanceEl=document.getElementById("balance");
-function loadWallet(){
-  fetch(API_URL+"?action=getWallet&username="+encodeURIComponent(USER))
-  .then(r=>r.json())
-  .then(d=>{
-    const bal=Number(d.balance||0);
-    localStorage.setItem("wallet",bal);
-    balanceEl.innerText="₹"+bal;
-  });
+/* ===== WALLET LOAD (app.js) ===== */
+const user = getUser();
+const balanceEl = document.getElementById("balance");
+const statusBox = document.getElementById("statusBox");
+
+async function loadWallet(){
+  const d = await getWallet(user.username);
+  const bal = Number(d.balance || 0);
+  localStorage.setItem("wallet", bal);
+  balanceEl.innerText = "₹" + bal;
 }
 loadWallet();
 
-/* ===== WITHDRAW REQUEST ===== */
+/* ===== WITHDRAW ===== */
 let locked=false;
-function submitWithdraw(){
+async function submitWithdraw(){
   if(locked) return;
 
-  const amt=Number(amount.value);
-  const wallet=Number(localStorage.getItem("wallet")||0);
+  const amt = Number(amount.value);
+  const wallet = Number(localStorage.getItem("wallet")||0);
 
-  if(!amt || amt<100){
+  if(!amt || amt < 100){
     statusBox.className="status reject";
     statusBox.innerText="Minimum withdrawal is ₹100";
     return;
   }
-  if(amt>wallet){
+  if(amt > wallet){
     statusBox.className="status reject";
     statusBox.innerText="Amount exceeds wallet balance";
     return;
   }
-  if(!upi.value){
+  if(!upi.value.trim()){
     statusBox.className="status reject";
     statusBox.innerText="Enter valid UPI ID";
     return;
@@ -191,34 +170,28 @@ function submitWithdraw(){
   statusBox.className="status pending";
   statusBox.innerText="⏳ Sending request...";
 
-  fetch(API_URL,{
-    method:"POST",
-    body:JSON.stringify({
-      action:"withdraw",
-      username:USER,
-      amount:amt,
-      upi:upi.value
-    })
-  })
-  .then(r=>r.json())
-  .then(res=>{
-    if(res.success){
-      localStorage.setItem("wallet",wallet-amt);
-      balanceEl.innerText="₹"+(wallet-amt);
-      statusBox.innerText="⏳ Withdrawal requested. Admin will process within 24 hours.";
-    }else{
-      statusBox.className="status reject";
-      statusBox.innerText=res.message||"Request failed";
-      locked=false;
-    }
-  })
-  .catch(()=>{
-    statusBox.className="status reject";
-    statusBox.innerText="Network error. Try again.";
-    locked=false;
+  const res = await withdrawMoney({
+    username: user.username,
+    amount: amt,
+    upi: upi.value.trim()
   });
+
+  if(res && res.success){
+    const newBal = wallet - amt;
+    localStorage.setItem("wallet", newBal);
+    balanceEl.innerText = "₹" + newBal;
+    statusBox.className="status success";
+    statusBox.innerText="⏳ Withdrawal requested. Admin will process within 24 hours.";
+  }else{
+    statusBox.className="status reject";
+    statusBox.innerText = (res && res.message) || "Request failed";
+    locked=false;
+  }
 }
 </script>
+
+<!-- CORE -->
+<script src="app.js"></script>
 
 </body>
 </html>
