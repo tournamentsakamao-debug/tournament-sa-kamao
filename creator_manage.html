@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ===== UI UNCHANGED ===== */
 :root{
   --bg:#020617;
   --card:#0f172a;
@@ -17,159 +18,81 @@
   --text:#e5e7eb;
   --muted:#94a3b8;
 }
-
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{
   margin:0;
   font-family:Segoe UI,system-ui,sans-serif;
   background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
   color:var(--text);
 }
-
-/* HEADER */
 .header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:14px;
-  background:rgba(2,6,23,.92);
+  position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;gap:12px;
+  padding:14px;background:rgba(2,6,23,.92);
   backdrop-filter:blur(12px);
 }
 .back{
-  width:42px;height:42px;
-  border-radius:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  width:42px;height:42px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
   font-size:20px;
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
-  color:#000;
-  font-weight:900;
-  cursor:pointer;
+  color:#000;font-weight:900;cursor:pointer;
   transition:transform .12s ease;
 }
 .back:active{transform:scale(.9)}
 .h1{font-size:18px;font-weight:900}
-
-/* CONTENT */
 .container{padding:14px 14px 140px}
-
 .card{
   background:var(--card);
   border-radius:22px;
   padding:14px;
   margin-bottom:14px;
   box-shadow:0 0 26px rgba(168,85,247,.25);
-  transition:transform .12s ease;
 }
-.card:active{transform:scale(.98)}
-
 .big{font-size:20px;font-weight:900}
 .label{font-size:12px;color:var(--muted);margin-top:8px}
-
-.row{
-  display:flex;
-  justify-content:space-between;
-  margin-top:6px;
-  font-size:14px;
-}
-
-/* STATUS */
-.status{
-  margin-top:10px;
-  padding:10px;
-  border-radius:14px;
-  font-size:14px;
-}
+.row{display:flex;justify-content:space-between;margin-top:6px;font-size:14px}
+.status{margin-top:10px;padding:10px;border-radius:14px;font-size:14px}
 .locked{background:rgba(239,68,68,.15);color:#ef4444}
 .unlocked{background:rgba(34,197,94,.15);color:#22c55e}
-
-/* PLAYER LIST */
 .player{
-  display:flex;
-  justify-content:space-between;
-  padding:10px;
-  border-radius:14px;
-  margin-top:8px;
-  background:#020617;
-  font-size:14px;
-  transition:transform .12s ease;
+  display:flex;justify-content:space-between;
+  padding:10px;border-radius:14px;margin-top:8px;
+  background:#020617;font-size:14px;
 }
-.player:active{transform:scale(.97)}
-
-/* INPUT */
 input,textarea{
-  width:100%;
-  padding:14px;
-  border-radius:16px;
-  border:none;
-  background:#020617;
-  color:#fff;
-  font-size:15px;
-  margin-top:6px;
+  width:100%;padding:14px;border-radius:16px;
+  border:none;background:#020617;color:#fff;
+  font-size:15px;margin-top:6px;
 }
-
-textarea{
-  min-height:90px;
-  resize:none;
-}
-
-/* BUTTONS */
+textarea{min-height:90px;resize:none}
 .btn{
-  width:100%;
-  padding:14px;
-  margin-top:12px;
-  border:none;
-  border-radius:18px;
-  font-size:16px;
-  font-weight:900;
-  color:#fff;
+  width:100%;padding:14px;margin-top:12px;
+  border:none;border-radius:18px;
+  font-size:16px;font-weight:900;color:#fff;
   background:linear-gradient(135deg,var(--blue),var(--purple));
   transition:transform .12s ease, box-shadow .12s ease;
 }
-.btn:active{
-  transform:scale(.95);
-  box-shadow:0 0 30px rgba(168,85,247,.8);
-}
-
-.btn.red{
-  background:linear-gradient(135deg,#ef4444,#f97316);
-}
-
-/* FIXED FOOTER */
-.footer{
-  position:fixed;
-  bottom:16px;
-  left:16px;
-  right:16px;
-}
+.btn:active{transform:scale(.95);box-shadow:0 0 30px rgba(168,85,247,.8)}
+.btn.red{background:linear-gradient(135deg,#ef4444,#f97316)}
+.footer{position:fixed;bottom:16px;left:16px;right:16px}
 </style>
 </head>
 
 <body>
 
 <script>
-/* ===== GLOBAL LOGIN CHECK ===== */
-if(
-  !localStorage.getItem("username") &&
-  !localStorage.getItem("nickname")
-){
+/* ===== SAFE LOGIN ===== */
+if(!localStorage.getItem("username") && !localStorage.getItem("nickname")){
   location.href="login.html";
 }
-
-/* session refresh */
-localStorage.setItem("app_session", Date.now());
-
-/* defaults */
 if(!localStorage.getItem("wallet")) localStorage.setItem("wallet","0");
-if(!localStorage.getItem("isAdmin")) localStorage.setItem("isAdmin","false");
+
+/* 🔴 REPLACE WITH YOUR GOOGLE APPS SCRIPT URL */
+const API_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+
+const USER = localStorage.getItem("username") || localStorage.getItem("nickname");
+const TID  = localStorage.getItem("created_tournament_id");
 </script>
 
 <!-- HEADER -->
@@ -182,40 +105,29 @@ if(!localStorage.getItem("isAdmin")) localStorage.setItem("isAdmin","false");
 
 <!-- TOURNAMENT INFO -->
 <div class="card">
-  <div class="big">BGMI Battle Clash</div>
+  <div class="big" id="tname">Loading...</div>
 
-  <div class="row">
-    <span>Players Joined</span>
-    <span>32 / 100</span>
-  </div>
-
-  <div class="row">
-    <span>Entry Fee</span>
-    <span>₹50</span>
-  </div>
-
-  <div class="row">
-    <span>Prize Pool</span>
-    <span class="green">₹2,000</span>
-  </div>
+  <div class="row"><span>Players Joined</span><span id="players"></span></div>
+  <div class="row"><span>Entry Fee</span><span id="fee"></span></div>
+  <div class="row"><span>Prize Pool</span><span class="green" id="prize"></span></div>
 
   <div class="status locked" id="lockStatus">
     🔒 Room ID & Password locked
   </div>
 </div>
 
-<!-- ROOM ID / PASSWORD -->
+<!-- ROOM DETAILS -->
 <div class="card">
   <div class="big">Room Details</div>
 
   <div class="label">Room ID</div>
-  <input id="roomId" placeholder="Enter room ID" disabled>
+  <input id="roomId" disabled>
 
   <div class="label">Room Password</div>
-  <input id="roomPass" placeholder="Enter password" disabled>
+  <input id="roomPass" disabled>
 
-  <div class="label">Description (max 500 words)</div>
-  <textarea id="desc" placeholder="Visible 10 min before match" disabled></textarea>
+  <div class="label">Description</div>
+  <textarea id="desc" disabled></textarea>
   <div class="label" id="descCount">0 / 500 words</div>
 
   <button class="btn" onclick="unlockRoom()">UNLOCK & ADD DETAILS</button>
@@ -224,26 +136,11 @@ if(!localStorage.getItem("isAdmin")) localStorage.setItem("isAdmin","false");
 <!-- PLAYER LIST -->
 <div class="card">
   <div class="big">Player Slot List</div>
-
-  <div class="player">
-    <span>#1 Rahul (BGMI)</span>
-    <span>UID: 54821478</span>
-  </div>
-
-  <div class="player">
-    <span>#2 Aman (BGMI)</span>
-    <span>UID: 87451236</span>
-  </div>
-
-  <div class="player">
-    <span>#3 Neeraj (BGMI)</span>
-    <span>UID: 95123647</span>
-  </div>
+  <div id="playerList"></div>
 </div>
 
 </div>
 
-<!-- FOOTER BUTTON -->
 <div class="footer">
   <button class="btn red" onclick="location.href='winner_select.html'">
     ANNOUNCE WINNER
@@ -255,24 +152,15 @@ if(!localStorage.getItem("isAdmin")) localStorage.setItem("isAdmin","false");
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* ===== MUSIC ===== */
-const bgm=document.getElementById("bgm");
+/* AUDIO */
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
-
-/* ===== TAP SOUND ===== */
 document.addEventListener("touchstart",()=>{
-  tap.currentTime=0;
-  tap.play().catch(()=>{});
+  tap.currentTime=0; tap.play().catch(()=>{});
 });
-
-/* ===== BLOCK LONG PRESS ===== */
 document.addEventListener("contextmenu",e=>e.preventDefault());
 
-/* ===== DESC 500 WORD LIMIT ===== */
-const desc=document.getElementById("desc");
-const descCount=document.getElementById("descCount");
-
+/* WORD LIMIT */
 desc.addEventListener("input",()=>{
   let w=desc.value.trim().split(/\s+/).filter(Boolean);
   if(w.length>500){
@@ -282,18 +170,32 @@ desc.addEventListener("input",()=>{
   descCount.innerText=w.length+" / 500 words";
 });
 
-/* ===== UNLOCK ROOM (ONE TIME) ===== */
+/* UNLOCK */
 function unlockRoom(){
-  if(desc.disabled===false) return;
-
   roomId.disabled=false;
   roomPass.disabled=false;
   desc.disabled=false;
-
-  const st=document.getElementById("lockStatus");
-  st.className="status unlocked";
-  st.innerText="🔓 Room details unlocked (visible 10 min before match)";
+  lockStatus.className="status unlocked";
+  lockStatus.innerText="🔓 Room details unlocked (visible 10 min before match)";
 }
+
+/* LOAD DATA */
+fetch(API_URL+"?action=creatorManage&tournament_id="+TID+"&username="+USER)
+.then(r=>r.json())
+.then(d=>{
+  tname.innerText=d.name;
+  players.innerText=d.joined+" / "+d.max;
+  fee.innerText="₹"+d.fee;
+  prize.innerText="₹"+d.prize;
+
+  d.players.forEach((p,i)=>{
+    playerList.innerHTML+=`
+      <div class="player">
+        <span>#${i+1} ${p.name}</span>
+        <span>UID: ${p.uid}</span>
+      </div>`;
+  });
+});
 </script>
 
 </body>
