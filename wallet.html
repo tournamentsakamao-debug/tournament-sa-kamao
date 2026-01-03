@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ===== UI UNCHANGED ===== */
 :root{
   --bg:#020617;
   --card:#0f172a;
@@ -16,50 +17,30 @@
   --text:#e5e7eb;
   --muted:#94a3b8;
 }
-
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{
   margin:0;
   font-family:Segoe UI,system-ui,sans-serif;
   background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
   color:var(--text);
 }
-
-/* HEADER */
 .header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:14px;
-  background:rgba(2,6,23,.92);
+  position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;gap:12px;
+  padding:14px;background:rgba(2,6,23,.92);
   backdrop-filter:blur(12px);
 }
 .back{
-  width:42px;height:42px;
-  border-radius:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  width:42px;height:42px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
   font-size:20px;
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
-  color:#000;
-  font-weight:900;
-  cursor:pointer;
+  color:#000;font-weight:900;cursor:pointer;
   transition:transform .12s ease;
 }
 .back:active{transform:scale(.9)}
 .h1{font-size:18px;font-weight:900}
-
-/* CONTENT */
 .container{padding:14px 14px 140px}
-
 .card{
   background:var(--card);
   border-radius:22px;
@@ -69,87 +50,44 @@ body{
   transition:transform .12s ease;
 }
 .card:active{transform:scale(.98)}
-
-/* BALANCE */
-.balance{
-  text-align:center;
-}
-.balance h2{
-  margin:6px 0;
-  font-size:28px;
-  color:var(--green);
-}
-.balance p{
-  font-size:13px;
-  color:var(--muted);
-}
-
-/* ACTION BUTTONS */
-.row{
-  display:flex;
-  gap:12px;
-  margin-top:12px;
-}
+.balance{text-align:center}
+.balance h2{margin:6px 0;font-size:28px;color:var(--green)}
+.balance p{font-size:13px;color:var(--muted)}
+.row{display:flex;gap:12px;margin-top:12px}
 .btn{
-  flex:1;
-  padding:14px;
-  border:none;
-  border-radius:18px;
-  font-size:15px;
-  font-weight:900;
-  color:#fff;
+  flex:1;padding:14px;border:none;border-radius:18px;
+  font-size:15px;font-weight:900;color:#fff;
   background:linear-gradient(135deg,var(--blue),var(--purple));
   transition:transform .12s ease, box-shadow .12s ease;
 }
-.btn.withdraw{
-  background:linear-gradient(135deg,#22c55e,#16a34a);
-}
-.btn:active{
-  transform:scale(.95);
-  box-shadow:0 0 26px rgba(168,85,247,.7);
-}
-
-/* HISTORY */
-.history{
-  font-size:14px;
-}
+.btn.withdraw{background:linear-gradient(135deg,#22c55e,#16a34a)}
+.btn:active{transform:scale(.95);box-shadow:0 0 26px rgba(168,85,247,.7)}
+.history{font-size:14px}
 .item{
-  padding:12px;
-  border-radius:14px;
-  background:#020617;
-  margin-top:10px;
+  padding:12px;border-radius:14px;
+  background:#020617;margin-top:10px;
 }
 .item.green{color:#22c55e}
 .item.red{color:#ef4444}
-
-.label{
-  font-size:12px;
-  color:var(--muted);
-}
+.label{font-size:12px;color:var(--muted)}
 </style>
 </head>
 
 <body>
 
 <script>
-/* ===== GLOBAL LOGIN CHECK ===== */
-if(
-  !localStorage.getItem("username") &&
-  !localStorage.getItem("nickname")
-){
+/* ===== LOGIN SAFE ===== */
+if(!localStorage.getItem("username") && !localStorage.getItem("nickname")){
   location.href="login.html";
 }
+localStorage.setItem("app_session",Date.now());
+if(!localStorage.getItem("wallet")) localStorage.setItem("wallet","0");
+if(!localStorage.getItem("isAdmin")) localStorage.setItem("isAdmin","false");
 
-/* session refresh */
-localStorage.setItem("app_session", Date.now());
+/* 🔴 REPLACE WITH YOUR APPS SCRIPT URL */
+const API_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
 
-/* defaults */
-if(!localStorage.getItem("wallet")){
-  localStorage.setItem("wallet","0");
-}
-if(!localStorage.getItem("isAdmin")){
-  localStorage.setItem("isAdmin","false");
-}
+const USER = localStorage.getItem("username") || localStorage.getItem("nickname");
 </script>
 
 <!-- HEADER -->
@@ -177,21 +115,7 @@ if(!localStorage.getItem("isAdmin")){
 <!-- HISTORY -->
 <div class="card history">
   <div class="label">Transaction History</div>
-
-  <div class="item green">
-    + ₹500 <br>
-    <small>Tournament Win • 15 May</small>
-  </div>
-
-  <div class="item red">
-    - ₹100 <br>
-    <small>Joined Tournament • BGMI</small>
-  </div>
-
-  <div class="item green">
-    + ₹300 <br>
-    <small>Referral Bonus</small>
-  </div>
+  <div id="historyList"></div>
 </div>
 
 </div>
@@ -201,26 +125,36 @@ if(!localStorage.getItem("isAdmin")){
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* ===== MUSIC ===== */
-const bgm=document.getElementById("bgm");
+/* ===== AUDIO ===== */
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
-
-/* ===== TAP SOUND ===== */
 document.addEventListener("touchstart",()=>{
-  tap.currentTime=0;
-  tap.play().catch(()=>{});
+  tap.currentTime=0; tap.play().catch(()=>{});
 });
-
-/* ===== BLOCK LONG PRESS ===== */
 document.addEventListener("contextmenu",e=>e.preventDefault());
 
-/* ===== WALLET SYNC ===== */
-function syncWallet(){
-  const w = Number(localStorage.getItem("wallet")||0);
-  document.getElementById("walletBalance").innerText = "₹"+w;
+/* ===== LOAD WALLET FROM SHEET ===== */
+function loadWallet(){
+  fetch(API_URL+"?action=getWallet&username="+encodeURIComponent(USER))
+  .then(r=>r.json())
+  .then(d=>{
+    const bal = Number(d.balance||0);
+    localStorage.setItem("wallet",bal);
+    document.getElementById("walletBalance").innerText="₹"+bal;
+
+    const box=document.getElementById("historyList");
+    box.innerHTML="";
+    (d.history||[]).forEach(t=>{
+      const div=document.createElement("div");
+      div.className="item "+(t.amount>0?"green":"red");
+      div.innerHTML=
+        (t.amount>0?"+ ":"- ")+"₹"+Math.abs(t.amount)+
+        "<br><small>"+t.note+"</small>";
+      box.appendChild(div);
+    });
+  });
 }
-syncWallet();
+loadWallet();
 
 /* ===== ACTIONS ===== */
 function addMoney(){
