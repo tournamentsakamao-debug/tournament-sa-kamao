@@ -142,7 +142,7 @@ textarea{min-height:110px;resize:none}
 <body>
 
 <script>
-/* ===== SESSION + WALLET SAFE INIT ===== */
+/* ===== SESSION SAFE ===== */
 if(!localStorage.getItem("username")){
   location.href="login.html";
 }
@@ -153,15 +153,15 @@ if(!localStorage.getItem("wallet")){
 
 <!-- HEADER -->
 <div class="header">
-  <div class="back" onclick="goBack()">←</div>
+  <div class="back" onclick="location.href='index.html'">←</div>
   <div class="h1">Create Tournament</div>
 </div>
 
 <div class="container">
 <div class="card">
 
-<div class="label">Tournament Name (letters only)</div>
-<input id="tname" maxlength="35" placeholder="e.g. BGMI Clash">
+<div class="label">Tournament Name</div>
+<input id="tname">
 
 <div class="label">Game</div>
 <select id="game">
@@ -181,41 +181,29 @@ if(!localStorage.getItem("wallet")){
 </select>
 
 <div class="row">
-<div>
-  <div class="label">Prize Money (₹ max 1 Crore)</div>
-  <input id="prize" type="number">
-</div>
-<div>
-  <div class="label">Entry Fee (₹ max 10 Lakh)</div>
-  <input id="fee" type="number">
-</div>
-</div>
-
-<div class="row">
-<div>
-  <div class="label">Max Players (≤ 500)</div>
-  <input id="players" type="number">
-</div>
-<div>
-  <div class="label">Date</div>
-  <input id="date" type="date">
-</div>
+  <div>
+    <div class="label">Prize Money</div>
+    <input id="prize" type="number">
+  </div>
+  <div>
+    <div class="label">Entry Fee</div>
+    <input id="fee" type="number">
+  </div>
 </div>
 
 <div class="row">
-<div>
-  <div class="label">Time</div>
-  <input id="time" type="time">
-</div>
-<div>
-  <div class="label">Day</div>
-  <input id="day" disabled placeholder="Auto">
-</div>
+  <div>
+    <div class="label">Max Players</div>
+    <input id="players" type="number">
+  </div>
+  <div>
+    <div class="label">Date</div>
+    <input id="date" type="date">
+  </div>
 </div>
 
-<div class="label">Rules (1000 words max)</div>
+<div class="label">Rules</div>
 <textarea id="rules"></textarea>
-<div class="label" id="ruleCount">0 / 1000 words</div>
 
 <div class="security">
 ₹100 security amount will be deducted to create tournament.
@@ -250,55 +238,38 @@ document.addEventListener("touchstart",()=>{
   s.play().catch(()=>{});
 });
 
-/* ===== BLOCK LONG PRESS ===== */
-document.addEventListener("contextmenu",e=>e.preventDefault());
-
-/* ===== VALIDATIONS ===== */
-tname.addEventListener("input",()=>{
-  tname.value=tname.value.replace(/[^a-zA-Z ]/g,"");
-});
-prize.addEventListener("input",()=>{ if(prize.value>10000000) prize.value=10000000; });
-fee.addEventListener("input",()=>{ if(fee.value>1000000) fee.value=1000000; });
-players.addEventListener("input",()=>{ if(players.value>500) players.value=500; });
-
-date.addEventListener("change",()=>{
-  const d=new Date(date.value);
-  if(!isNaN(d)) day.value=d.toLocaleDateString("en-US",{weekday:"long"});
-});
-
-rules.addEventListener("input",()=>{
-  let w=rules.value.trim().split(/\s+/).filter(Boolean);
-  if(w.length>1000){
-    rules.value=w.slice(0,1000).join(" ");
-    w=rules.value.split(/\s+/);
-  }
-  ruleCount.innerText=w.length+" / 1000 words";
-});
-
-/* ===== ACTIONS ===== */
-function goBack(){
-  location.href="index.html";
-}
-
+/* ===== CREATE TOURNAMENT (API CONNECTED) ===== */
 function createTournament(){
-  if(!tname.value||!game.value||!mode.value||!prize.value){
-    pmsg.innerText="Fill all required fields correctly";
+  if(!tname.value || !game.value || !mode.value || !prize.value){
+    pmsg.innerText="Please fill all required fields";
     popup.style.display="flex";
     return;
   }
 
   let wallet=parseInt(localStorage.getItem("wallet")||"0");
-
   if(wallet<100){
     location.href="payment.html";
     return;
   }
 
-  wallet-=100;
-  localStorage.setItem("wallet",wallet);
-
-  /* future: save tournament to DB */
-  location.href="index.html";
+  fetch("https://script.google.com/macros/s/AKfycbyV0tflAz3KL_bczgQF6JaHi-Ptc_-DmBIN7ptPZQtwTAhpKehThsvppOQ9zKQRLxwM/exec?action=createTournament&creator_username="+
+    encodeURIComponent(localStorage.getItem("username"))+
+    "&game_id="+encodeURIComponent(game.value)+
+    "&mode="+encodeURIComponent(mode.value)+
+    "&title="+encodeURIComponent(tname.value)+
+    "&entry_fee="+fee.value+
+    "&prize_pool="+prize.value+
+    "&max_players="+players.value+
+    "&rules="+encodeURIComponent(rules.value)
+  ).then(r=>r.json()).then(res=>{
+    if(res.success){
+      localStorage.setItem("wallet",wallet-100);
+      location.href="index.html";
+    }else{
+      pmsg.innerText="Server error";
+      popup.style.display="flex";
+    }
+  });
 }
 </script>
 
