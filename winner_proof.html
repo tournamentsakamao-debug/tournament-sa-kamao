@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ===== UI UNCHANGED ===== */
 :root{
   --bg:#020617;
   --card:#0f172a;
@@ -16,50 +17,31 @@
   --text:#e5e7eb;
   --muted:#94a3b8;
 }
-
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-
 body{
   margin:0;
   font-family:Segoe UI,system-ui,sans-serif;
   background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
   color:var(--text);
 }
-
 /* HEADER */
 .header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:14px;
-  background:rgba(2,6,23,.92);
+  position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;gap:12px;
+  padding:14px;background:rgba(2,6,23,.92);
   backdrop-filter:blur(12px);
 }
 .back{
-  width:42px;height:42px;
-  border-radius:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  width:42px;height:42px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
   font-size:20px;
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
-  color:#000;
-  font-weight:900;
-  cursor:pointer;
+  color:#000;font-weight:900;cursor:pointer;
   transition:transform .12s ease, box-shadow .12s ease;
 }
-.back:active{
-  transform:scale(.9);
-  box-shadow:0 0 20px rgba(168,85,247,.8);
-}
+.back:active{transform:scale(.9);box-shadow:0 0 20px rgba(168,85,247,.8)}
 .h1{font-size:18px;font-weight:900}
-
-/* CONTENT */
 .container{padding:14px 14px 120px}
-
 .card{
   background:var(--card);
   border-radius:22px;
@@ -67,67 +49,24 @@ body{
   margin-bottom:14px;
   box-shadow:0 0 26px rgba(168,85,247,.25);
 }
-
-.label{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:12px;
-}
-
+.label{font-size:12px;color:var(--muted);margin-top:12px}
 input,textarea{
-  width:100%;
-  padding:14px;
-  border-radius:16px;
-  border:none;
-  background:#020617;
-  color:#fff;
-  font-size:15px;
-  margin-top:6px;
+  width:100%;padding:14px;border-radius:16px;border:none;
+  background:#020617;color:#fff;font-size:15px;margin-top:6px;
 }
-
 textarea{min-height:100px;resize:none}
-
-.note{
-  font-size:12px;
-  color:#facc15;
-  margin-top:8px;
-}
-
-.upload{
-  background:#020617;
-  border-radius:16px;
-  padding:12px;
-  margin-top:10px;
-  font-size:14px;
-}
-
+.note{font-size:12px;color:#facc15;margin-top:8px}
+.upload{background:#020617;border-radius:16px;padding:12px;margin-top:10px;font-size:14px}
 .btn{
-  position:fixed;
-  bottom:16px;
-  left:16px;
-  right:16px;
-  padding:16px;
-  border:none;
-  border-radius:20px;
+  position:fixed;bottom:16px;left:16px;right:16px;
+  padding:16px;border:none;border-radius:20px;
   background:linear-gradient(135deg,var(--blue),var(--purple));
-  color:#fff;
-  font-size:18px;
-  font-weight:900;
+  color:#fff;font-size:18px;font-weight:900;
   box-shadow:0 0 36px rgba(168,85,247,.75);
   transition:transform .12s ease, box-shadow .12s ease;
 }
-.btn:active{
-  transform:scale(.95);
-  box-shadow:0 0 40px rgba(168,85,247,1);
-}
-
-/* STATUS */
-.status{
-  padding:10px;
-  border-radius:14px;
-  margin-top:10px;
-  font-size:14px;
-}
+.btn:active{transform:scale(.95);box-shadow:0 0 40px rgba(168,85,247,1)}
+.status{padding:10px;border-radius:14px;margin-top:10px;font-size:14px}
 .pending{background:rgba(250,204,21,.15);color:#facc15}
 .success{background:rgba(34,197,94,.15);color:#22c55e}
 .reject{background:rgba(239,68,68,.15);color:#ef4444}
@@ -137,15 +76,20 @@ textarea{min-height:100px;resize:none}
 <body>
 
 <script>
-/* LOGIN CHECK (username OR nickname) */
+/* ===== LOGIN CHECK ===== */
 if(!localStorage.getItem("username") && !localStorage.getItem("nickname")){
   location.href="login.html";
 }
-
-/* ensure wallet exists */
 if(!localStorage.getItem("wallet")){
   localStorage.setItem("wallet","0");
 }
+
+/* 🔴 PASTE YOUR GOOGLE APPS SCRIPT URL */
+const API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+
+/* REQUIRED DATA */
+const USER = localStorage.getItem("username") || localStorage.getItem("nickname");
+const TID  = localStorage.getItem("current_tournament");
 </script>
 
 <!-- HEADER -->
@@ -158,27 +102,27 @@ if(!localStorage.getItem("wallet")){
 
 <!-- TOURNAMENT INFO -->
 <div class="card">
-  <div class="h1">BGMI Battle Clash</div>
+  <div class="h1" id="title">Loading...</div>
   <div class="label">Winning Amount</div>
-  <div style="font-size:22px;font-weight:900;color:var(--green)">₹2,000</div>
+  <div style="font-size:22px;font-weight:900;color:var(--green)" id="amount">₹0</div>
   <div class="label">Your Rank</div>
-  <div>🥇 1st Position</div>
+  <div id="rank">-</div>
 </div>
 
 <!-- UPLOAD -->
 <div class="card">
   <div class="label">Screenshot Proof</div>
   <div class="upload">
-    <input type="file" accept="image/*">
+    <input type="file" id="shot" accept="image/*">
   </div>
 
   <div class="label">Screen Recording</div>
   <div class="upload">
-    <input type="file" accept="video/*">
+    <input type="file" id="video" accept="video/*">
   </div>
 
   <div class="label">Message (optional)</div>
-  <textarea placeholder="Any note for admin..."></textarea>
+  <textarea id="msg" placeholder="Any note for admin..."></textarea>
 
   <div class="note">
     ⚠ Proof must be submitted within <b>24 hours</b> of match end.
@@ -202,49 +146,56 @@ if(!localStorage.getItem("wallet")){
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* MUSIC */
-const bgm=document.getElementById("bgm");
+/* ===== AUDIO ===== */
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
-
-/* GLOBAL TAP SOUND */
 document.addEventListener("touchstart",()=>{
-  const s=document.getElementById("tap");
-  s.currentTime=0;
-  s.play().catch(()=>{});
+  tap.currentTime=0;
+  tap.play().catch(()=>{});
 });
+document.addEventListener("contextmenu",e=>e.preventDefault());
 
-/* BACK */
+/* ===== BACK ===== */
 function goBack(){
   location.href="index.html";
 }
 
-/* SUBMIT PROOF (demo logic) */
-let submitted=false;
+/* ===== LOAD DATA FROM SHEET ===== */
+fetch(API_URL+"?action=getWinnerStatus&tournament_id="+TID+"&username="+USER)
+.then(r=>r.json())
+.then(d=>{
+  title.innerText=d.title;
+  amount.innerText="₹"+d.amount;
+  rank.innerText=d.rank;
 
+  if(d.status==="approved"){
+    statusBox.className="status success";
+    statusBox.innerText="✅ Approved! Amount credited.";
+  }
+  if(d.status==="rejected"){
+    statusBox.className="status reject";
+    statusBox.innerText="❌ Rejected. Contact admin.";
+  }
+});
+
+/* ===== SUBMIT PROOF ===== */
 function submitProof(){
-  if(submitted) return;
-  submitted=true;
+  submitBtn.disabled=true;
+  submitBtn.innerText="SUBMITTING...";
 
-  const btn=document.getElementById("submitBtn");
-  const box=document.getElementById("statusBox");
-
-  btn.innerText="SUBMITTING...";
-  btn.disabled=true;
-
-  box.className="status pending";
-  box.innerText="⏳ Proof submitted. Admin reviewing...";
-
-  setTimeout(()=>{
-    box.className="status success";
-    box.innerText="✅ Approved! Amount added to wallet.";
-
-    /* demo wallet credit */
-    let w=Number(localStorage.getItem("wallet")||0);
-    localStorage.setItem("wallet",w+2000);
-
-    btn.innerText="SUBMITTED";
-  },4000);
+  fetch(API_URL,{
+    method:"POST",
+    body:new URLSearchParams({
+      action:"submitWinnerProof",
+      tournament_id:TID,
+      username:USER,
+      message:msg.value
+    })
+  }).then(()=> {
+    statusBox.className="status pending";
+    statusBox.innerText="⏳ Proof submitted. Admin reviewing...";
+    submitBtn.innerText="SUBMITTED";
+  });
 }
 </script>
 
