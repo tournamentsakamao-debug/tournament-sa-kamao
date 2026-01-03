@@ -16,7 +16,10 @@
   --muted:#94a3b8;
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
 body{
   margin:0;
@@ -25,194 +28,124 @@ body{
   color:var(--text);
 }
 
-/* ===== TOP ACTION ===== */
-.topbar{
-  padding:14px;
+/* HEADER */
+.header{
   display:flex;
-  gap:12px;
-}
-.action{
-  flex:1;
-  padding:16px;
-  border-radius:18px;
-  border:none;
-  font-size:16px;
-  font-weight:900;
-  color:#000;
-  display:flex;
+  justify-content:space-between;
   align-items:center;
-  justify-content:center;
-  gap:8px;
-  background:linear-gradient(135deg,#60a5fa,#38bdf8);
-  transition:transform .12s ease, box-shadow .12s ease;
-}
-.action.join{
-  background:linear-gradient(135deg,#22c55e,#16a34a);
-}
-.action:active{
-  transform:scale(.95);
-  box-shadow:0 0 30px rgba(168,85,247,.8);
-}
-
-/* ===== SEARCH ===== */
-.search{
-  padding:0 14px 14px;
-}
-.search input{
-  width:100%;
   padding:14px;
-  border-radius:16px;
-  border:none;
+  background:rgba(2,6,23,.95);
+  backdrop-filter:blur(12px);
+}
+.logo{
+  font-size:18px;
+  font-weight:900;
+}
+.wallet{
   background:#020617;
-  color:#fff;
-  font-size:15px;
+  padding:8px 14px;
+  border-radius:16px;
+  font-weight:800;
 }
 
-/* ===== CARD ===== */
+/* LIST */
+.container{padding:14px 14px 100px}
+
 .card{
-  position:relative;
-  margin:14px;
   background:var(--card);
   border-radius:22px;
   overflow:hidden;
+  margin-bottom:14px;
   box-shadow:0 0 26px rgba(168,85,247,.25);
-  -webkit-tap-highlight-color:transparent;
+  transition:.12s;
 }
-.card-tap{
-  position:absolute;
-  inset:0;
-  z-index:1;
-}
+.card:active{transform:scale(.97)}
 
 .banner{
   height:150px;
-  background:linear-gradient(135deg,#312e81,#020617);
-  display:flex;
-  align-items:end;
-  padding:12px;
-  font-size:18px;
-  font-weight:900;
-  z-index:2;
-  position:relative;
+  background-size:cover;
+  background-position:center;
 }
 
-.body{
+.info{
   padding:14px;
-  position:relative;
-  z-index:2;
+}
+.title{
+  font-size:16px;
+  font-weight:900;
+}
+.sub{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:4px;
 }
 
-.line{font-size:13px;opacity:.8}
-.prize{font-size:22px;font-weight:900;color:var(--green)}
-.row{display:flex;justify-content:space-between;font-size:13px}
+.row{
+  display:flex;
+  justify-content:space-between;
+  margin-top:8px;
+  font-size:13px;
+}
 
-.join-btn{
-  margin-top:10px;
+.join{
+  margin-top:12px;
   width:100%;
   padding:14px;
   border:none;
-  border-radius:16px;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  color:#fff;
-  font-weight:900;
+  border-radius:18px;
   font-size:16px;
-  z-index:3;
-  position:relative;
-  transition:transform .12s ease, box-shadow .12s ease;
+  font-weight:900;
+  color:#fff;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
 }
-.join-btn:active{
-  transform:scale(.95);
-  box-shadow:0 0 30px rgba(168,85,247,.8);
-}
+.join:active{transform:scale(.95)}
 
-/* ===== BOTTOM NAV ===== */
+/* BOTTOM NAV */
 .nav{
   position:fixed;
   bottom:0;
   left:0;
   right:0;
-  height:72px;
+  display:flex;
   background:#020617;
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
+  border-top:1px solid #1e293b;
 }
-.nav-item{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  font-size:11px;
-  color:#94a3b8;
+.nav div{
+  flex:1;
+  text-align:center;
+  padding:10px;
+  font-size:12px;
   cursor:pointer;
-  transition:transform .12s ease,color .12s ease;
 }
-.nav-item span{font-size:22px}
-.nav-item.active{color:var(--blue)}
-.nav-item:active{
-  transform:scale(1.15);
-}
-
-.spacer{height:90px}
-
-/* remove highlight */
-*{ -webkit-tap-highlight-color: transparent; }
+.nav div:active{background:#0f172a}
 </style>
 </head>
 
 <body>
 
 <script>
-/* ================= GLOBAL SESSION CHECK ================= */
+/* LOGIN CHECK */
 if(!localStorage.getItem("username")){
   location.href="login.html";
 }
-localStorage.setItem("app_session", Date.now());
 
-if(!localStorage.getItem("wallet")){
-  localStorage.setItem("wallet","0");
-}
-if(!localStorage.getItem("isAdmin")){
-  localStorage.setItem("isAdmin","false");
-}
+const API="https://script.google.com/macros/s/AKfycbyV0tflAz3KL_bczgQF6JaHi-Ptc_-DmBIN7ptPZQtwTAhpKehThsvppOQ9zKQRLxwM/exec";
 </script>
 
-<!-- TOP -->
-<div class="topbar">
-  <button class="action join" onclick="goJoin()">🎮 JOIN</button>
-  <button class="action" onclick="goCreate()">➕ CREATE</button>
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">Tournament Sa Kamao</div>
+  <div class="wallet" id="wallet">₹0</div>
 </div>
 
-<!-- SEARCH -->
-<div class="search">
-  <input placeholder="Search tournament, prize, game">
-</div>
+<div class="container" id="list"></div>
 
-<!-- CARD -->
-<div class="card">
-  <div class="card-tap" onclick="openTournament()"></div>
-
-  <div class="banner">BGMI Battle Clash</div>
-
-  <div class="body">
-    <div class="line">Game: BGMI • Squad</div>
-    <div class="prize">₹2,000</div>
-    <div class="row">
-      <div>Entry: ₹50</div>
-      <div>32 / 100</div>
-    </div>
-    <div class="line">Wed • 15 May • 7:00 PM</div>
-    <button class="join-btn" onclick="joinTournament(event)">JOIN NOW</button>
-  </div>
-</div>
-
-<div class="spacer"></div>
-
-<!-- NAV -->
+<!-- BOTTOM NAV -->
 <div class="nav">
-  <div class="nav-item active"><span>🏠</span>Home</div>
-  <div class="nav-item" onclick="goMy()"><span>🎮</span>My</div>
-  <div class="nav-item" onclick="goWallet()"><span>💰</span>Wallet</div>
-  <div class="nav-item" onclick="goProfile()"><span>👤</span>Profile</div>
+  <div onclick="location.href='index.html'">🏠 Home</div>
+  <div onclick="location.href='create_tournament.html'">➕ Create</div>
+  <div onclick="location.href='wallet.html'">💰 Wallet</div>
+  <div onclick="location.href='profile.html'">👤 My</div>
 </div>
 
 <!-- SOUND -->
@@ -220,42 +153,51 @@ if(!localStorage.getItem("isAdmin")){
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* ================= MUSIC ================= */
+/* MUSIC */
 const bgm=document.getElementById("bgm");
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
 
-/* ================= TAP SOUND (GLOBAL + NAV) ================= */
-function playTap(){
+/* TAP SOUND */
+document.addEventListener("touchstart",()=>{
   const s=document.getElementById("tap");
-  if(s){
-    s.currentTime=0;
-    s.play().catch(()=>{});
-  }
-}
-
-document.addEventListener("touchstart",playTap);
-document.querySelectorAll(".nav-item").forEach(i=>{
-  i.addEventListener("click",playTap);
+  s.currentTime=0;
+  s.play().catch(()=>{});
 });
 
-/* ================= BLOCK LONG PRESS ================= */
-document.addEventListener("contextmenu",e=>e.preventDefault());
+/* LOAD WALLET */
+fetch(API+"?action=getWallet&username="+localStorage.getItem("username"))
+.then(r=>r.json())
+.then(d=>{
+  document.getElementById("wallet").innerText="₹"+d.wallet;
+});
 
-/* ================= NAV ================= */
-function goCreate(){ location.href="create.html"; }
-function goJoin(){}
-function goMy(){ location.href="my.html"; }
-function goWallet(){ location.href="wallet.html"; }
-function goProfile(){ location.href="profile.html"; }
+/* LOAD TOURNAMENTS */
+fetch(API+"?action=getGames")
+.then(r=>r.json())
+.then(d=>{
+  const box=document.getElementById("list");
+  d.games.forEach(g=>{
+    const c=document.createElement("div");
+    c.className="card";
+    c.innerHTML=`
+      <div class="banner" style="background-image:url('${g[4]}')"></div>
+      <div class="info">
+        <div class="title">${g[1]}</div>
+        <div class="sub">Modes: ${g[2]}</div>
+        <div class="row">
+          <span>Max Players: ${g[3]}</span>
+          <span>Status: ${g[5]=="true"?"Active":"Off"}</span>
+        </div>
+        <button class="join" onclick="openJoin('${g[0]}')">JOIN NOW</button>
+      </div>`;
+    box.appendChild(c);
+  });
+});
 
-/* ================= CARD ACTIONS ================= */
-function joinTournament(e){
-  e.stopPropagation();
-  location.href="payment.html";
-}
-function openTournament(){
-  location.href="tournament.html";
+function openJoin(gameId){
+  localStorage.setItem("join_game",gameId);
+  location.href="join_tournament.html";
 }
 </script>
 
