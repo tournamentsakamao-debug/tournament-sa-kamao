@@ -15,7 +15,10 @@
   --muted:#94a3b8;
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
 body{
   margin:0;
@@ -118,11 +121,6 @@ input{
   color:#fff;
   font-weight:900;
 }
-
-/* REMOVE LONG PRESS / HIGHLIGHT */
-*{
-  -webkit-tap-highlight-color: transparent;
-}
 </style>
 </head>
 
@@ -151,66 +149,70 @@ input{
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* ================= GLOBAL APP SYSTEM (DO NOT REMOVE) ================= */
+/******************** CONFIG ********************/
+const API_URL = "https://script.google.com/macros/s/AKfycbyV0tflAz3KL_bczgQF6JaHi-Ptc_-DmBIN7ptPZQtwTAhpKehThsvppOQ9zKQRLxwM/exec";
 
-// Auto redirect if already logged in (first install only)
+/******************** AUTO LOGIN CHECK ********************/
 if(localStorage.getItem("username")){
-  location.href = "index.html";
+  location.href="index.html";
 }
 
-// Base flags (future admin / logout system)
-if(!localStorage.getItem("app_session")){
-  localStorage.setItem("app_session", Date.now());
-}
-if(!localStorage.getItem("isAdmin")){
-  localStorage.setItem("isAdmin","false");
+/******************** DEFAULT FLAGS ********************/
+if(!localStorage.getItem("music")) localStorage.setItem("music","on");
+if(!localStorage.getItem("tapSound")) localStorage.setItem("tapSound","on");
+
+/******************** MUSIC ********************/
+const bgm=document.getElementById("bgm");
+bgm.volume=0.35;
+if(localStorage.getItem("music")==="on"){
+  bgm.play().catch(()=>{});
 }
 
-/* ================= BACKGROUND MUSIC ================= */
-const bgm = document.getElementById("bgm");
-bgm.volume = 0.35;
-bgm.play().catch(()=>{});
-
-/* ================= TOUCH SOUND ================= */
+/******************** TAP SOUND ********************/
 document.addEventListener("touchstart",()=>{
-  const s=document.getElementById("tap");
-  s.currentTime=0;
-  s.play().catch(()=>{});
+  if(localStorage.getItem("tapSound")==="off") return;
+  const t=document.getElementById("tap");
+  t.currentTime=0;
+  t.play().catch(()=>{});
 });
 
-/* ================= BLOCK RIGHT CLICK ================= */
+/******************** BLOCK RIGHT CLICK ********************/
 document.addEventListener("contextmenu",e=>e.preventDefault());
 
-/* ================= USERNAME VALIDATION ================= */
-const username = document.getElementById("username");
-username.addEventListener("input",()=>{
-  username.value = username.value.replace(/[^a-zA-Z0-9_]/g,"");
+/******************** USERNAME FILTER ********************/
+const usernameInput=document.getElementById("username");
+usernameInput.addEventListener("input",()=>{
+  usernameInput.value=usernameInput.value.replace(/[^a-zA-Z0-9_]/g,"");
 });
 
-/* ================= LOGIN ================= */
+/******************** LOGIN ********************/
 function login(){
-  const name = username.value.trim();
+  const username=usernameInput.value.trim();
 
-  if(name.length < 4){
+  if(username.length<4){
     showPop("Username must be at least 4 characters");
     return;
   }
 
-  // SAVE USER (visible only to admin later)
-  localStorage.setItem("username", name);
+  fetch(API_URL+"?action=login&username="+encodeURIComponent(username))
+    .then(r=>r.json())
+    .then(res=>{
+      if(res.error){
+        showPop(res.error);
+        return;
+      }
 
-  // INIT WALLET + FLAGS (future DB sync)
-  if(!localStorage.getItem("wallet")){
-    localStorage.setItem("wallet","0");
-  }
-
-  // GO TO HOME (UI-2)
-  location.href = "index.html";
+      localStorage.setItem("username",username);
+      location.href="index.html";
+    })
+    .catch(()=>{
+      showPop("Network error. Try again.");
+    });
 }
 
 function showPop(msg){
-  pmsg.innerText = msg;
-  popup.style.display = "flex";
+  pmsg.innerText=msg;
+  popup.style.display="flex";
 }
 </script>
 
