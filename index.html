@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ===== ROOT ===== */
 :root{
   --bg:#020617;
   --card:#0f172a;
@@ -16,7 +15,7 @@
   --text:#e5e7eb;
   --muted:#94a3b8;
 }
-*{box-sizing:border-box}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{
   margin:0;
   font-family:Segoe UI,system-ui,sans-serif;
@@ -24,26 +23,25 @@ body{
   color:var(--text);
 }
 
-/* ===== TOP ===== */
+/* TOP */
 .topbar{padding:14px;display:flex;gap:12px}
 .action{
   flex:1;padding:16px;border-radius:18px;border:none;
   font-size:17px;font-weight:900;color:#fff;
-  display:flex;align-items:center;justify-content:center;gap:8px;
+  display:flex;align-items:center;justify-content:center;
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
-  transition:.12s;
 }
 .action.join{background:linear-gradient(135deg,#22c55e,#16a34a)}
 .action:active{transform:scale(.95)}
 
-/* ===== SEARCH ===== */
+/* SEARCH */
 .search{padding:0 14px 14px}
 .search input{
   width:100%;padding:14px;border-radius:16px;border:none;
   background:#020617;color:#fff;font-size:15px;
 }
 
-/* ===== CARD ===== */
+/* CARD */
 .card{
   position:relative;margin:14px;background:var(--card);
   border-radius:22px;overflow:hidden;
@@ -52,11 +50,10 @@ body{
 .card-tap{position:absolute;inset:0;z-index:1}
 .banner{
   height:150px;
-  background:linear-gradient(135deg,#312e81,#020617);
   display:flex;align-items:end;padding:12px;
-  font-size:18px;font-weight:900;z-index:2;
+  font-size:18px;font-weight:900;
 }
-.body{padding:14px;z-index:2;position:relative}
+.body{padding:14px;position:relative;z-index:2}
 .line{font-size:13px;opacity:.8;margin:4px 0}
 .prize{font-size:22px;font-weight:900;color:var(--green)}
 .join-btn{
@@ -67,7 +64,7 @@ body{
 }
 .join-btn:active{transform:scale(.95)}
 
-/* ===== NAV ===== */
+/* NAV */
 .nav{
   position:fixed;bottom:0;left:0;right:0;height:72px;
   background:#020617;display:flex;justify-content:space-around;
@@ -87,61 +84,73 @@ body{
 <body>
 
 <script>
-/* LOGIN */
+/* LOGIN CHECK */
 if(!localStorage.getItem("username")){
   location.href="login.html";
 }
 </script>
 
 <div class="topbar">
-  <button class="action join" onclick="goJoin()">🎮 JOIN</button>
-  <button class="action" onclick="goCreate()">➕ CREATE</button>
+  <button class="action join" onclick="go('index.html')">🎮 JOIN</button>
+  <button class="action" onclick="go('create.html')">➕ CREATE</button>
 </div>
 
 <div class="search">
-  <input id="searchBox" placeholder="Search tournament or prize" oninput="filterList()">
+  <input id="searchBox" placeholder="Search tournament or prize">
 </div>
 
 <div id="list"></div>
 <div class="spacer"></div>
 
-<!-- NAV -->
 <div class="nav">
-  <div class="nav-item active" onclick="goHome()"><span>🏠</span>Home</div>
-  <div class="nav-item" onclick="goJoin()"><span>🎮</span>Tournaments</div>
-  <div class="nav-item" onclick="goWallet()"><span>💰</span>Wallet</div>
-  <div class="nav-item" onclick="goHistory()"><span>🏆</span>My</div>
-  <div class="nav-item" onclick="goProfile()"><span>👤</span>Profile</div>
+  <div class="nav-item active" onclick="go('index.html')"><span>🏠</span>Home</div>
+  <div class="nav-item" onclick="go('index.html')"><span>🎮</span>Tournaments</div>
+  <div class="nav-item" onclick="go('wallet.html')"><span>💰</span>Wallet</div>
+  <div class="nav-item" onclick="go('history.html')"><span>🏆</span>My</div>
+  <div class="nav-item" onclick="go('profile.html')"><span>👤</span>Profile</div>
 </div>
 
-<!-- SOUND -->
-<audio id="tap" src="assets/tap.mp3"></audio>
-<audio id="bgm" src="assets/bgm.mp3" loop></audio>
+<!-- AUDIO -->
+<audio id="tap" src="assets/tap.mp3" preload="auto"></audio>
+<audio id="bgm" src="assets/bgm.mp3" preload="auto" loop></audio>
 
 <script>
-/* ===== CONFIG ===== */
+/* CONFIG */
 const API_URL="https://script.google.com/macros/s/AKfycbyV0tflAz3KL_bczgQF6JaHi-Ptc_-DmBIN7ptPZQtwTAhpKehThsvppOQ9zKQRLxwM/exec";
+const tap=document.getElementById("tap");
 const bgm=document.getElementById("bgm");
 bgm.volume=0.35;
-document.addEventListener("click",()=>bgm.play(),{once:true});
 
-/* TAP */
+/* MUSIC UNLOCK */
 document.addEventListener("touchstart",()=>{
-  tap.currentTime=0;tap.play().catch(()=>{});
+  bgm.play().catch(()=>{});
+},{once:true});
+
+/* TAP SOUND */
+document.addEventListener("touchstart",()=>{
+  tap.currentTime=0;
+  tap.play().catch(()=>{});
 });
 
-/* LOAD */
+/* GLOBAL NAV */
+function go(p){ location.href=p; }
+
+/* LOAD DATA */
 let tournaments=[];
 fetch(API_URL+"?action=getGames")
 .then(r=>r.json())
 .then(d=>{
-  tournaments=d.games||[];
+  tournaments = d.games || [];
   render(tournaments);
 });
 
 function render(arr){
   const box=document.getElementById("list");
   box.innerHTML="";
+  if(arr.length===0){
+    box.innerHTML="<p style='text-align:center;color:#94a3b8'>No tournaments</p>";
+    return;
+  }
   arr.forEach(g=>{
     box.innerHTML+=`
     <div class="card">
@@ -157,10 +166,10 @@ function render(arr){
 }
 
 /* SEARCH */
-function filterList(){
+searchBox.oninput=()=>{
   const q=searchBox.value.toLowerCase();
   render(tournaments.filter(g=>g.join(" ").toLowerCase().includes(q)));
-}
+};
 
 /* ACTIONS */
 function openTournament(id){
@@ -171,14 +180,6 @@ function join(id){
   localStorage.setItem("tournament_id",id);
   location.href="join.html";
 }
-
-/* NAV */
-function goHome(){location.href="index.html";}
-function goJoin(){location.href="index.html";}
-function goCreate(){location.href="create.html";}
-function goWallet(){location.href="wallet.html";}
-function goHistory(){location.href="history.html";}
-function goProfile(){location.href="profile.html";}
 </script>
 
 </body>
