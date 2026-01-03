@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ===== UI UNCHANGED ===== */
 :root{
   --bg:#020617;
   --card:#0f172a;
@@ -17,151 +18,84 @@
   --text:#e5e7eb;
   --muted:#94a3b8;
 }
-
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{
   margin:0;
   font-family:Segoe UI,system-ui,sans-serif;
   background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
   color:var(--text);
 }
-
-/* HEADER */
 .header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:14px;
-  background:rgba(2,6,23,.92);
+  position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;gap:12px;
+  padding:14px;background:rgba(2,6,23,.92);
   backdrop-filter:blur(12px);
 }
 .back{
-  width:42px;height:42px;
-  border-radius:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  width:42px;height:42px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
   font-size:20px;
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
-  color:#000;
-  font-weight:900;
-  cursor:pointer;
+  color:#000;font-weight:900;cursor:pointer;
   transition:transform .12s ease;
 }
 .back:active{transform:scale(.9)}
 .h1{font-size:18px;font-weight:900}
-
-/* CONTENT */
 .container{padding:14px 14px 140px}
-
 .card{
   background:var(--card);
   border-radius:22px;
   padding:14px;
   margin-bottom:14px;
   box-shadow:0 0 26px rgba(168,85,247,.25);
-  transition:transform .12s ease;
 }
-.card:active{transform:scale(.98)}
-
 .big{font-size:18px;font-weight:900}
 .label{font-size:12px;color:var(--muted);margin-top:10px}
-
-/* PLAYER */
 .player{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px;
-  border-radius:16px;
-  margin-top:10px;
-  background:#020617;
-  font-size:14px;
-  transition:transform .12s ease;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px;border-radius:16px;margin-top:10px;
+  background:#020617;font-size:14px;
 }
-.player:active{transform:scale(.97)}
-
 select{
-  padding:8px;
-  border-radius:10px;
-  border:none;
-  background:#020617;
-  color:#fff;
+  padding:8px;border-radius:10px;border:none;
+  background:#020617;color:#fff;
 }
-
-/* INPUT */
 input{
-  width:100%;
-  padding:14px;
-  border-radius:16px;
-  border:none;
-  background:#020617;
-  color:#fff;
-  font-size:15px;
-  margin-top:6px;
+  width:100%;padding:14px;border-radius:16px;
+  border:none;background:#020617;color:#fff;
+  font-size:15px;margin-top:6px;
 }
-
-/* INFO BOX */
 .info{
-  margin-top:12px;
-  padding:12px;
-  border-radius:16px;
+  margin-top:12px;padding:12px;border-radius:16px;
   background:rgba(34,197,94,.12);
   border:1px solid rgba(34,197,94,.4);
-  color:#22c55e;
-  font-size:13px;
+  color:#22c55e;font-size:13px;
 }
-
-/* BUTTON */
 .btn{
-  width:100%;
-  padding:16px;
-  border:none;
-  border-radius:20px;
-  font-size:18px;
-  font-weight:900;
-  color:#fff;
+  width:100%;padding:16px;border:none;border-radius:20px;
+  font-size:18px;font-weight:900;color:#fff;
   background:linear-gradient(135deg,var(--blue),var(--purple));
   transition:transform .12s ease, box-shadow .12s ease;
 }
-.btn:active{
-  transform:scale(.95);
-  box-shadow:0 0 30px rgba(168,85,247,.8);
-}
-
-.footer{
-  position:fixed;
-  bottom:16px;
-  left:16px;
-  right:16px;
-}
+.btn:active{transform:scale(.95);box-shadow:0 0 30px rgba(168,85,247,.8)}
+.footer{position:fixed;bottom:16px;left:16px;right:16px}
 </style>
 </head>
 
 <body>
 
 <script>
-/* ===== GLOBAL LOGIN CHECK ===== */
-if(
-  !localStorage.getItem("username") &&
-  !localStorage.getItem("nickname")
-){
+/* ===== SAFE LOGIN ===== */
+if(!localStorage.getItem("username") && !localStorage.getItem("nickname")){
   location.href="login.html";
 }
-
-/* session refresh */
-localStorage.setItem("app_session", Date.now());
-
-/* defaults */
 if(!localStorage.getItem("wallet")) localStorage.setItem("wallet","0");
-if(!localStorage.getItem("isAdmin")) localStorage.setItem("isAdmin","false");
+
+/* 🔴 REPLACE WITH YOUR GOOGLE APPS SCRIPT URL */
+const API_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+
+const USER = localStorage.getItem("username") || localStorage.getItem("nickname");
+const TID  = localStorage.getItem("created_tournament_id");
 </script>
 
 <!-- HEADER -->
@@ -174,58 +108,21 @@ if(!localStorage.getItem("isAdmin")) localStorage.setItem("isAdmin","false");
 
 <!-- TOURNAMENT INFO -->
 <div class="card">
-  <div class="big">BGMI Battle Clash</div>
+  <div class="big" id="tname">Loading...</div>
   <div class="label">Select winner rank for each player</div>
 </div>
 
-<!-- PLAYER LIST WITH RANK -->
+<!-- PLAYER LIST -->
 <div class="card">
   <div class="big">Players</div>
-
-  <div class="player">
-    <span>#1 Rahul (UID: 54821478)</span>
-    <select class="rankSelect">
-      <option value="">Rank</option>
-      <option>1st</option>
-      <option>2nd</option>
-      <option>3rd</option>
-      <option>4th</option>
-      <option>5th</option>
-    </select>
-  </div>
-
-  <div class="player">
-    <span>#2 Aman (UID: 87451236)</span>
-    <select class="rankSelect">
-      <option value="">Rank</option>
-      <option>1st</option>
-      <option>2nd</option>
-      <option>3rd</option>
-      <option>4th</option>
-      <option>5th</option>
-    </select>
-  </div>
-
-  <div class="player">
-    <span>#3 Neeraj (UID: 95123647)</span>
-    <select class="rankSelect">
-      <option value="">Rank</option>
-      <option>1st</option>
-      <option>2nd</option>
-      <option>3rd</option>
-      <option>4th</option>
-      <option>5th</option>
-    </select>
-  </div>
+  <div id="playerList"></div>
 </div>
 
-<!-- PROOF UPLOAD -->
+<!-- PROOF -->
 <div class="card">
   <div class="big">Proof Upload</div>
-
   <div class="label">Screenshot / Screen Recording Link</div>
   <input id="proofLink" placeholder="Paste Google Drive link">
-
   <div class="info">
     ℹ️ Submit proof within 24 hours.  
     Amount will be credited after admin verification.
@@ -234,11 +131,8 @@ if(!localStorage.getItem("isAdmin")) localStorage.setItem("isAdmin","false");
 
 </div>
 
-<!-- SUBMIT -->
 <div class="footer">
-  <button class="btn" onclick="submitWinners()">
-    SUBMIT WINNERS
-  </button>
+  <button class="btn" onclick="submitWinners()">SUBMIT WINNERS</button>
 </div>
 
 <!-- SOUND -->
@@ -246,53 +140,86 @@ if(!localStorage.getItem("isAdmin")) localStorage.setItem("isAdmin","false");
 <audio id="bgm" src="assets/bgm.mp3" loop></audio>
 
 <script>
-/* ===== MUSIC ===== */
-const bgm=document.getElementById("bgm");
+/* ===== AUDIO ===== */
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
-
-/* ===== TAP SOUND ===== */
 document.addEventListener("touchstart",()=>{
-  tap.currentTime=0;
-  tap.play().catch(()=>{});
+  tap.currentTime=0; tap.play().catch(()=>{});
 });
-
-/* ===== BLOCK LONG PRESS ===== */
 document.addEventListener("contextmenu",e=>e.preventDefault());
 
-/* ===== PREVENT DUPLICATE RANKS ===== */
-document.querySelectorAll(".rankSelect").forEach(sel=>{
-  sel.addEventListener("change",()=>{
-    const selected=[...document.querySelectorAll(".rankSelect")]
-      .map(s=>s.value)
-      .filter(v=>v);
+/* ===== LOAD PLAYERS FROM SHEET ===== */
+fetch(API_URL+"?action=winnerSelect&tournament_id="+TID)
+.then(r=>r.json())
+.then(d=>{
+  tname.innerText=d.name;
 
-    document.querySelectorAll(".rankSelect").forEach(s=>{
-      [...s.options].forEach(o=>{
-        if(o.value && selected.includes(o.value) && s.value!==o.value){
-          o.disabled=true;
-        }else{
-          o.disabled=false;
-        }
+  d.players.forEach((p,i)=>{
+    playerList.innerHTML+=`
+    <div class="player">
+      <span>#${i+1} ${p.name} (UID: ${p.uid})</span>
+      <select class="rankSelect" data-uid="${p.uid}">
+        <option value="">Rank</option>
+        <option>1st</option>
+        <option>2nd</option>
+        <option>3rd</option>
+        <option>4th</option>
+        <option>5th</option>
+      </select>
+    </div>`;
+  });
+
+  enableRankProtection();
+});
+
+/* ===== PREVENT DUPLICATE RANKS ===== */
+function enableRankProtection(){
+  document.querySelectorAll(".rankSelect").forEach(sel=>{
+    sel.addEventListener("change",()=>{
+      const used=[...document.querySelectorAll(".rankSelect")]
+        .map(s=>s.value).filter(v=>v);
+
+      document.querySelectorAll(".rankSelect").forEach(s=>{
+        [...s.options].forEach(o=>{
+          if(o.value && used.includes(o.value) && s.value!==o.value){
+            o.disabled=true;
+          }else o.disabled=false;
+        });
       });
     });
   });
-});
+}
 
-/* ===== SUBMIT ===== */
+/* ===== SUBMIT WINNERS ===== */
 function submitWinners(){
-  const selected=[...document.querySelectorAll(".rankSelect")]
-    .map(s=>s.value)
-    .filter(v=>v);
-
-  if(selected.length===0){
-    alert("Please select at least one winner rank");
+  const proof=proofLink.value.trim();
+  if(!proof){
+    alert("Please add proof link");
     return;
   }
 
-  // future: proof + admin verification + auto distribution
-  alert("Submitted! In 24 hours money will be added to wallet after verification.");
-  location.href="creator_manage.html";
+  const winners=[...document.querySelectorAll(".rankSelect")]
+    .filter(s=>s.value)
+    .map(s=>({uid:s.dataset.uid,rank:s.value}));
+
+  if(winners.length===0){
+    alert("Select at least one winner");
+    return;
+  }
+
+  fetch(API_URL,{
+    method:"POST",
+    body:JSON.stringify({
+      action:"submitWinners",
+      tournament_id:TID,
+      username:USER,
+      proof:proof,
+      winners:winners
+    })
+  }).then(()=>{
+    alert("Winners submitted successfully!");
+    location.href="creator_manage.html";
+  });
 }
 </script>
 
