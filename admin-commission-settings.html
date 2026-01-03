@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ==== UI SAME – NO CHANGE ==== */
 :root{
   --bg:#020617;
   --card:#0f172a;
@@ -17,46 +18,29 @@
   --text:#e5e7eb;
   --muted:#94a3b8;
 }
-
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:Segoe UI,system-ui,sans-serif;
   background:radial-gradient(circle at top,#1e1b4b,#020617 70%);
   color:var(--text);
 }
-
-/* HEADER */
 .header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  display:flex;
-  align-items:center;
-  gap:12px;
+  position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;gap:12px;
   padding:14px;
   background:rgba(2,6,23,.92);
   backdrop-filter:blur(12px);
 }
 .back{
-  width:42px;height:42px;
-  border-radius:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  width:42px;height:42px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
   font-size:20px;
   background:linear-gradient(135deg,#60a5fa,#38bdf8);
-  color:#000;
-  font-weight:900;
-  cursor:pointer;
+  color:#000;font-weight:900;cursor:pointer;
 }
 .h1{font-size:18px;font-weight:900}
-
-/* CONTAINER */
 .container{padding:14px 14px 120px}
-
-/* CARD */
 .card{
   background:var(--card);
   border-radius:22px;
@@ -64,17 +48,9 @@ body{
   margin-bottom:14px;
   box-shadow:0 0 26px rgba(168,85,247,.25);
 }
-
-/* TEXT */
 .small{font-size:12px;color:var(--muted)}
 .bold{font-weight:800}
-
-/* INPUTS */
-.label{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:12px;
-}
+.label{font-size:12px;color:var(--muted);margin-top:12px}
 input{
   width:100%;
   padding:14px;
@@ -85,15 +61,8 @@ input{
   font-size:15px;
   margin-top:6px;
 }
-
-/* ROW */
-.row{
-  display:flex;
-  gap:10px;
-}
+.row{display:flex;gap:10px}
 .row>div{flex:1}
-
-/* PREVIEW */
 .preview{
   margin-top:14px;
   padding:14px;
@@ -107,8 +76,6 @@ input{
   justify-content:space-between;
   margin:4px 0;
 }
-
-/* SAVE BTN */
 .save-btn{
   position:fixed;
   bottom:16px;
@@ -130,9 +97,19 @@ input{
 <body>
 
 <script>
-/* ADMIN CHECK */
+/* ===== ADMIN CHECK ===== */
 if(localStorage.getItem("role")!=="admin"){
   location.href="index.html";
+}
+
+/* ===== API CONFIG ===== */
+const API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+
+function api(action,data={}){
+  return fetch(API_URL,{
+    method:"POST",
+    body:JSON.stringify({action,...data})
+  }).then(r=>r.json());
 }
 </script>
 
@@ -144,42 +121,24 @@ if(localStorage.getItem("role")!=="admin"){
 
 <div class="container">
 
-<!-- COMMISSION RULES -->
+<!-- COMMISSION -->
 <div class="card">
   <div class="bold">Commission Configuration</div>
   <div class="small">Set percentage distribution (Total must be 100%)</div>
 
   <div class="row">
-    <div>
-      <div class="label">🥇 1st Prize %</div>
-      <input id="p1" type="number" value="50">
-    </div>
-    <div>
-      <div class="label">🥈 2nd Prize %</div>
-      <input id="p2" type="number" value="20">
-    </div>
+    <div><div class="label">🥇 1st Prize %</div><input id="p1" type="number" value="50"></div>
+    <div><div class="label">🥈 2nd Prize %</div><input id="p2" type="number" value="20"></div>
   </div>
 
   <div class="row">
-    <div>
-      <div class="label">🥉 3rd Prize %</div>
-      <input id="p3" type="number" value="10">
-    </div>
-    <div>
-      <div class="label">🏅 4th Prize %</div>
-      <input id="p4" type="number" value="0">
-    </div>
+    <div><div class="label">🥉 3rd Prize %</div><input id="p3" type="number" value="10"></div>
+    <div><div class="label">🏅 4th Prize %</div><input id="p4" type="number" value="0"></div>
   </div>
 
   <div class="row">
-    <div>
-      <div class="label">🎖 5th Prize %</div>
-      <input id="p5" type="number" value="0">
-    </div>
-    <div>
-      <div class="label">👤 Creator %</div>
-      <input id="creator" type="number" value="10">
-    </div>
+    <div><div class="label">🎖 5th Prize %</div><input id="p5" type="number" value="0"></div>
+    <div><div class="label">👤 Creator %</div><input id="creator" type="number" value="10"></div>
   </div>
 
   <div class="label">🛡 Admin %</div>
@@ -189,10 +148,7 @@ if(localStorage.getItem("role")!=="admin"){
 <!-- PREVIEW -->
 <div class="card">
   <div class="bold">Live Preview (₹4800 example)</div>
-
-  <div class="preview" id="preview">
-    <!-- JS fills -->
-  </div>
+  <div class="preview" id="preview"></div>
 </div>
 
 </div>
@@ -205,33 +161,28 @@ if(localStorage.getItem("role")!=="admin"){
 
 <script>
 /* MUSIC */
-const bgm=document.getElementById("bgm");
 bgm.volume=0.35;
 bgm.play().catch(()=>{});
 
-/* TOUCH SOUND */
+/* TAP SOUND */
 document.addEventListener("touchstart",()=>{
-  const s=document.getElementById("tap");
-  s.currentTime=0;
-  s.play().catch(()=>{});
+  tap.currentTime=0;
+  tap.play().catch(()=>{});
 });
 
-/* CALC PREVIEW */
+/* PREVIEW LOGIC */
 const totalPrize = 4800;
-const inputs = ["p1","p2","p3","p4","p5","creator","admin"];
+const ids = ["p1","p2","p3","p4","p5","creator","admin"];
 
-inputs.forEach(id=>{
-  document.getElementById(id).addEventListener("input",updatePreview);
-});
+ids.forEach(id=>document.getElementById(id).addEventListener("input",updatePreview));
 
 function updatePreview(){
-  let html="";
-  let sum=0;
-  inputs.forEach(id=> sum+=Number(document.getElementById(id).value||0));
+  let html="",sum=0;
+  ids.forEach(id=>sum+=Number(document.getElementById(id).value||0));
 
-  inputs.forEach(id=>{
-    const percent = Number(document.getElementById(id).value||0);
-    const amount = Math.round(totalPrize*percent/100);
+  ids.forEach(id=>{
+    const percent=Number(document.getElementById(id).value||0);
+    const amount=Math.round(totalPrize*percent/100);
     html+=`<div><span>${id.toUpperCase()}</span><span>₹${amount}</span></div>`;
   });
 
@@ -242,9 +193,18 @@ function updatePreview(){
 }
 updatePreview();
 
-/* SAVE */
-function saveRules(){
-  alert("Commission rules saved successfully ✔");
+/* SAVE TO DATABASE */
+async function saveRules(){
+  const data={};
+  ids.forEach(id=>data[id]=Number(document.getElementById(id).value||0));
+
+  if(Object.values(data).reduce((a,b)=>a+b,0)!==100){
+    alert("Total percentage must be 100%");
+    return;
+  }
+
+  await api("SAVE_COMMISSION_RULES",data);
+  alert("✅ Commission rules saved successfully");
 }
 </script>
 
